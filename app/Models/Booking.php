@@ -23,17 +23,11 @@ class Booking extends Model
         'metode_pembayaran',
     ];
 
-    /**
-     * Relasi: Booking ini milik salah satu jenis lapangan mode
-     */
     public function lapanganMode()
     {
         return $this->belongsTo(LapanganMode::class);
     }
 
-    /**
-     * Scope untuk cari booking pada jam tertentu (bisa kamu pakai untuk validasi bentrok)
-     */
     public function scopeDiJamYangSama($query, $tanggal, $mulai, $selesai)
     {
         return $query->where('tanggal', $tanggal)

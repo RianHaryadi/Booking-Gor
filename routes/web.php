@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\BookingLapanganController;
-use App\Http\Controllers\BookingController;
+use App\Http\Controllers\BookBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +17,14 @@ use App\Http\Controllers\BookingController;
 // Halaman Beranda
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Halaman Daftar Lapangan (Booking Lapangan)
-Route::get('/booking-lapangan', [BookingLapanganController::class, 'index'])->name('booking.index');
+// Halaman Daftar Lapangan
+Route::get('/booking', [BookBookingController::class, 'index'])->name('booking.index');
 
-// Formulir Booking Lapangan
-Route::get('/booking-lapangan/{lapangan}/form', [BookingController::class, 'form'])->name('booking.form');
+// Form Booking untuk Lapangan Tertentu
+Route::get('/booking/{field}/form', [BookBookingController::class, 'form'])->name('booking.form');
 
 // Proses Submit Booking
-Route::post('/booking-lapangan/submit', [BookingController::class, 'submit'])->name('booking.submit');
-Route::post('/booking-lapangan/store', [BookingLapanganController::class, 'store'])->name('booking.store');
+Route::post('/booking/store', [BookBookingController::class, 'store'])->name('booking.store');
+
+// Halaman Sukses setelah Booking
+Route::get('/booking/success', [BookBookingController::class, 'success'])->name('booking.success');

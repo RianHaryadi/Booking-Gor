@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') | GOR Serbaguna</title>
-    @vite('resources/css/app.css') <!-- Memastikan Tailwind CSS dimuat -->
-    <!-- Fallback CSS jika Vite gagal -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" fallback>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <title>@yield('title') - GOR Serbaguna</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome & Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    @yield('styles')
 </head>
 <body class="bg-gray-50 font-sans text-gray-900 antialiased">
-
     <!-- Navbar -->
     <nav class="bg-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -75,7 +81,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="{{ route('booking.index') }}"
                        class="block px-4 py-2 rounded-md hover:bg-indigo-50 hover:text-indigo-600 {{ request()->routeIs('booking.index') ? 'bg-indigo-50 text-indigo-600' : '' }} transition-colors duration-300">
                         Booking Lapangan
                     </a>
@@ -90,11 +96,9 @@
         </div>
     </nav>
 
-    <!-- Main content -->
-    <main class="min-h-screen py-8">
-        <div class="container mx-auto px-4">
-            @yield('content')
-        </div>
+    <!-- Main Content -->
+    <main class="pt-15 min-h-screen">
+        @yield('content')
     </main>
 
     <!-- Footer -->
@@ -139,5 +143,7 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         });
     </script>
+
+    @yield('scripts')
 </body>
 </html>

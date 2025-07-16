@@ -34,7 +34,7 @@ class BookingResource extends Resource
             ->schema([
                 Select::make('lapangan_mode_id')
                     ->label('Jenis Lapangan')
-                    ->relationship('lapanganMode', 'nama_mode')
+                    ->relationship('lapanganMode', 'name')
                     ->required()
                     ->reactive()
                     ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
@@ -191,7 +191,7 @@ class BookingResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('kode_booking')->label('Kode')->searchable(),
-                TextColumn::make('lapanganMode.nama_mode')->label('Lapangan'),
+                TextColumn::make('lapanganMode.name')->label('Lapangan'),
                 TextColumn::make('tanggal')->date()->sortable(),
                 TextColumn::make('jam_mulai')->time(),
                 TextColumn::make('jam_selesai')->time(),

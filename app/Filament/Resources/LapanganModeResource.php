@@ -11,11 +11,9 @@ use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Resources\LapanganModeResource\Pages;
@@ -31,37 +29,81 @@ class LapanganModeResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('nama_mode')
+            TextInput::make('name')
                 ->label('Nama Lapangan')
                 ->required()
                 ->maxLength(255)
-                ->placeholder('Contoh: Voli A, Futsal, Bulutangkis B'),
+                ->placeholder('Contoh: Futsal A, Voli B, Bulutangkis C'),
 
-            Toggle::make('is_full_lapangan')
-                ->label('Gunakan Seluruh Lapangan')
-                ->default(true),
-
-            TextInput::make('harga')
-                ->label('Harga per 2 Jam')
-                ->numeric()
-                ->prefix('Rp')
-                ->minValue(0)
-                ->default(0)
+            TextInput::make('location')
+                ->label('Lokasi')
                 ->required()
-                ->helperText('Masukkan harga dalam format angka, misal: 100000'),
+                ->maxLength(255)
+                ->placeholder('Contoh: Central District, Jakarta'),
 
-            Textarea::make('deskripsi')
+            TextInput::make('distance')
+                ->label('Jarak (km)')
+                ->numeric()
+                ->minValue(0)
+                ->required()
+                ->placeholder('Contoh: 2.5'),
+
+            Textarea::make('description')
                 ->label('Deskripsi Fasilitas')
                 ->rows(4)
-                ->nullable(),
+                ->nullable()
+                ->placeholder('Contoh: Lapangan futsal dengan rumput sintetis berkualitas tinggi.'),
 
-            FileUpload::make('foto')
-                ->label('Foto Fasilitas')
+            FileUpload::make('image_url')
+                ->label('Foto Lapangan')
                 ->image()
                 ->directory('lapangan-fasilitas')
                 ->preserveFilenames()
                 ->maxSize(2048)
                 ->nullable(),
+
+            TextColumn::make('original_price')
+                ->label('Harga Asli')
+                ->sortable()
+                ->formatStateUsing(fn ($state) => 'Rp' . number_format($state, 0, ',', '.')),
+
+
+            TextInput::make('discounted_price')
+                ->label('Harga Diskon per 2 Jam')
+                ->numeric()
+                ->prefix('Rp')
+                ->minValue(0)
+                ->nullable()
+                ->placeholder('Contoh: 280000'),
+
+            TextInput::make('category')
+                ->label('Kategori')
+                ->maxLength(255)
+                ->nullable()
+                ->placeholder('Contoh: Premium, Eco-Friendly'),
+
+            TextInput::make('rating')
+                ->label('Rating')
+                ->numeric()
+                ->minValue(0)
+                ->maxValue(5)
+                ->step(0.1)
+                ->nullable()
+                ->placeholder('Contoh: 4.9'),
+
+            TextInput::make('latitude')
+                ->label('Latitude')
+                ->numeric()
+                ->step(0.0001)
+                ->nullable()
+                ->placeholder('Contoh: -6.2088'),
+
+            TextInput::make('longitude')
+                ->label('Longitude')
+                ->numeric()
+                ->step(0.0001)
+                ->nullable()
+                ->placeholder('Contoh: 106.8456'),
         ]);
     }
 
@@ -69,32 +111,60 @@ class LapanganModeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nama_mode')
+                TextColumn::make('name')
                     ->label('Nama Lapangan')
                     ->searchable()
                     ->sortable(),
 
-                IconColumn::make('is_full_lapangan')
-                    ->label('Full Lapangan')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
-
-                TextColumn::make('harga')
-                    ->label('Harga per 2 Jam')
-                    ->money('IDR')
+                TextColumn::make('location')
+                    ->label('Lokasi')
+                    ->searchable()
                     ->sortable(),
 
-                TextColumn::make('deskripsi')
+                TextColumn::make('distance')
+                    ->label('Jarak (km)')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => number_format($state, 1) . ' km'),
+
+                TextColumn::make('description')
                     ->label('Deskripsi')
                     ->limit(50)
                     ->tooltip(fn (?string $state): ?string => $state),
 
-                ImageColumn::make('foto')
+                ImageColumn::make('image_url')
                     ->label('Foto')
                     ->square(),
+
+                TextColumn::make('original_price')
+                    ->label('Harga Asli')
+                    ->money('IDR')
+                    ->sortable(),
+
+                TextColumn::make('discounted_price')
+                    ->label('Harga Diskon')
+                    ->money('IDR')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ? 'Rp' . number_format($state, 0, ',', '.') : '-'),
+
+                TextColumn::make('category')
+                    ->label('Kategori')
+                    ->sortable()
+                    ->default('-'),
+
+                TextColumn::make('rating')
+                    ->label('Rating')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 1) : '-'),
+
+                TextColumn::make('latitude')
+                    ->label('Latitude')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ?? '-'),
+
+                TextColumn::make('longitude')
+                    ->label('Longitude')
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ?? '-'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -117,14 +187,13 @@ class LapanganModeResource extends Resource
                             ->preserveFilenames(),
                     ])
                     ->action(function (array $data): void {
-
-                        // Mendapatkan path relatif file
+                        // Get the file path
                         $filePath = is_array($data['csv_file']) ? ($data['csv_file']['path'] ?? $data['csv_file'][0]) : $data['csv_file'];
                         if (strpos($filePath, 'csv-temp/') !== 0) {
                             $filePath = 'csv-temp/' . $filePath;
                         }
 
-                        // Periksa apakah file ada di disk public
+                        // Check if file exists
                         if (!Storage::disk('public')->exists($filePath)) {
                             Notification::make()
                                 ->title('File tidak ditemukan')
@@ -134,10 +203,10 @@ class LapanganModeResource extends Resource
                             return;
                         }
 
-                        // Dapatkan path absolut untuk membaca file
+                        // Get absolute path
                         $absolutePath = Storage::disk('public')->path($filePath);
 
-                        // Buka file CSV
+                        // Open CSV file
                         $handle = fopen($absolutePath, 'r');
                         if ($handle === false) {
                             Notification::make()
@@ -147,15 +216,15 @@ class LapanganModeResource extends Resource
                             return;
                         }
 
-                        // Baca header
+                        // Read header
                         $header = fgetcsv($handle, 0, ',');
-                        $required = ['nama_mode', 'is_full_lapangan', 'harga', 'deskripsi'];
+                        $required = ['name', 'location', 'distance', 'original_price'];
 
-                        // Normalisasi header
+                        // Normalize header
                         $header = array_map('trim', array_map('strtolower', $header));
 
-                        // Periksa apakah semua kolom wajib ada
-                        if (!array_intersect($required, $header) === $required) {
+                        // Check required columns
+                        if (array_intersect($required, $header) !== $required) {
                             Notification::make()
                                 ->title('Format CSV salah')
                                 ->danger()
@@ -165,48 +234,65 @@ class LapanganModeResource extends Resource
                             return;
                         }
 
-                        // Dapatkan indeks kolom
-                        $namaModeIndex = array_search('nama_mode', $header);
-                        $isFullLapanganIndex = array_search('is_full_lapangan', $header);
-                        $hargaIndex = array_search('harga', $header);
-                        $deskripsiIndex = array_search('deskripsi', $header);
+                        // Get column indices
+                        $nameIndex = array_search('name', $header);
+                        $locationIndex = array_search('location', $header);
+                        $distanceIndex = array_search('distance', $header);
+                        $descriptionIndex = array_search('description', $header);
+                        $originalPriceIndex = array_search('original_price', $header);
+                        $discountedPriceIndex = array_search('discounted_price', $header);
+                        $categoryIndex = array_search('category', $header);
+                        $ratingIndex = array_search('rating', $header);
+                        $latitudeIndex = array_search('latitude', $header);
+                        $longitudeIndex = array_search('longitude', $header);
 
-                        // Proses baris data
+                        // Process rows
                         $count = 0;
                         $skipped = 0;
                         while (($row = fgetcsv($handle, 0, ',')) !== false) {
-
-                            // Pastikan jumlah kolom cukup
                             if (count($row) < count($required)) {
                                 $skipped++;
                                 continue;
                             }
 
-                            // Normalisasi data
-                            $nama_mode = trim($row[$namaModeIndex] ?? '');
-                            $is_full_lapangan = filter_var($row[$isFullLapanganIndex] ?? 'false', FILTER_VALIDATE_BOOLEAN);
-                            $harga = (float)($row[$hargaIndex] ?? 0);
-                            $deskripsi = trim($row[$deskripsiIndex] ?? '') ?: null;
+                            // Normalize data
+                            $name = trim($row[$nameIndex] ?? '');
+                            $location = trim($row[$locationIndex] ?? '');
+                            $distance = (float)($row[$distanceIndex] ?? 0);
+                            $description = trim($row[$descriptionIndex] ?? '') ?: null;
+                            $original_price = (float)($row[$originalPriceIndex] ?? 0);
+                            $discounted_price = isset($row[$discountedPriceIndex]) ? (float)$row[$discountedPriceIndex] : null;
+                            $category = isset($row[$categoryIndex]) ? trim($row[$categoryIndex] ?? '') : null;
+                            $rating = isset($row[$ratingIndex]) ? (float)$row[$ratingIndex] : null;
+                            $latitude = isset($row[$latitudeIndex]) ? (float)$row[$latitudeIndex] : null;
+                            $longitude = isset($row[$longitudeIndex]) ? (float)$row[$longitudeIndex] : null;
 
-                            // Cek duplikasi dan validasi
-                            if (empty($nama_mode)) {
+                            // Validate required fields
+                            if (empty($name) || empty($location) || $distance <= 0 || $original_price <= 0) {
                                 $skipped++;
                                 continue;
                             }
 
-                            if (LapanganMode::where('nama_mode', $nama_mode)->exists()) {
+                            // Check for duplicates
+                            if (LapanganMode::where('name', $name)->where('location', $location)->exists()) {
                                 $skipped++;
                                 continue;
                             }
 
-                            // Simpan data
+                            // Save data
                             try {
                                 LapanganMode::create([
-                                    'nama_mode'        => $nama_mode,
-                                    'is_full_lapangan' => $is_full_lapangan,
-                                    'harga'            => $harga,
-                                    'deskripsi'        => $deskripsi,
-                                    'foto'             => null,
+                                    'name' => $name,
+                                    'location' => $location,
+                                    'distance' => $distance,
+                                    'description' => $description,
+                                    'image' => null,
+                                    'original_price' => $original_price,
+                                    'discounted_price' => $discounted_price,
+                                    'category' => $category,
+                                    'rating' => $rating,
+                                    'latitude' => $latitude,
+                                    'longitude' => $longitude,
                                 ]);
                                 $count++;
                             } catch (\Exception $e) {
@@ -216,13 +302,13 @@ class LapanganModeResource extends Resource
 
                         fclose($handle);
 
-                        // Hapus file setelah diproses
+                        // Delete file after processing
                         try {
                             Storage::disk('public')->delete($filePath);
                         } catch (\Exception $e) {
                         }
 
-                        // Kirim notifikasi
+                        // Send notification
                         Notification::make()
                             ->title('Import Selesai')
                             ->success()

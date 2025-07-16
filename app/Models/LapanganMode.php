@@ -10,17 +10,19 @@ class LapanganMode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama_mode',
-        'slot_sub',
-        'is_full_lapangan',
-        'deskripsi',
-        'foto',
-        'harga',
+        'name',
+        'location',
+        'distance',
+        'description',
+        'image',
+        'original_price',
+        'discounted_price',
+        'category',
+        'rating',
+        'latitude',
+        'longitude',
     ];
 
-    /**
-     * Relasi: Satu jenis mode bisa punya banyak booking
-     */
     public function bookings()
     {
         return $this->hasMany(Booking::class);
