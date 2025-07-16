@@ -49,7 +49,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="{{ route('tracking.index') }}"
                        class="relative px-2 py-1 rounded-md hover:text-indigo-600 {{ request()->routeIs('booking.track') ? 'text-indigo-600' : '' }} transition-colors duration-300"
                        onmouseover="this.classList.add('scale-105');"
                        onmouseout="this.classList.remove('scale-105');">
@@ -87,7 +87,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="{{ route('tracking.index') }}"
                        class="block px-4 py-2 rounded-md hover:bg-indigo-50 hover:text-indigo-600 {{ request()->routeIs('booking.track') ? 'bg-indigo-50 text-indigo-600' : '' }} transition-colors duration-300">
                         Tracking
                     </a>
@@ -118,7 +118,7 @@
                     <ul class="text-sm text-gray-300 space-y-2">
                         <li><a href="{{ route('home') }}" class="hover:text-indigo-400 transition-colors duration-300">Home</a></li>
                         <li><a href="{{ route('booking.index') }}" class="hover:text-indigo-400 transition-colors duration-300">Booking Lapangan</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition-colors duration-300">Tracking</a></li>
+                        <li><a href="{{ route('tracking.index') }}" class="hover:text-indigo-400 transition-colors duration-300">Tracking</a></li>
                     </ul>
                 </div>
                 <!-- Contact Info -->

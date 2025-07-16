@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LapanganMode;
 use App\Models\Booking;
+use App\Models\BookingValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -141,7 +142,7 @@ class BookBookingController extends Controller
                 return back()->withErrors(['total_harga' => 'Total harga tidak valid.'])->withInput();
             }
 
-            // ✅ Tentukan status otomatis
+            // Tentukan status berdasarkan metode pembayaran
             $status = in_array($validated['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
 
             $booking = Booking::create([
@@ -159,6 +160,15 @@ class BookBookingController extends Controller
                 'kode_booking' => 'BK-' . now()->format('Ymd') . '-' . strtoupper(Str::random(5)),
             ]);
 
+            // ✅ Tambahkan otomatis ke booking_validations jika status booked
+            if ($status === 'booked') {
+                BookingValidation::create([
+                    'booking_id' => $booking->id,
+                    'validated_by' => 'System',
+                    'validated_at' => now(),
+                ]);
+            }
+
             return redirect()->route('booking.success')->with('booking', $booking);
         } catch (\Exception $e) {
             Log::error('Gagal membuat booking: ' . $e->getMessage());
@@ -175,3 +185,4 @@ class BookBookingController extends Controller
         return view('booking.success', compact('booking'));
     }
 }
+    

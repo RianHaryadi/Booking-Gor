@@ -29,6 +29,12 @@ class Booking extends Model
         return $this->belongsTo(LapanganMode::class);
     }
 
+    public function validation()
+{
+    return $this->hasOne(BookingValidation::class);
+}
+
+
     public function scopeDiJamYangSama($query, $tanggal, $mulai, $selesai)
     {
         return $query->where('tanggal', $tanggal)
