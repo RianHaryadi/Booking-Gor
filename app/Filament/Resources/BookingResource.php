@@ -5,9 +5,7 @@ namespace App\Filament\Resources;
 use App\Models\Booking;
 use App\Models\LapanganMode;
 use App\Services\BookingValidator;
-use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Notifications\Notification;
@@ -16,8 +14,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables;
 use App\Filament\Resources\BookingResource\Pages;
 
 class BookingResource extends Resource
@@ -30,71 +28,82 @@ class BookingResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Select::make('lapangan_mode_id')
-                    ->label('Jenis Lapangan')
-                    ->relationship('lapanganMode', 'name')
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
+        return $form->schema([
+            Select::make('lapangan_mode_id')
+                ->label('Jenis Lapangan')
+                ->relationship('lapanganMode', 'name')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
 
-                DatePicker::make('tanggal')
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
+            DatePicker::make('tanggal')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
 
-                TimePicker::make('jam_mulai')
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
+            TimePicker::make('jam_mulai')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
 
-                TimePicker::make('jam_selesai')
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
+            TimePicker::make('jam_selesai')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
 
-                TextInput::make('nama_pemesan')->required(),
+            TextInput::make('nama_pemesan')->required(),
 
-                TextInput::make('nomor_telepon')->tel(),
+            TextInput::make('nomor_telepon')->tel(),
 
-                TextInput::make('email')->email(),
+            TextInput::make('email')->email(),
 
-                Select::make('metode_pembayaran')
-                    ->label('Metode Pembayaran')
-                    ->options([
-                        'cash' => 'Cash',
-                        'transfer' => 'Transfer Bank',
-                        'qris' => 'QRIS',
-                    ])
-                    ->default('cash')
-                    ->required(),
+            Select::make('metode_pembayaran')
+                ->label('Metode Pembayaran')
+                ->options([
+                    'cash' => 'Cash',
+                    'transfer' => 'Transfer Bank',
+                    'qris' => 'QRIS',
+                ])
+                ->default('cash')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set) {
+                    $set('status', in_array($state, ['transfer', 'qris']) ? 'booked' : 'pending');
+                }),
 
-                TextInput::make('total_harga')
-                    ->numeric()
-                    ->prefix('Rp')
-                    ->readOnly()
-                    ->helperText('Akan dihitung otomatis berdasarkan durasi dan harga lapangan.')
-                    ->afterStateHydrated(function (TextInput $component, ?string $state, callable $set, callable $get) {
-                        $jamMulai = strtotime($get('jam_mulai'));
-                        $jamSelesai = strtotime($get('jam_selesai'));
-                        $durasiJam = ($jamSelesai - $jamMulai) / 3600;
-                        $lapanganMode = LapanganMode::find($get('lapangan_mode_id'));
-                        if ($lapanganMode && $durasiJam > 0) {
-                            $set('total_harga', $lapanganMode->harga * ($durasiJam / 2));
-                        }
-                    }),
+            Select::make('status')
+                ->label('Status')
+                ->options([
+                    'pending' => 'Pending',
+                    'booked' => 'Booked',
+                    'cancelled' => 'Cancelled',
+                    'completed' => 'Completed',
+                ])
+                ->default('pending')
+                ->required(),
 
-                Select::make('status')
-                    ->options([
-                        'booked' => 'Booked',
-                        'cancelled' => 'Cancelled',
-                        'completed' => 'Completed',
-                    ])
-                    ->default('booked'),
+            TextInput::make('total_harga')
+                ->numeric()
+                ->prefix('Rp')
+                ->readOnly()
+                ->helperText('Akan dihitung otomatis berdasarkan durasi dan harga lapangan.')
+                ->afterStateHydrated(function (TextInput $component, ?string $state, callable $set, callable $get) {
+                    $jamMulai = strtotime($get('jam_mulai'));
+                    $jamSelesai = strtotime($get('jam_selesai'));
+                    $durasiJam = ($jamSelesai - $jamMulai) / 3600;
+                    $lapanganMode = LapanganMode::find($get('lapangan_mode_id'));
+                    if ($lapanganMode && $durasiJam > 0) {
+                        $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
+                        $set('total_harga', $harga * ($durasiJam / 2));
+                    }
+                }),
 
-                Hidden::make('kode_booking'),
-            ]);
+            TextInput::make('kode_booking')
+                ->label('Kode Booking')
+                ->disabled()
+                ->default(fn () => 'BK-' . date('Ymd') . '-' . strtoupper(uniqid()))
+                ->dehydrated(),
+        ]);
     }
 
     protected static function updateTotalHarga(callable $get, callable $set): void
@@ -111,9 +120,8 @@ class BookingResource extends Resource
             if ($durasiJam > 0) {
                 $lapanganMode = LapanganMode::find($lapanganModeId);
                 if ($lapanganMode) {
-                    $hargaPer2Jam = $lapanganMode->harga;
-                    $totalHarga = $hargaPer2Jam * ($durasiJam / 2);
-                    $set('total_harga', $totalHarga);
+                    $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
+                    $set('total_harga', $harga * ($durasiJam / 2));
                 }
             }
         }
@@ -146,10 +154,13 @@ class BookingResource extends Resource
         $jamSelesai = strtotime($data['jam_selesai']);
         $durasiJam = ($jamSelesai - $jamMulai) / 3600;
         $lapanganMode = LapanganMode::find($data['lapangan_mode_id']);
-
         if ($lapanganMode) {
-            $data['total_harga'] = $lapanganMode->harga * ($durasiJam / 2);
+            $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
+            $data['total_harga'] = $harga * ($durasiJam / 2);
         }
+
+        // Otomatis atur status berdasarkan metode pembayaran
+        $data['status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
 
         return $data;
     }
@@ -178,10 +189,13 @@ class BookingResource extends Resource
         $jamSelesai = strtotime($data['jam_selesai']);
         $durasiJam = ($jamSelesai - $jamMulai) / 3600;
         $lapanganMode = LapanganMode::find($data['lapangan_mode_id']);
-
         if ($lapanganMode) {
-            $data['total_harga'] = $lapanganMode->harga * ($durasiJam / 2);
+            $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
+            $data['total_harga'] = $harga * ($durasiJam / 2);
         }
+
+        // Otomatis atur status berdasarkan metode pembayaran
+        $data['status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
 
         return $data;
     }
@@ -191,11 +205,13 @@ class BookingResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('kode_booking')->label('Kode')->searchable(),
+                TextColumn::make('nama_pemesan')->label('Pemesan')->searchable(),
                 TextColumn::make('lapanganMode.name')->label('Lapangan'),
                 TextColumn::make('tanggal')->date()->sortable(),
                 TextColumn::make('jam_mulai')->time(),
                 TextColumn::make('jam_selesai')->time(),
                 TextColumn::make('total_harga')->money('IDR'),
+                TextColumn::make('metode_pembayaran')->label('Pembayaran')->badge(),
                 TextColumn::make('status')->badge(),
             ])
             ->actions([

@@ -21,6 +21,7 @@ class Booking extends Model
         'total_harga',
         'kode_booking',
         'metode_pembayaran',
+        'status'
     ];
 
     public function lapanganMode()

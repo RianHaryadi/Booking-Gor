@@ -101,6 +101,7 @@ class BookBookingController extends Controller
             }
 
             $validated = $validator->validated();
+
             if (Carbon::parse($validated['tanggal'])->isSunday()) {
                 return back()->withErrors(['tanggal' => 'GOR tutup pada hari Minggu.'])->withInput();
             }
@@ -116,6 +117,7 @@ class BookBookingController extends Controller
             }
 
             $field = LapanganMode::findOrFail($validated['lapangan_mode_id']);
+
             $conflict = Booking::where('tanggal', $validated['tanggal'])
                 ->where('lapangan_mode_id', $field->id)
                 ->where(function ($q) use ($jamMulai, $jamSelesai) {
@@ -139,6 +141,9 @@ class BookBookingController extends Controller
                 return back()->withErrors(['total_harga' => 'Total harga tidak valid.'])->withInput();
             }
 
+            // ✅ Tentukan status otomatis
+            $status = in_array($validated['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
+
             $booking = Booking::create([
                 'lapangan_mode_id' => $field->id,
                 'tanggal' => $validated['tanggal'],
@@ -150,7 +155,7 @@ class BookBookingController extends Controller
                 'email' => $validated['email'],
                 'metode_pembayaran' => $validated['metode_pembayaran'],
                 'total_harga' => $totalHarga,
-                'status' => 'pending',
+                'status' => $status,
                 'kode_booking' => 'BK-' . now()->format('Ymd') . '-' . strtoupper(Str::random(5)),
             ]);
 
