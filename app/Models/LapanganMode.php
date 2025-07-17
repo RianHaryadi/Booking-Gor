@@ -12,15 +12,11 @@ class LapanganMode extends Model
     protected $fillable = [
         'name',
         'location',
-        'distance',
         'description',
         'image',
         'original_price',
-        'discounted_price',
         'category',
         'rating',
-        'latitude',
-        'longitude',
     ];
 
     public function bookings()

@@ -41,20 +41,13 @@ class LapanganModeResource extends Resource
                 ->maxLength(255)
                 ->placeholder('Contoh: Central District, Jakarta'),
 
-            TextInput::make('distance')
-                ->label('Jarak (km)')
-                ->numeric()
-                ->minValue(0)
-                ->required()
-                ->placeholder('Contoh: 2.5'),
-
             Textarea::make('description')
                 ->label('Deskripsi Fasilitas')
                 ->rows(4)
                 ->nullable()
                 ->placeholder('Contoh: Lapangan futsal dengan rumput sintetis berkualitas tinggi.'),
 
-            FileUpload::make('image_url')
+            FileUpload::make('image')
                 ->label('Foto Lapangan')
                 ->image()
                 ->directory('lapangan-fasilitas')
@@ -62,19 +55,12 @@ class LapanganModeResource extends Resource
                 ->maxSize(2048)
                 ->nullable(),
 
-            TextColumn::make('original_price')
+            TextInput::make('original_price')
                 ->label('Harga Asli')
-                ->sortable()
-                ->formatStateUsing(fn ($state) => 'Rp' . number_format($state, 0, ',', '.')),
-
-
-            TextInput::make('discounted_price')
-                ->label('Harga Diskon per 2 Jam')
                 ->numeric()
-                ->prefix('Rp')
+                ->required()
                 ->minValue(0)
-                ->nullable()
-                ->placeholder('Contoh: 280000'),
+                ->placeholder('Contoh: 250000'),
 
             TextInput::make('category')
                 ->label('Kategori')
@@ -90,20 +76,6 @@ class LapanganModeResource extends Resource
                 ->step(0.1)
                 ->nullable()
                 ->placeholder('Contoh: 4.9'),
-
-            TextInput::make('latitude')
-                ->label('Latitude')
-                ->numeric()
-                ->step(0.0001)
-                ->nullable()
-                ->placeholder('Contoh: -6.2088'),
-
-            TextInput::make('longitude')
-                ->label('Longitude')
-                ->numeric()
-                ->step(0.0001)
-                ->nullable()
-                ->placeholder('Contoh: 106.8456'),
         ]);
     }
 
@@ -121,17 +93,12 @@ class LapanganModeResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('distance')
-                    ->label('Jarak (km)')
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => number_format($state, 1) . ' km'),
-
                 TextColumn::make('description')
                     ->label('Deskripsi')
                     ->limit(50)
                     ->tooltip(fn (?string $state): ?string => $state),
 
-                ImageColumn::make('image_url')
+                ImageColumn::make('image')
                     ->label('Foto')
                     ->square(),
 
@@ -139,12 +106,6 @@ class LapanganModeResource extends Resource
                     ->label('Harga Asli')
                     ->money('IDR')
                     ->sortable(),
-
-                TextColumn::make('discounted_price')
-                    ->label('Harga Diskon')
-                    ->money('IDR')
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => $state ? 'Rp' . number_format($state, 0, ',', '.') : '-'),
 
                 TextColumn::make('category')
                     ->label('Kategori')
@@ -155,16 +116,6 @@ class LapanganModeResource extends Resource
                     ->label('Rating')
                     ->sortable()
                     ->formatStateUsing(fn ($state) => $state ? number_format($state, 1) : '-'),
-
-                TextColumn::make('latitude')
-                    ->label('Latitude')
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => $state ?? '-'),
-
-                TextColumn::make('longitude')
-                    ->label('Longitude')
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => $state ?? '-'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -218,7 +169,7 @@ class LapanganModeResource extends Resource
 
                         // Read header
                         $header = fgetcsv($handle, 0, ',');
-                        $required = ['name', 'location', 'distance', 'original_price'];
+                        $required = ['name', 'location', 'original_price'];
 
                         // Normalize header
                         $header = array_map('trim', array_map('strtolower', $header));
@@ -237,14 +188,11 @@ class LapanganModeResource extends Resource
                         // Get column indices
                         $nameIndex = array_search('name', $header);
                         $locationIndex = array_search('location', $header);
-                        $distanceIndex = array_search('distance', $header);
                         $descriptionIndex = array_search('description', $header);
+                        $imageIndex = array_search('image', $header);
                         $originalPriceIndex = array_search('original_price', $header);
-                        $discountedPriceIndex = array_search('discounted_price', $header);
                         $categoryIndex = array_search('category', $header);
                         $ratingIndex = array_search('rating', $header);
-                        $latitudeIndex = array_search('latitude', $header);
-                        $longitudeIndex = array_search('longitude', $header);
 
                         // Process rows
                         $count = 0;
@@ -258,20 +206,11 @@ class LapanganModeResource extends Resource
                             // Normalize data
                             $name = trim($row[$nameIndex] ?? '');
                             $location = trim($row[$locationIndex] ?? '');
-                            $distance = (float)($row[$distanceIndex] ?? 0);
-                            $description = trim($row[$descriptionIndex] ?? '') ?: null;
+                            $description = isset($row[$descriptionIndex]) ? trim($row[$descriptionIndex] ?? '') ?: null : null;
+                            $image = isset($row[$imageIndex]) ? trim($row[$imageIndex] ?? '') ?: null : null;
                             $original_price = (float)($row[$originalPriceIndex] ?? 0);
-                            $discounted_price = isset($row[$discountedPriceIndex]) ? (float)$row[$discountedPriceIndex] : null;
-                            $category = isset($row[$categoryIndex]) ? trim($row[$categoryIndex] ?? '') : null;
+                            $category = isset($row[$categoryIndex]) ? trim($row[$categoryIndex] ?? '') ?: null : null;
                             $rating = isset($row[$ratingIndex]) ? (float)$row[$ratingIndex] : null;
-                            $latitude = isset($row[$latitudeIndex]) ? (float)$row[$latitudeIndex] : null;
-                            $longitude = isset($row[$longitudeIndex]) ? (float)$row[$longitudeIndex] : null;
-
-                            // Validate required fields
-                            if (empty($name) || empty($location) || $distance <= 0 || $original_price <= 0) {
-                                $skipped++;
-                                continue;
-                            }
 
                             // Check for duplicates
                             if (LapanganMode::where('name', $name)->where('location', $location)->exists()) {
@@ -284,15 +223,11 @@ class LapanganModeResource extends Resource
                                 LapanganMode::create([
                                     'name' => $name,
                                     'location' => $location,
-                                    'distance' => $distance,
                                     'description' => $description,
-                                    'image' => null,
+                                    'image' => $image,
                                     'original_price' => $original_price,
-                                    'discounted_price' => $discounted_price,
                                     'category' => $category,
                                     'rating' => $rating,
-                                    'latitude' => $latitude,
-                                    'longitude' => $longitude,
                                 ]);
                                 $count++;
                             } catch (\Exception $e) {

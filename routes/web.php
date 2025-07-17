@@ -30,6 +30,8 @@ Route::post('/booking/store', [BookBookingController::class, 'store'])->name('bo
 // Halaman Sukses setelah Booking
 Route::get('/booking/success', [BookBookingController::class, 'success'])->name('booking.success');
 
+Route::get('/booking/timeslots', [BookBookingController::class, 'getTimeSlots'])->name('booking.timeslots');
+
 
 Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking.index');
 Route::post('/tracking', [TrackingController::class, 'search'])->name('tracking.result');

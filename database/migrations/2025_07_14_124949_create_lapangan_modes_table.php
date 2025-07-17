@@ -12,15 +12,11 @@ class CreateLapanganModesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('location');
-            $table->float('distance');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->decimal('original_price', 10, 2);
-            $table->decimal('discounted_price', 10, 2)->nullable();
             $table->string('category')->nullable();
             $table->float('rating')->nullable();
-            $table->float('latitude')->nullable();
-            $table->float('longitude')->nullable();
             $table->timestamps();
         });
     }
