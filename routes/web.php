@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookBookingController;
 use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,7 @@ Route::get('/booking/timeslots', [BookBookingController::class, 'getTimeSlots'])
 // Tracking Routes
 Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking.index');
 Route::post('/tracking', [TrackingController::class, 'search'])->name('tracking.result');
+
+// event end turnamnet
+Route::get('/event', [EventController::class, 'index'])->name('event.index');
+

@@ -225,7 +225,7 @@
                                 </span>
                                 <span class="text-sm text-gray-500">/ 2 jam</span>
                             </div>
-                            <a href="#"
+                            <a href="{{ route('booking.form', ['field' => $lapangan->id, 'date' => $tanggal]) }}"
                                class="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-2.5 px-5 rounded-lg font-medium flex items-center justify-center transition-all shadow-md hover:shadow-lg active:scale-95">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -422,7 +422,7 @@
                             <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($tanggal)->toDateString() }}"
                                    class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
                                    min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                   onchange="console.log('Tanggal dipilih:', this.value); this.form.submit()">
+                                   onchange="this.form.submit()">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                                 <svg class="h-6 w-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -514,38 +514,46 @@
                                     @foreach ($field->availableTimeSlots as $slot)
                                         <td class="p-5 text-center">
                                             @if ($slot['status'] === 'booked' || $slot['status'] === 'pending')
-    <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 cursor-not-allowed">
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-        {{ ucfirst($slot['status']) }}
-    </span>
-@else
-    <a href="{{ route('booking.form', [
-        'field' => $field->id,
-        'date' => $tanggal,
-        'jam_mulai' => $slot['time'],
-        'jam_selesai' => $slot['end_time'],
-        'nama_pemesan' => $slot['nama_pemesan'] ?? '',
-        'nomor_telepon' => $slot['nomor_telepon'] ?? '',
-        'email' => $slot['email'] ?? '',
-        'total_harga' => $slot['total_harga'] ?? '',
-        'kode_booking' => $slot['kode_booking'] ?? '',
-        'metode_pembayaran' => $slot['metode_pembayaran'] ?? '',
-        'durasi' => $slot['durasi'] ?? ''
-    ]) }}"
-       class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-        Tersedia
-    </a>
-@endif
+                                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 cursor-not-allowed">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                    </svg>
+                                                    {{ ucfirst($slot['status']) }}
+                                                </span>
+                                            @else
+                                                <a href="{{ route('booking.form', [
+                                                    'field' => $field->id,
+                                                    'date' => $tanggal,
+                                                    'jam_mulai' => $slot['time'],
+                                                    'jam_selesai' => $slot['end_time'],
+                                                    'durasi' => $slot['durasi'] ?? 2,
+                                                    'total_harga' => $slot['total_harga'] ?? ($field->original_price * ($slot['durasi'] ?? 2) / 2),
+                                                    'kode_booking' => $slot['kode_booking'] ?? 'BK-' . now()->format('Ymd') . '-' . \Illuminate\Support\Str::random(5)
+                                                ]) }}"
+                                                   class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                    </svg>
+                                                    Tersedia
+                                                </a>
+                                            @endif
                                         </td>
                                     @endforeach
                                 @else
-                                    <td class="p-5 text-center text-gray-500" colspan="{{ count($allFields->first()->availableTimeSlots ?? []) }}">
-                                        Tidak ada slot waktu tersedia
+                                    <td colspan="{{ count($allFields->first()->availableTimeSlots ?? []) }}" class="p-10 text-center">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <div class="w-24 h-24 mb-6 text-gray-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                            </div>
+                                            <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
+                                            <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
+                                            <button onclick="document.getElementById('tanggal').focus()" 
+                                                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
+                                                Pilih Tanggal Lain
+                                            </button>
+                                        </div>
                                     </td>
                                 @endif
                             </tr>
@@ -588,7 +596,7 @@
                     <a href="{{ route('booking.index') }}"
                        class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-bold rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl active:scale-95">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10 Lane 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         Booking Sekarang
                     </a>
@@ -598,7 +606,7 @@
     </div>
 </section>
 
-<section id="facilities" class="py-20 bg-gray-50">
+<section id="facilities-support" class="py-20 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6">
         <div class="mb-12 sm:mb-20">
             <h3 class="text-2xl sm:text-3xl font-bold mb-8 header-font text-center">
@@ -684,6 +692,12 @@
         100% { background-position: 100% 50%; }
     }
     
+    @keyframes pulse-slow {
+        0% { opacity: 0.75; }
+        50% { opacity: 0.5; }
+        100% { opacity: 0.75; }
+    }
+    
     .animate-bounce-slow {
         animation: bounce-slow 3s infinite;
     }
@@ -692,12 +706,34 @@
         animation: text-shimmer 8s ease infinite;
     }
     
+    .animate-pulse-slow {
+        animation: pulse-slow 3s ease-in-out infinite;
+    }
+    
     .glow-effect {
         box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
     }
     
     .glow-effect-lg {
         box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
+    }
+    
+    .zoom-effect {
+        transition: transform 0.7s ease;
+    }
+    
+    .group:hover .zoom-effect {
+        transform: scale(1.1);
+    }
+    
+    .floating {
+        animation: floating 6s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0); }
     }
     
     /* Smooth transitions */
@@ -749,18 +785,6 @@
             }, { threshold: 0.5 });
             observer.observe(number);
         });
-
-        // Schedule day selector
-        document.querySelectorAll('.schedule-day').forEach(button => {
-            button.addEventListener('click', function() {
-                document.querySelectorAll('.schedule-day').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                console.log('Selected day:', this.dataset.day);
-            });
-        });
-
-        // Set first schedule day as active
-        document.querySelector('.schedule-day')?.classList.add('active');
 
         // Scroll-triggered animations
         const animateOnScroll = () => {
