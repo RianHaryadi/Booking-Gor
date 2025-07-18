@@ -21,6 +21,7 @@ class CreateBookingsTable extends Migration
             $table->decimal('total_harga', 10, 2);
             $table->string('kode_booking')->unique();
             $table->string('metode_pembayaran');
+            $table->integer('durasi');
             $table->timestamps();
         });
     }

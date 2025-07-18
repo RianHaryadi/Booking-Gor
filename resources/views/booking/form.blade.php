@@ -56,12 +56,12 @@
                     </div>
 
                     <div class="mt-6 pt-6 border-t border-gray-100">
-                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Description</h3>
+                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Description</h3>
                         <p class="mt-2 text-gray-600">{{ $lapangan->description ?? 'No description available.' }}</p>
                     </div>
 
                     <div class="mt-6 pt-6 border-t border-gray-100">
-                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Facilities</h3>
+                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Facilities</h3>
                         <div class="mt-3 flex flex-wrap gap-2">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -111,7 +111,7 @@
                     <div class="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div>
                     <div class="flex items-center text-gray-500 relative">
                         <div class="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card">
                                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                                 <line x1="1" y1="10" x2="23" y2="10"></line>
                             </svg>
@@ -139,6 +139,8 @@
                 @endif
                 <input type="hidden" name="lapangan_mode_id" value="{{ $lapangan->id }}">
                 <input type="hidden" name="jam_selesai" id="jam_selesai">
+                <input type="hidden" name="status" id="status" value="pending">
+                <input type="hidden" name="kode_booking" id="kode_booking" value="BOOK-{{ uniqid() }}">
 
                 <div class="space-y-6">
                     <h2 class="text-2xl font-bold text-gray-900 flex items-center">
@@ -306,6 +308,10 @@
                             <span class="font-medium">{{ $lapangan->name }}</span>
                         </div>
                         <div class="flex justify-between">
+                            <span class="text-gray-600">Booking Code:</span>
+                            <span class="font-medium" id="summary-kode_booking">-</span>
+                        </div>
+                        <div class="flex justify-between">
                             <span class="text-gray-600">Date:</span>
                             <span class="font-medium" id="summary-date">-</span>
                         </div>
@@ -354,14 +360,17 @@
         const tanggalInput = document.getElementById('tanggal');
         const namaPemesanInput = document.getElementById('nama_pemesan');
         const nomorTeleponInput = document.getElementById('nomor_telepon');
+        const emailInput = document.getElementById('email');
         const metodePembayaranSelect = document.getElementById('metode_pembayaran');
         const totalHargaDisplay = document.getElementById('total_harga_display');
         const totalHargaInput = document.getElementById('total_harga');
+        const kodeBookingInput = document.getElementById('kode_booking');
         const submitButton = document.getElementById('submit-button');
         const summaryDate = document.getElementById('summary-date');
         const summaryTime = document.getElementById('summary-time');
         const summaryDuration = document.getElementById('summary-duration');
         const summaryTotal = document.getElementById('summary-total');
+        const summaryKodeBooking = document.getElementById('summary-kode_booking');
         const noTimeslotsMessage = document.getElementById('no-timeslots-message');
         const sundayMessage = document.getElementById('sunday-message');
         const endTimeWarning = document.getElementById('end-time-warning');
@@ -423,7 +432,7 @@
                 return '';
             }
 
-            return `${String(endDateTime.getHours()).padStart(2, '0')}:00`;
+            return `${String(endDateTime.getHours()).padStart(2, '0')}:${String(endDateTime.getMinutes()).padStart(2, '0')}`;
         }
 
         function updateTotalHarga() {
@@ -444,11 +453,13 @@
             summaryTime.textContent = (startTime && endTime) ? `${startTime} - ${endTime}` : '-';
             summaryDuration.textContent = durasiSelect.value ? `${durasiSelect.value} Hours` : '-';
             summaryTotal.textContent = totalHargaInput.value ? `Rp${parseFloat(totalHargaInput.value).toLocaleString('id-ID')}` : 'Rp0';
+            summaryKodeBooking.textContent = kodeBookingInput.value || '-';
         }
 
         function validateForm() {
             const cleanedPhone = nomorTeleponInput.value.replace(/[^\d+]/g, '');
             const isSundaySelected = tanggalInput.value && (new Date(tanggalInput.value + 'T00:00:00').getDay() === 0);
+            const isValidEmail = !emailInput.value || emailInput.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
             const isValid = tanggalInput.value &&
                 !isSundaySelected &&
                 durasiSelect.value &&
@@ -456,9 +467,11 @@
                 jamSelesaiInput.value &&
                 endTimeWarning.classList.contains('hidden') &&
                 namaPemesanInput.value.trim().length >= 2 &&
-                cleanedPhone.match(/^\+?\d{8,15}$/) &&
+                cleanedPhone.match(/^\+?(\d{8,15})$/) &&
                 metodePembayaranSelect.value &&
-                parseFloat(totalHargaInput.value) > 0;
+                parseFloat(totalHargaInput.value) > 0 &&
+                kodeBookingInput.value &&
+                isValidEmail;
 
             submitButton.disabled = !isValid;
             console.log('Form validation:', {
@@ -471,8 +484,10 @@
                 endTimeWarningHidden: endTimeWarning.classList.contains('hidden'),
                 namaPemesan: namaPemesanInput.value.trim().length >= 2,
                 nomorTelepon: cleanedPhone,
+                email: isValidEmail,
                 metodePembayaran: metodePembayaranSelect.value,
-                totalHarga: parseFloat(totalHargaInput.value)
+                totalHarga: parseFloat(totalHargaInput.value),
+                kodeBooking: kodeBookingInput.value
             });
             return isValid;
         }
@@ -559,6 +574,10 @@
             }
 
             try {
+                // Generate a new kode_booking before submission
+                kodeBookingInput.value = `BOOK-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+                summaryKodeBooking.textContent = kodeBookingInput.value;
+
                 submitButton.disabled = true;
                 loadingSpinner.classList.remove('hidden');
                 hideError();
@@ -595,8 +614,8 @@
             phoneError.id = 'phone-error';
             phoneError.className = 'mt-2 text-sm text-red-600';
             const cleanedPhone = nomorTeleponInput.value.replace(/[^\d+]/g, '');
-            if (!cleanedPhone.match(/^\+?\d{8,15}$/)) {
-                phoneError.textContent = 'Please enter a valid phone number (8-15 digits)';
+            if (!cleanedPhone.match(/^\+?(\d{8,15})$/)) {
+                phoneError.textContent = 'Please enter a valid phone number (8-15 digits, may start with +)';
                 nomorTeleponInput.after(phoneError);
             } else {
                 phoneError.remove();
@@ -604,6 +623,7 @@
             validateForm();
         });
 
+        emailInput.addEventListener('input', validateForm);
         durasiSelect.addEventListener('change', updateTotalHarga);
         jamMulaiSelect.addEventListener('change', updateTotalHarga);
         tanggalInput.addEventListener('change', fetchAvailableTimeSlots);
@@ -611,6 +631,7 @@
         nomorTeleponInput.addEventListener('input', validateForm);
         metodePembayaranSelect.addEventListener('change', validateForm);
 
+        // Initial fetch and validation
         fetchAvailableTimeSlots().then(() => {
             validateForm();
             updateTotalHarga();

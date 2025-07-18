@@ -25,7 +25,8 @@ class LapanganModeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-cube';
     protected static ?string $navigationLabel = 'Jenis Lapangan';
     protected static ?string $pluralModelLabel = 'Jenis Lapangan';
-
+    protected static ?string $navigationGroup = 'Main Data';
+    protected static ?int $navigationSort = 1;
     public static function form(Form $form): Form
     {
         return $form->schema([

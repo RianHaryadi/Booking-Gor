@@ -10,28 +10,21 @@ use App\Http\Controllers\TrackingController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Di bawah ini adalah daftar route yang digunakan untuk halaman frontend
-| seperti Home, Booking Lapangan, dan Submit Booking.
+| Web routes untuk homepage, sistem booking, dan tracking booking.
 |
 */
 
-// Halaman Beranda
+// Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Halaman Daftar Lapangan
+// Booking Routes
 Route::get('/booking', [BookBookingController::class, 'index'])->name('booking.index');
-
-// Form Booking untuk Lapangan Tertentu
 Route::get('/booking/{field}/form', [BookBookingController::class, 'form'])->name('booking.form');
-
-// Proses Submit Booking
+Route::get('/booking/schedule/{field?}', [BookBookingController::class, 'scheduleForm'])->name('booking.schedule');
 Route::post('/booking/store', [BookBookingController::class, 'store'])->name('booking.store');
-
-// Halaman Sukses setelah Booking
 Route::get('/booking/success', [BookBookingController::class, 'success'])->name('booking.success');
-
 Route::get('/booking/timeslots', [BookBookingController::class, 'getTimeSlots'])->name('booking.timeslots');
 
-
+// Tracking Routes
 Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking.index');
 Route::post('/tracking', [TrackingController::class, 'search'])->name('tracking.result');

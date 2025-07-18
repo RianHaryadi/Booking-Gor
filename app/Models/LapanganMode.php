@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class LapanganMode extends Model
 {
     use HasFactory;
-
+    
+    protected $table = 'lapangan_modes';
     protected $fillable = [
         'name',
         'location',

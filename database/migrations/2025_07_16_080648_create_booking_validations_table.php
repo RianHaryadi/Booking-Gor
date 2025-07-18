@@ -10,8 +10,13 @@ return new class extends Migration {
         Schema::create('booking_validations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('booking_id')->constrained()->onDelete('cascade');
-            $table->string('validated_by');
-            $table->timestamp('validated_at');
+            $table->string('kode_booking'); // Referensi unik booking
+            $table->string('status'); // Status booking saat validasi
+            $table->decimal('total_harga', 10, 2); // Total harga saat validasi
+            $table->date('tanggal'); // Tanggal booking
+            $table->time('jam_mulai'); // Jam mulai booking
+            $table->time('jam_selesai'); // Jam selesai booking
+            $table->string('nama_pemesan'); // Nama pemesan saat validasi
             $table->timestamps();
         });
     }

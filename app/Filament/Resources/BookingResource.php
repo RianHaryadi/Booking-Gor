@@ -25,6 +25,8 @@ class BookingResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     protected static ?string $navigationLabel = 'Booking Lapangan';
     protected static ?string $pluralModelLabel = 'Booking Lapangan';
+    protected static ?string $navigationGroup = 'Main Data';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -51,10 +53,20 @@ class BookingResource extends Resource
                 ->reactive()
                 ->afterStateUpdated(fn ($state, callable $get, callable $set) => self::updateTotalHarga($get, $set)),
 
+            TextInput::make('durasi')
+                ->label('Durasi (jam)')
+                ->numeric()
+                ->readOnly()
+                ->required()
+                ->afterStateHydrated(function ($component, $state, $set, $get) {
+                    $jamMulai = strtotime($get('jam_mulai'));
+                    $jamSelesai = strtotime($get('jam_selesai'));
+                    $durasiJam = ($jamSelesai - $jamMulai) / 3600;
+                    $set('durasi', $durasiJam);
+                }),
+
             TextInput::make('nama_pemesan')->required(),
-
             TextInput::make('nomor_telepon')->tel(),
-
             TextInput::make('email')->email(),
 
             Select::make('metode_pembayaran')
@@ -118,6 +130,7 @@ class BookingResource extends Resource
             $durasiJam = ($jamSelesaiTime - $jamMulaiTime) / 3600;
 
             if ($durasiJam > 0) {
+                $set('durasi', $durasiJam);
                 $lapanganMode = LapanganMode::find($lapanganModeId);
                 if ($lapanganMode) {
                     $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
@@ -153,13 +166,14 @@ class BookingResource extends Resource
         $jamMulai = strtotime($data['jam_mulai']);
         $jamSelesai = strtotime($data['jam_selesai']);
         $durasiJam = ($jamSelesai - $jamMulai) / 3600;
+        $data['durasi'] = $durasiJam;
+
         $lapanganMode = LapanganMode::find($data['lapangan_mode_id']);
         if ($lapanganMode) {
             $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
             $data['total_harga'] = $harga * ($durasiJam / 2);
         }
 
-        // Otomatis atur status berdasarkan metode pembayaran
         $data['status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
 
         return $data;
@@ -188,13 +202,14 @@ class BookingResource extends Resource
         $jamMulai = strtotime($data['jam_mulai']);
         $jamSelesai = strtotime($data['jam_selesai']);
         $durasiJam = ($jamSelesai - $jamMulai) / 3600;
+        $data['durasi'] = $durasiJam;
+
         $lapanganMode = LapanganMode::find($data['lapangan_mode_id']);
         if ($lapanganMode) {
             $harga = $lapanganMode->discounted_price ?? $lapanganMode->original_price;
             $data['total_harga'] = $harga * ($durasiJam / 2);
         }
 
-        // Otomatis atur status berdasarkan metode pembayaran
         $data['status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
 
         return $data;
@@ -210,6 +225,7 @@ class BookingResource extends Resource
                 TextColumn::make('tanggal')->date()->sortable(),
                 TextColumn::make('jam_mulai')->time(),
                 TextColumn::make('jam_selesai')->time(),
+                TextColumn::make('durasi')->label('Durasi')->suffix(' Jam'),
                 TextColumn::make('total_harga')->money('IDR'),
                 TextColumn::make('metode_pembayaran')->label('Pembayaran')->badge(),
                 TextColumn::make('status')->badge(),

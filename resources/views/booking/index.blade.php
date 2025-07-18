@@ -46,23 +46,6 @@
             <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Available Fields</h2>
             <p class="text-gray-600">Browse through our premium selection of sports venues</p>
         </div>
-        <div class="flex flex-wrap gap-3">
-            <button class="filter-btn active" data-filter="all">
-                <span class="availability-dot all"></span> All
-            </button>
-            <button class="filter-btn" data-filter="Futsal">
-                <span class="availability-dot futsal"></span> Futsal
-            </button>
-            <button class="filter-btn" data-filter="Volly">
-                <span class="availability-dot volly"></span> Volleyball
-            </button>
-            <button class="filter-btn" data-filter="Basket">
-                <span class="availability-dot basket"></span> Basketball
-            </button>
-            <button class="filter-btn" data-filter="Badminton">
-                <span class="availability-dot badminton"></span> Badminton
-            </button>
-        </div>
     </div>
 </div>
 

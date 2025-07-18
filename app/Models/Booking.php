@@ -21,13 +21,21 @@ class Booking extends Model
         'total_harga',
         'kode_booking',
         'metode_pembayaran',
-        'status'
+        'status',
+        'durasi',
     ];
+   
 
     public function lapanganMode()
     {
         return $this->belongsTo(LapanganMode::class);
     }
+    
+     protected $casts = [
+    'tanggal' => 'date',
+    'jam_mulai' => 'datetime',
+    'jam_selesai' => 'datetime',
+];
 
     public function validation()
 {
