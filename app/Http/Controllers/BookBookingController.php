@@ -42,39 +42,55 @@ class BookBookingController extends Controller
         $endHour = 22;  // 10:00 PM
         $interval = 2;  // 2-hour slots
 
-        // Parse date and ensure it's in Asia/Jakarta timezone
         $parsedDate = Carbon::parse($date)->setTimezone('Asia/Jakarta')->startOfDay();
 
-        // Fetch bookings for the specific field and date
+        // Ambil semua kolom yang diperlukan dari tabel Booking
         $bookings = Booking::where('tanggal', $parsedDate->toDateString())
             ->where('lapangan_mode_id', $field->id)
             ->whereIn('status', ['booked', 'pending'])
-            ->select('jam_mulai', 'jam_selesai')
+            ->select('jam_mulai', 'jam_selesai', 'nama_pemesan', 'nomor_telepon', 'email', 'total_harga', 'kode_booking', 'metode_pembayaran', 'durasi', 'status')
             ->get();
 
         for ($hour = $startHour; $hour < $endHour; $hour += $interval) {
             $startTime = sprintf('%02d:00', $hour);
             $endTime = sprintf('%02d:00', $hour + $interval);
 
-            // Convert times to Carbon instances for accurate comparison
             $slotStart = Carbon::parse("$date $startTime");
             $slotEnd = Carbon::parse("$date $endTime");
 
-            // Check if the slot overlaps with any booking
             $isBooked = $bookings->contains(function ($booking) use ($startTime, $endTime, $slotEnd) {
                 $bookingStart = Carbon::parse($booking->jam_mulai);
                 $bookingEnd = Carbon::parse($booking->jam_selesai);
                 return $bookingStart->lte($slotEnd->format('H:i')) && $bookingEnd->gte($startTime);
             });
 
-            // Determine slot status: booked, soon (past), or available
-            $status = $isBooked ? 'booked' : 
+            $booking = $bookings->first(function ($booking) use ($startTime, $endTime, $slotEnd) {
+                $bookingStart = Carbon::parse($booking->jam_mulai);
+                $bookingEnd = Carbon::parse($booking->jam_selesai);
+                return $bookingStart->lte($slotEnd->format('H:i')) && $bookingEnd->gte($startTime);
+            });
+
+            $status = $isBooked ? ($booking->status ?? 'booked') : 
                      ($slotStart->isPast() ? 'soon' : 'available');
+            $nama_pemesan = $booking ? $booking->nama_pemesan : null;
+            $nomor_telepon = $booking ? $booking->nomor_telepon : null;
+            $email = $booking ? $booking->email : null;
+            $total_harga = $booking ? $booking->total_harga : null;
+            $kode_booking = $booking ? $booking->kode_booking : null;
+            $metode_pembayaran = $booking ? $booking->metode_pembayaran : null;
+            $durasi = $booking ? $booking->durasi : null;
 
             $slots[] = [
                 'time' => $startTime,
                 'end_time' => $endTime,
                 'status' => $status,
+                'nama_pemesan' => $nama_pemesan,
+                'nomor_telepon' => $nomor_telepon,
+                'email' => $email,
+                'total_harga' => $total_harga,
+                'kode_booking' => $kode_booking,
+                'metode_pembayaran' => $metode_pembayaran,
+                'durasi' => $durasi,
             ];
         }
 
@@ -133,12 +149,33 @@ class BookBookingController extends Controller
             $selectedDate = Carbon::tomorrow()->toDateString();
         }
 
+        // Ambil data dari parameter query
+        $bookingData = [
+            'jam_mulai' => $request->input('jam_mulai'),
+            'jam_selesai' => $request->input('jam_selesai'),
+            'nama_pemesan' => $request->input('nama_pemesan'),
+            'nomor_telepon' => $request->input('nomor_telepon'),
+            'email' => $request->input('email'),
+            'total_harga' => $request->input('total_harga'),
+            'kode_booking' => $request->input('kode_booking'),
+            'metode_pembayaran' => $request->input('metode_pembayaran'),
+            'durasi' => $request->input('durasi'),
+        ];
+
         $field->availableTimeSlots = $this->getAvailableTimeSlots($field, $selectedDate);
-        Log::debug('Form pricing', [
+
+        Log::debug('Form data', [
             'field_id' => $field->id,
+            'selected_date' => $selectedDate,
+            'booking_data' => $bookingData,
             'original_price' => $field->original_price
         ]);
-        return view('booking.form', ['lapangan' => $field, 'selectedDate' => $selectedDate]);
+
+        return view('booking.form', [
+            'lapangan' => $field,
+            'selectedDate' => $selectedDate,
+            'bookingData' => $bookingData
+        ]);
     }
 
     public function scheduleForm(Request $request)
@@ -157,7 +194,7 @@ class BookBookingController extends Controller
         return view('booking.schedule_form', compact('fields', 'selectedDate'));
     }
 
-public function store(Request $request)
+    public function store(Request $request)
     {
         return DB::transaction(function () use ($request) {
             try {
@@ -362,7 +399,6 @@ public function store(Request $request)
             }
         });
     }
-
 
     public function success()
     {

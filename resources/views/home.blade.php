@@ -391,10 +391,19 @@
             </p>
         </div>
 
-        <!-- Sunday Warning -->
-        @if (\Carbon\Carbon::parse($tanggal)->isSunday())
+        <!-- Flash Message for Sunday Warning or Errors -->
+        @if (session('warning'))
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg">
+                <p class="font-medium">{{ session('warning') }}</p>
+            </div>
+        @elseif (\Carbon\Carbon::parse($tanggal)->isSunday())
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg">
                 <p class="font-medium">Peringatan: GOR tutup pada hari Minggu. Jadwal ditampilkan untuk tanggal {{ \Carbon\Carbon::parse($tanggal)->addDay()->translatedFormat('l, d F Y') }}.</p>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg">
+                <p class="font-medium">{{ session('error') }}</p>
             </div>
         @endif
 
@@ -421,7 +430,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" 
+                    <button type="submit"
                             class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-6 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center">
                         <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -456,83 +465,89 @@
                     <thead>
                         <tr class="bg-gradient-to-r from-indigo-500/10 to-blue-500/10">
                             <th class="p-5 text-left text-indigo-700 font-bold text-sm uppercase tracking-wider">Lapangan</th>
-                            @foreach ($allFields->first()->availableTimeSlots ?? [] as $slot)
-                                <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">
-                                    <div class="flex flex-col items-center">
-                                        <span class="font-bold">{{ $slot['time'] }}</span>
-                                        <span class="text-xs font-normal text-indigo-500">{{ $slot['end_time'] }}</span>
-                                    </div>
-                                </th>
-                            @endforeach
+                            @if ($allFields->isNotEmpty() && !empty($allFields->first()->availableTimeSlots))
+                                @foreach ($allFields->first()->availableTimeSlots as $slot)
+                                    <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-bold">{{ $slot['time'] }}</span>
+                                            <span class="text-xs font-normal text-indigo-500">{{ $slot['end_time'] }}</span>
+                                        </div>
+                                    </th>
+                                @endforeach
+                            @else
+                                <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">No Time Slots Available</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200/30">
-                        @forelse ($allFields as $index => $lapangan)
+                        @forelse ($allFields as $index => $field)
                             <tr class="hover:bg-gray-50/50 transition-colors duration-200 {{ $index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30' }}">
                                 <td class="p-5 font-medium text-gray-900">
                                     <div class="flex items-center">
-                                        @if($lapangan->image)
-                                        <div class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden mr-4 border-2 border-white shadow-sm">
-                                            <img class="h-full w-full object-cover" src="{{ asset('storage/' . $lapangan->image) }}" alt="{{ $lapangan->name }}">
-                                        </div>
+                                        @if($field->image)
+                                            <div class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden mr-4 border-2 border-white shadow-sm">
+                                                <img class="h-full w-full object-cover" src="{{ asset('storage/' . $field->image) }}" alt="{{ $field->name }}">
+                                            </div>
                                         @endif
                                         <div>
-                                            <div class="font-bold text-gray-800">{{ $lapangan->name }}</div>
+                                            <div class="font-bold text-gray-800">{{ $field->name }}</div>
                                             <div class="flex items-center mt-1">
                                                 <span class="text-xs px-2 py-1 rounded-full font-medium 
-                                                    @if($lapangan->category === 'Premium') bg-amber-100 text-amber-800
-                                                    @elseif($lapangan->category === 'VIP') bg-purple-100 text-purple-800
+                                                    @if($field->category === 'Premium') bg-amber-100 text-amber-800
+                                                    @elseif($field->category === 'VIP') bg-purple-100 text-purple-800
                                                     @else bg-blue-100 text-blue-800 @endif">
-                                                    {{ $lapangan->category ?? 'Standard' }}
+                                                    {{ $field->category ?? 'Standard' }}
                                                 </span>
-                                                @if($lapangan->rating)
-                                                <span class="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 flex items-center">
-                                                    <svg class="w-3 h-3 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                    </svg>
-                                                    {{ number_format($lapangan->rating, 1) }}
-                                                </span>
+                                                @if($field->rating)
+                                                    <span class="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 flex items-center">
+                                                        <svg class="w-3 h-3 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                        </svg>
+                                                        {{ number_format($field->rating, 1) }}
+                                                    </span>
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                @foreach ($lapangan->availableTimeSlots as $slot)
-                                    <td class="p-5 text-center">
-                                        @if ($slot['status'] === 'booked')
-                                            <div class="tooltip" data-tip="Slot sudah dipesan">
-                                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 cursor-not-allowed">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                    </svg>
-                                                    Booked
-                                                </span>
-                                            </div>
-                                        @elseif ($slot['status'] === 'soon')
-                                            <div class="tooltip" data-tip="Akan tersedia dalam 1 jam">
-                                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-50 text-gray-700 border border-gray-200 cursor-not-allowed">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                    </svg>
-                                                    Soon
-                                                </span>
-                                            </div>
-                                        @else
-                                            <a href="{{ route('booking.form', [
-                                                'field' => $lapangan->id,
-                                                'date' => $tanggal,
-                                                'jam_mulai' => $slot['time'],
-                                                'jam_selesai' => $slot['end_time']
-                                            ]) }}"
-                                               class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                </svg>
-                                                Tersedia
-                                            </a>
-                                        @endif
+                                @if($field->availableTimeSlots)
+                                    @foreach ($field->availableTimeSlots as $slot)
+                                        <td class="p-5 text-center">
+                                            @if ($slot['status'] === 'booked' || $slot['status'] === 'pending')
+    <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 cursor-not-allowed">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        {{ ucfirst($slot['status']) }}
+    </span>
+@else
+    <a href="{{ route('booking.form', [
+        'field' => $field->id,
+        'date' => $tanggal,
+        'jam_mulai' => $slot['time'],
+        'jam_selesai' => $slot['end_time'],
+        'nama_pemesan' => $slot['nama_pemesan'] ?? '',
+        'nomor_telepon' => $slot['nomor_telepon'] ?? '',
+        'email' => $slot['email'] ?? '',
+        'total_harga' => $slot['total_harga'] ?? '',
+        'kode_booking' => $slot['kode_booking'] ?? '',
+        'metode_pembayaran' => $slot['metode_pembayaran'] ?? '',
+        'durasi' => $slot['durasi'] ?? ''
+    ]) }}"
+       class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        Tersedia
+    </a>
+@endif
+                                        </td>
+                                    @endforeach
+                                @else
+                                    <td class="p-5 text-center text-gray-500" colspan="{{ count($allFields->first()->availableTimeSlots ?? []) }}">
+                                        Tidak ada slot waktu tersedia
                                     </td>
-                                @endforeach
+                                @endif
                             </tr>
                         @empty
                             <tr>
@@ -567,17 +582,13 @@
                         </div>
                         <div class="flex items-center bg-white/80 px-3 py-1.5 rounded-lg shadow-sm border border-gray-200/50">
                             <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                            <span>Booked</span>
-                        </div>
-                        <div class="flex items-center bg-white/80 px-3 py-1.5 rounded-lg shadow-sm border border-gray-200/50">
-                            <span class="w-3 h-3 bg-gray-500 rounded-full mr-2"></span>
-                            <span>Soon</span>
+                            <span>Booked/Pending</span>
                         </div>
                     </div>
                     <a href="{{ route('booking.index') }}"
                        class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-bold rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl active:scale-95">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10 Lane 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         Booking Sekarang
                     </a>
