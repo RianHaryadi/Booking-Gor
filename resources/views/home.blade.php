@@ -364,16 +364,136 @@
     </div>
 </section>
 
-<div class="h-64 sm:h-96 w-full bg-gray-200">
-    <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.902409423135!2d107.61067631525976!3d-6.903087969054819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93a9d7d!2sBandung%2C%20West%20Java%2C%20Indonesia!5e0!3m2!1sen!2sid!4v1698765432109" 
-        width="100%" 
-        height="100%" 
-        style="border:0;" 
-        allowfullscreen="" 
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
+<section id="event-gallery" class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="container mx-auto px-4 sm:px-6">
+        <div class="mb-12 sm:mb-20 text-center">
+            <h3 class="text-3xl sm:text-4xl font-bold mb-4 header-font">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                    Dokumentasi Event
+                </span>
+            </h3>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Jelajahi momen-momen berharga dari acara kami melalui galeri foto eksklusif
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Gallery Item 1 with hover effect -->
+            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <img src="images/unnamed (2).webp" alt="Ruang Loker Premium" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Item 2 -->
+            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <img src="images/unnamed (4).webp" alt="Sport Cafe" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Item 3 -->
+            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <img src="images/unnamed (15).webp" alt="Musholla" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Item 4 -->
+            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <img src="images/unnamed (18).webp" alt="Toilet" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Item 5 -->
+            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <img src="images/unnamed (2).webp" alt="Bus Transport" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gallery Item 5 -->
+            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <img src="images/unnamed (2).webp" alt="Bus Transport" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <div>
+                    </div>
+                </div>
+            </div>
+            
+        
+        <div class="mt-12 text-center">
+            <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300">
+                Lihat Semua Dokumentasi
+                <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="relative h-96 w-full overflow-hidden rounded-2xl shadow-xl">
+    <!-- Map Container with Gradient Overlay -->
+    <div class="absolute inset-0 z-0">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.442051823585!2d106.88008447475163!3d-6.336742293652942!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ed1de1b28475%3A0xab797084e7b67501!2sGOR%20PKP%20Jakarta%20Islamic%20School!5e0!3m2!1sid!2sid!4v1752926106964!5m2!1sid!2sid" 
+            class="w-full h-full" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+    
+    <!-- Location Info Card -->
+    <div class="absolute bottom-6 left-6 z-10 bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-sm">
+        <div class="flex items-start gap-4">
+            <div class="bg-indigo-100 p-3 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-800">GOR PKP Jakarta Islamic School</h3>
+                <p class="text-gray-600 mt-1">Jl. Raya PKP, Kelapa Dua, Tangerang</p>
+                <div class="mt-3 flex gap-2">
+                    <a href="https://maps.google.com/?q=GOR+PKP+Jakarta+Islamic+School" target="_blank" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                        Buka di Maps
+                    </a>
+                    <a href="https://www.google.com/maps/dir//GOR+PKP+Jakarta+Islamic+School/@-6.3367423,106.8800845,17z/data=!4m8!4m7!1m0!1m5!1m1!1s0x2e69ed1de1b28475:0xab797084e7b67501!2m2!1d106.8826594!2d-6.3367423" target="_blank" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                        Petunjuk Arah
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Map Controls -->
+    <div class="absolute top-6 right-6 z-10 flex gap-2">
+        <button class="p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors" title="Zoom In">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+        </button>
+        <button class="p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors" title="Zoom Out">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+            </svg>
+        </button>
+    </div>
 </div>
 
 <section class="py-20 bg-gradient-to-b from-blue-50/50 to-white/50" id="schedule">
@@ -596,53 +716,136 @@
     </div>
 </section>
 
-<section id="facilities-support" class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-6">
-        <div class="mb-12 sm:mb-20">
-            <h3 class="text-2xl sm:text-3xl font-bold mb-8 header-font text-center">
+<section id="facilities-support" class="py-20 bg-gradient-to-b from-gray-50 to-gray-100">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center mb-16">
+            <h3 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
                     Fasilitas Pendukung
                 </span>
             </h3>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                <div class="relative rounded-xl overflow-hidden h-56 sm:h-64 group">
-                    <img src="{{ asset('images/locker-room.jpg') }}" alt="Ruang Loker Premium" class="w-full h-full object-cover zoom-effect lazyload">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4 sm:p-6">
-                        <div>
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-full flex items-center justify-center text-white mb-4">
-                                <i class="fas fa-lock text-lg sm:text-xl"></i>
-                            </div>
-                            <h4 class="text-white font-bold text-lg sm:text-xl mb-2">Loker Premium</h4>
-                            <p class="text-blue-100 text-sm sm:text-base">Sistem keamanan digital dengan CCTV 24 jam</p>
-                        </div>
-                    </div>
+            <p class="text-lg text-gray-600">
+                Fasilitas premium yang kami sediakan untuk kenyamanan dan kebutuhan Anda selama acara berlangsung
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Facility Card 1 -->
+            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="aspect-w-4 aspect-h-3">
+                    <img src="images/loker.jpg" alt="Ruang Loker Premium" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
                 </div>
-                <div class="relative rounded-xl overflow-hidden h-56 sm:h-64 group">
-                    <img src="{{ asset('images/cafeteria.jpg') }}" alt="Sport Cafe" class="w-full h-full object-cover zoom-effect lazyload">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4 sm:p-6">
-                        <div>
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-full flex items-center justify-center text-white mb-4">
-                                <i class="fas fa-utensils text-lg sm:text-xl"></i>
-                            </div>
-                            <h4 class="text-white font-bold text-lg sm:text-xl mb-2">Sport Cafe</h4>
-                            <p class="text-blue-100 text-sm sm:text-base">Menu sehat khusus atlet dan minuman isotonik</p>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
                         </div>
-                    </div>
-                </div>
-                <div class="relative rounded-xl overflow-hidden h-56 sm:h-64 group">
-                    <img src="{{ asset('images/shower-room.jpg') }}" alt="Shower Room" class="w-full h-full object-cover zoom-effect lazyload">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4 sm:p-6">
-                        <div>
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-full flex items-center justify-center text-white mb-4">
-                                <i class="fas fa-shower text-lg sm:text-xl"></i>
-                            </div>
-                            <h4 class="text-white font-bold text-lg sm:text-xl mb-2">Shower Room</h4>
-                            <p class="text-blue-100 text-sm sm:text-base">Fasilitas mandi dengan air hangat dan perlengkapan lengkap</p>
-                        </div>
+                        <h4 class="text-white text-xl font-bold mb-1">Ruang Loker Premium</h4>
+                        <p class="text-gray-200 text-sm">Penyimpanan barang pribadi yang aman dan nyaman</p>
                     </div>
                 </div>
             </div>
+            
+            <!-- Facility Card 2 -->
+            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="aspect-w-4 aspect-h-3">
+                    <img src="images/ambulance.webp" alt="Ambulance Standby" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <h4 class="text-white text-xl font-bold mb-1">Ambulance Standby</h4>
+                        <p class="text-gray-200 text-sm">Layanan kesehatan siap 24 jam selama acara</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Facility Card 3 -->
+            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="aspect-w-4 aspect-h-3">
+                    <img src="images/Musholla.jpg" alt="Musholla" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                        </div>
+                        <h4 class="text-white text-xl font-bold mb-1">Area Musholla</h4>
+                        <p class="text-gray-200 text-sm">Tempat ibadah yang nyaman dan lengkap</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Facility Card 4 -->
+            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="aspect-w-4 aspect-h-3">
+                    <img src="images/Toilet.jpg" alt="Toilet Bersih" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                        </div>
+                        <h4 class="text-white text-xl font-bold mb-1">Toilet Bersih</h4>
+                        <p class="text-gray-200 text-sm">Fasilitas sanitasi yang higienis dan terawat</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Facility Card 5 -->
+            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="aspect-w-4 aspect-h-3">
+                    <img src="images/bus.webp" alt="Transportasi Bus" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+                        <h4 class="text-white text-xl font-bold mb-1">Transportasi Bus</h4>
+                        <p class="text-gray-200 text-sm">Pelayanan transportasi antar-jemput peserta</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Facility Card 6 -->
+            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                <div class="aspect-w-4 aspect-h-3">
+                    <img src="images/Control.jpg" alt="Control Room" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
+                    <div>
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-white text-xl font-bold mb-1">Control Room</h4>
+                        <p class="text-gray-200 text-sm">Pusat kendali dan monitoring acara</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-16 text-center">
+            <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-indigo-700">
+                Lihat Semua Fasilitas
+                <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
         </div>
     </div>
 </section>
