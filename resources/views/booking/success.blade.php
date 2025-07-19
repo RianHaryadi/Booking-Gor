@@ -235,7 +235,7 @@
                     <button onclick="window.print()" class="btn-outline">
                         <i class="fas fa-print mr-2"></i> Print
                     </button>
-                    <a href="{{ route('booking.index') }}" class="btn-primary">
+                    <a href="{{ route('home') }}" class="btn-primary">
                         <i class="fas fa-home mr-2"></i> Home
                     </a>
                 </div>

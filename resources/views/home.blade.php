@@ -378,7 +378,6 @@
 
 <section class="py-20 bg-gradient-to-b from-blue-50/50 to-white/50" id="schedule">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Animated Header -->
         <div class="text-center mb-12 sm:mb-16">
             <div class="relative inline-block mb-6 animate-float">
                 <h2 class="text-4xl sm:text-5xl font-bold mb-2 relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 animate-text-shimmer">
@@ -391,14 +390,9 @@
             </p>
         </div>
 
-        <!-- Flash Message for Sunday Warning or Errors -->
         @if (session('warning'))
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg">
                 <p class="font-medium">{{ session('warning') }}</p>
-            </div>
-        @elseif (\Carbon\Carbon::parse($tanggal)->isSunday())
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg">
-                <p class="font-medium">Peringatan: GOR tutup pada hari Minggu. Jadwal ditampilkan untuk tanggal {{ \Carbon\Carbon::parse($tanggal)->addDay()->translatedFormat('l, d F Y') }}.</p>
             </div>
         @endif
         @if (session('error'))
@@ -407,7 +401,6 @@
             </div>
         @endif
 
-        <!-- Date Picker Card -->
         <div class="mb-10 max-w-lg mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 backdrop-blur-sm bg-white/80">
             <div class="p-6">
                 <form method="GET" action="{{ route('home') }}" class="space-y-4">
@@ -420,10 +413,10 @@
                         </label>
                         <div class="relative">
                             <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($tanggal)->toDateString() }}"
-                                    class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
-                                    min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                    max="{{ \Carbon\Carbon::today()->addDays(7)->toDateString() }}"
-                                    onchange="this.form.submit()">
+                                class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
+                                min="{{ \Carbon\Carbon::today()->toDateString() }}"
+                                max="{{ \Carbon\Carbon::today()->addDays(7)->toDateString() }}"
+                                onchange="this.form.submit()">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                                 <svg class="h-6 w-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -442,7 +435,6 @@
             </div>
         </div>
 
-              <!-- Schedule Table Card -->
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/30 max-w-6xl mx-auto transition-all duration-500 hover:shadow-2xl backdrop-blur-sm bg-white/90">
             <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4">
                 <div class="flex flex-col sm:flex-row justify-between items-center">
@@ -524,12 +516,12 @@
                                                     'field' => $field->id,
                                                     'date' => $tanggal,
                                                     'jam_mulai' => $slot['time'],
-                                                    'jam_selesai' => $slot['end_time'],
-                                                    'durasi' => $slot['durasi'] ?? 2,
-                                                    'total_harga' => $slot['total_harga'] ?? ($field->original_price * ($slot['durasi'] ?? 2) / 2),
-                                                    'kode_booking' => $slot['kode_booking'] ?? 'BK-' . now()->format('Ymd') . '-' . \Illuminate\Support\Str::random(5)
+                                                    'jam_selesai' => \Carbon\Carbon::parse($tanggal . ' ' . $slot['time'])->addHours($slot['durasi'])->format('H:i'), // Calculate end time based on selected duration
+                                                    'durasi' => $slot['durasi'], // Use the duration from the slot data
+                                                    'total_harga' => $slot['total_harga'], // Use the calculated total_harga from the slot data
+                                                    'kode_booking' => 'BK-' . now()->format('Ymd') . '-' . \Illuminate\Support\Str::random(5)
                                                 ]) }}"
-                                                   class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
+                                                    class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                                     </svg>
@@ -549,7 +541,7 @@
                                             <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
                                             <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
                                             <button onclick="document.getElementById('tanggal').focus()" 
-                                                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
+                                                class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
                                                 Pilih Tanggal Lain
                                             </button>
                                         </div>
@@ -568,7 +560,7 @@
                                         <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
                                         <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
                                         <button onclick="document.getElementById('tanggal').focus()" 
-                                                class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
+                                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
                                             Pilih Tanggal Lain
                                         </button>
                                     </div>

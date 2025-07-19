@@ -19,6 +19,7 @@ class BookBookingController extends Controller
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
         $parsedDate = Carbon::parse($selectedDate)->setTimezone('Asia/Jakarta')->startOfDay();
 
+        // Check if the selected date is Sunday
         if ($parsedDate->isSunday()) {
             $selectedDate = Carbon::tomorrow()->toDateString();
             return redirect()->route('booking.index', ['date' => $selectedDate])
@@ -51,9 +52,15 @@ class BookBookingController extends Controller
         $slots = [];
         $startHour = 8; // 8:00 AM
         $endHour = 22;  // 10:00 PM
-        $interval = 2;  // 2-hour slots
+        $interval = 2;  // Fixed 2-hour slots
 
         $parsedDate = Carbon::parse($date)->setTimezone('Asia/Jakarta')->startOfDay();
+
+        // Skip slot generation if the date is a Sunday
+        if ($parsedDate->isSunday()) {
+            return $slots; // Return empty array
+        }
+
         $bookings = Booking::where('tanggal', $parsedDate->toDateString())
             ->where('lapangan_mode_id', $field->id)
             ->whereIn('status', ['booked', 'pending'])
@@ -80,10 +87,10 @@ class BookBookingController extends Controller
                 'nama_pemesan' => $booking ? $booking->nama_pemesan : null,
                 'nomor_telepon' => $booking ? $booking->nomor_telepon : null,
                 'email' => $booking ? $booking->email : null,
-                'total_harga' => $booking ? $booking->total_harga : ($field->original_price * 2 / 2),
+                'total_harga' => $booking ? $booking->total_harga : ($field->original_price * ($interval / 2)),
                 'kode_booking' => $booking ? $booking->kode_booking : null,
                 'metode_pembayaran' => $booking ? $booking->metode_pembayaran : null,
-                'durasi' => $booking ? $booking->durasi : 2,
+                'durasi' => $booking ? $booking->durasi : $interval,
             ];
         }
 
@@ -109,6 +116,7 @@ class BookBookingController extends Controller
             $field = LapanganMode::findOrFail($request->input('lapangan_mode_id'));
             $date = $request->input('date');
 
+            // Check if the date is a Sunday
             if (Carbon::parse($date)->setTimezone('Asia/Jakarta')->isSunday()) {
                 return response()->json(['slots' => [], 'hargaPer2Jam' => $field->original_price ?? 10000], 200);
             }
@@ -119,7 +127,7 @@ class BookBookingController extends Controller
             Log::info('Time slots fetched successfully', [
                 'lapangan_mode_id' => $field->id,
                 'date' => $date,
-                'slots' => $slots,
+                'slots_count' => count($slots),
                 'hargaPer2Jam' => $hargaPer2Jam,
             ]);
 
@@ -139,6 +147,7 @@ class BookBookingController extends Controller
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
         $parsedDate = Carbon::parse($selectedDate)->setTimezone('Asia/Jakarta')->startOfDay();
 
+        // Check if the date is a Sunday
         if ($parsedDate->isSunday()) {
             $selectedDate = Carbon::tomorrow()->toDateString();
             return redirect()->route('booking.form', ['field' => $field->id, 'date' => $selectedDate])
@@ -161,7 +170,7 @@ class BookBookingController extends Controller
             'total_harga' => $request->input('total_harga'),
             'kode_booking' => $request->input('kode_booking'),
             'metode_pembayaran' => $request->input('metode_pembayaran'),
-            'durasi' => $request->input('durasi'),
+            'durasi' => $request->input('durasi', 2), // Default to 2 if not provided
         ];
 
         $field->availableTimeSlots = $this->getAvailableTimeSlots($field, $selectedDate);
@@ -185,6 +194,7 @@ class BookBookingController extends Controller
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
         $parsedDate = Carbon::parse($selectedDate)->setTimezone('Asia/Jakarta')->startOfDay();
 
+        // Check if the date is a Sunday
         if ($parsedDate->isSunday()) {
             $selectedDate = Carbon::tomorrow()->toDateString();
             return redirect()->route('booking.schedule_form', ['date' => $selectedDate])
@@ -212,7 +222,7 @@ class BookBookingController extends Controller
             try {
                 Log::info('Starting booking store process', ['request_data' => $request->all()]);
 
-                // Validasi input
+                // Validate input
                 $validator = Validator::make($request->all(), [
                     'lapangan_mode_id' => 'required|exists:lapangan_modes,id',
                     'tanggal' => 'required|date|after_or_equal:today|before_or_equal:' . Carbon::today()->addDays(7)->toDateString(),
@@ -241,7 +251,7 @@ class BookBookingController extends Controller
                 $validated = $validator->validated();
                 Log::debug('Validated data', ['validated' => $validated]);
 
-                // Cek apakah tanggal adalah hari Minggu
+                // Check if the date is a Sunday
                 $parsedDate = Carbon::parse($validated['tanggal'])->setTimezone('Asia/Jakarta');
                 if ($parsedDate->isSunday()) {
                     $error = ['tanggal' => 'GOR is closed on Sundays.'];
@@ -252,7 +262,7 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Validasi waktu dan durasi
+                // Validate time and duration
                 $jamMulai = Carbon::parse($validated['jam_mulai']);
                 $jamSelesai = Carbon::parse($validated['jam_selesai']);
                 $durasi = (int) $validated['durasi'];
@@ -270,10 +280,10 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Cek apakah waktu booking dalam jam operasional
+                // Check if booking is within operational hours
                 $startHour = (int) $jamMulai->format('H');
                 $endHour = (int) $jamSelesai->format('H');
-                if ($startHour < 8 || $endHour > 22) {
+                if ($startHour < 8 || $endHour > 22 || ($endHour === 22 && $jamSelesai->minute > 0)) {
                     $error = ['jam_mulai' => 'Booking must be between 08:00–22:00.'];
                     Log::warning('Booking outside operational hours', [
                         'start_hour' => $startHour,
@@ -285,18 +295,14 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Cek konflik waktu
+                // Check for time slot conflicts
                 $field = LapanganMode::findOrFail($validated['lapangan_mode_id']);
                 $conflict = Booking::where('tanggal', $validated['tanggal'])
                     ->where('lapangan_mode_id', $field->id)
                     ->whereIn('status', ['booked', 'pending'])
                     ->where(function ($q) use ($jamMulai, $jamSelesai) {
-                        $q->whereBetween('jam_mulai', [$jamMulai->format('H:i'), $jamSelesai->format('H:i')])
-                          ->orWhereBetween('jam_selesai', [$jamMulai->format('H:i'), $jamSelesai->format('H:i')])
-                          ->orWhere(function ($q2) use ($jamMulai, $jamSelesai) {
-                              $q2->where('jam_mulai', '<=', $jamMulai->format('H:i'))
-                                 ->where('jam_selesai', '>=', $jamSelesai->format('H:i'));
-                          });
+                        $q->where('jam_mulai', '<', $jamSelesai->format('H:i'))
+                          ->where('jam_selesai', '>', $jamMulai->format('H:i'));
                     })
                     ->exists();
 
@@ -313,12 +319,12 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Hitung harga
+                // Calculate price
                 $hargaPer2Jam = $field->original_price ?? 10000;
                 $totalHarga = $hargaPer2Jam * ($durasi / 2);
 
                 if (abs($totalHarga - $validated['total_harga']) > 0.01) {
-                    $error = ['total_harga' => 'Invalid total price.'];
+                    $error = ['total_harga' => 'Invalid total price. Expected: ' . $totalHarga];
                     Log::warning('Total price mismatch', [
                         'calculated' => $totalHarga,
                         'provided' => $validated['total_harga'],
@@ -329,13 +335,11 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Tentukan status berdasarkan metode pembayaran
+                // Determine status based on payment method
                 $status = in_array($validated['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
-
-                // Gunakan kode booking dari input jika valid
                 $kodeBooking = $validated['kode_booking'];
 
-                // Data untuk booking
+                // Prepare booking data
                 $bookingData = [
                     'lapangan_mode_id' => $field->id,
                     'tanggal' => $validated['tanggal'],
@@ -353,14 +357,14 @@ class BookBookingController extends Controller
 
                 Log::debug('Attempting to create booking', ['booking_data' => $bookingData]);
 
-                // Buat booking
+                // Create booking
                 $booking = Booking::create($bookingData);
                 Log::info('Booking created successfully', [
                     'booking_id' => $booking->id,
                     'kode_booking' => $booking->kode_booking,
                 ]);
 
-                // Buat record BookingValidation untuk metode pembayaran transfer atau qris
+                // Create booking validation for transfer or QRIS payments
                 if (in_array($booking->metode_pembayaran, ['transfer', 'qris'])) {
                     $validationData = [
                         'booking_id' => $booking->id,
@@ -383,7 +387,7 @@ class BookBookingController extends Controller
                     ]);
                 }
 
-                // Simpan booking ke session
+                // Store booking in session
                 session()->put('booking', $booking);
 
                 if ($request->expectsJson()) {
