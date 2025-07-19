@@ -48,54 +48,62 @@ class BookBookingController extends Controller
     }
 
     private function getAvailableTimeSlots($field, $date)
-    {
-        $slots = [];
-        $startHour = 8; // 8:00 AM
-        $endHour = 22;  // 10:00 PM
-        $interval = 2;  // Fixed 2-hour slots
+{
+    $slots = [];
+    $startHour = 8; // 8:00 AM
+    $endHour = 22;  // 10:00 PM
+    $interval = 2;  // Fixed 2-hour slots
 
-        $parsedDate = Carbon::parse($date)->setTimezone('Asia/Jakarta')->startOfDay();
+    $parsedDate = Carbon::parse($date)->setTimezone('Asia/Jakarta')->startOfDay();
+    $isToday = $parsedDate->isToday(); // Cek apakah tanggal yang dipilih adalah hari ini
 
-        // Skip slot generation if the date is a Sunday
-        if ($parsedDate->isSunday()) {
-            return $slots; // Return empty array
-        }
-
-        $bookings = Booking::where('tanggal', $parsedDate->toDateString())
-            ->where('lapangan_mode_id', $field->id)
-            ->whereIn('status', ['booked', 'pending'])
-            ->select('jam_mulai', 'jam_selesai', 'nama_pemesan', 'nomor_telepon', 'email', 'total_harga', 'kode_booking', 'metode_pembayaran', 'durasi', 'status')
-            ->get();
-
-        for ($hour = $startHour; $hour < $endHour; $hour += $interval) {
-            $startTime = sprintf('%02d:00:00', $hour);
-            $endTime = sprintf('%02d:00:00', $hour + $interval);
-            $slotStart = Carbon::parse("$date $startTime");
-            $slotEnd = Carbon::parse("$date $endTime");
-
-            $booking = $bookings->first(function ($booking) use ($slotStart, $slotEnd) {
-                $bookingStart = Carbon::parse($booking->jam_mulai);
-                $bookingEnd = Carbon::parse($booking->jam_selesai);
-                return $bookingStart->lte($slotEnd) && $bookingEnd->gte($slotStart);
-            });
-
-            $status = $booking ? $booking->status : ($slotStart->isPast() ? 'soon' : 'available');
-            $slots[] = [
-                'time' => substr($startTime, 0, 5),
-                'end_time' => substr($endTime, 0, 5),
-                'status' => $status,
-                'nama_pemesan' => $booking ? $booking->nama_pemesan : null,
-                'nomor_telepon' => $booking ? $booking->nomor_telepon : null,
-                'email' => $booking ? $booking->email : null,
-                'total_harga' => $booking ? $booking->total_harga : ($field->original_price * ($interval / 2)),
-                'kode_booking' => $booking ? $booking->kode_booking : null,
-                'metode_pembayaran' => $booking ? $booking->metode_pembayaran : null,
-                'durasi' => $booking ? $booking->durasi : $interval,
-            ];
-        }
-
-        return $slots;
+    // Skip slot generation if the date is a Sunday
+    if ($parsedDate->isSunday()) {
+        return $slots; // Return empty array
     }
+
+    $bookings = Booking::where('tanggal', $parsedDate->toDateString())
+        ->where('lapangan_mode_id', $field->id)
+        ->whereIn('status', ['booked', 'pending'])
+        ->select('jam_mulai', 'jam_selesai', 'nama_pemesan', 'nomor_telepon', 'email', 'total_harga', 'kode_booking', 'metode_pembayaran', 'durasi', 'status')
+        ->get();
+
+    for ($hour = $startHour; $hour < $endHour; $hour += $interval) {
+        $startTime = sprintf('%02d:00:00', $hour);
+        $endTime = sprintf('%02d:00:00', $hour + $interval);
+        $slotStart = Carbon::parse("$date $startTime");
+        $slotEnd = Carbon::parse("$date $endTime");
+
+        $booking = $bookings->first(function ($booking) use ($slotStart, $slotEnd) {
+            $bookingStart = Carbon::parse($booking->jam_mulai);
+            $bookingEnd = Carbon::parse($booking->jam_selesai);
+            // FIX 1: Mengubah logika pengecekan konflik.
+            // Menggunakan lt (less than) dan gt (greater than) agar slot yang berdekatan tidak dianggap bentrok.
+            // Contoh: Booking sampai jam 18:00 tidak akan konflik dengan slot baru yang mulai jam 18:00.
+            return $bookingStart->lt($slotEnd) && $bookingEnd->gt($slotStart);
+        });
+
+        // FIX 2: Pengecekan waktu lampau hanya berlaku untuk hari ini.
+        // Jika tanggal yang dipilih bukan hari ini, semua slot dianggap 'available'.
+        $isPastSlot = $isToday && $slotStart->isPast();
+        $status = $booking ? $booking->status : ($isPastSlot ? 'soon' : 'available');
+
+        $slots[] = [
+            'time' => substr($startTime, 0, 5),
+            'end_time' => substr($endTime, 0, 5),
+            'status' => $status,
+            'nama_pemesan' => $booking ? $booking->nama_pemesan : null,
+            'nomor_telepon' => $booking ? $booking->nomor_telepon : null,
+            'email' => $booking ? $booking->email : null,
+            'total_harga' => $booking ? $booking->total_harga : ($field->original_price * ($interval / 2)),
+            'kode_booking' => $booking ? $booking->kode_booking : null,
+            'metode_pembayaran' => $booking ? $booking->metode_pembayaran : null,
+            'durasi' => $booking ? $booking->durasi : $interval,
+        ];
+    }
+
+    return $slots;
+}
 
     public function getTimeSlots(Request $request)
     {
