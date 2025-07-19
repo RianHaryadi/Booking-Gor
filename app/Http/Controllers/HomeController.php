@@ -15,9 +15,9 @@ class HomeController extends Controller
         // Set locale for Carbon
         Carbon::setLocale('id');
 
-        // Get selected date for filtering, default to today
+        // Get selected date, default to today
         $tanggal = $request->input('tanggal', Carbon::today()->toDateString());
-        $parsedDate = Carbon::parse($tanggal)->startOfDay();
+        $parsedDate = Carbon::parse($tanggal)->setTimezone('Asia/Jakarta')->startOfDay();
 
         // Redirect to next day if selected date is Sunday
         if ($parsedDate->isSunday()) {
@@ -27,18 +27,25 @@ class HomeController extends Controller
                             ->with('warning', 'GOR tutup pada hari Minggu. Menampilkan jadwal untuk ' . $parsedDate->translatedFormat('l, d F Y') . '.');
         }
 
+        // Validate date is within 7 days
+        $maxDate = Carbon::today()->addDays(7)->startOfDay();
+        if ($parsedDate->gt($maxDate)) {
+            return redirect()->route('home', ['tanggal' => Carbon::today()->toDateString()])
+                            ->with('error', 'Tanggal tidak boleh lebih dari 7 hari ke depan.');
+        }
+
         // Fetch all upcoming tournaments and take top 4
         $allTournaments = Turnamen::where('status', 'upcoming')
-            ->where('tanggal_mulai', '>=', $parsedDate)
+            ->where('tanggal_mulai', '>=', Carbon::today())
             ->orderBy('tanggal_mulai')
             ->get();
         $tournaments = $allTournaments->take(4);
 
-        // Fetch all fields and take top 4 by rating
+        // Fetch all fields
         $allFields = LapanganMode::all();
         $fields = LapanganMode::orderBy('rating', 'desc')->take(4)->get();
 
-        // Fetch all bookings for the selected date to avoid N+1
+        // Fetch bookings for the selected date
         $bookings = Booking::where('tanggal', $parsedDate->toDateString())
             ->whereIn('lapangan_mode_id', $allFields->pluck('id'))
             ->whereIn('status', ['booked', 'pending'])
@@ -73,31 +80,21 @@ class HomeController extends Controller
             $booking = $fieldBookings->first(function ($booking) use ($slotStart, $slotEnd) {
                 $bookingStart = Carbon::parse($booking->jam_mulai);
                 $bookingEnd = Carbon::parse($booking->jam_selesai);
-                return ($bookingStart->equalTo($slotStart) && $bookingEnd->equalTo($slotEnd)) ||
-                       ($bookingStart->lt($slotEnd) && $bookingEnd->gt($slotStart));
+                return $bookingStart->lte($slotEnd) && $bookingEnd->gte($slotStart);
             });
 
-            // Include all required booking data
             $status = $booking ? $booking->status : 'available';
-            $nama_pemesan = $booking ? $booking->nama_pemesan : null;
-            $nomor_telepon = $booking ? $booking->nomor_telepon : null;
-            $email = $booking ? $booking->email : null;
-            $total_harga = $booking ? $booking->total_harga : null;
-            $kode_booking = $booking ? $booking->kode_booking : null;
-            $metode_pembayaran = $booking ? $booking->metode_pembayaran : null;
-            $durasi = $booking ? $booking->durasi : null;
-
             $slots[] = [
-                'time' => substr($startTime, 0, 5), // Format 08:00
-                'end_time' => substr($endTime, 0, 5), // Format 10:00
+                'time' => substr($startTime, 0, 5),
+                'end_time' => substr($endTime, 0, 5),
                 'status' => $status,
-                'nama_pemesan' => $nama_pemesan,
-                'nomor_telepon' => $nomor_telepon,
-                'email' => $email,
-                'total_harga' => $total_harga,
-                'kode_booking' => $kode_booking,
-                'metode_pembayaran' => $metode_pembayaran,
-                'durasi' => $durasi,
+                'nama_pemesan' => $booking ? $booking->nama_pemesan : null,
+                'nomor_telepon' => $booking ? $booking->nomor_telepon : null,
+                'email' => $booking ? $booking->email : null,
+                'total_harga' => $booking ? $booking->total_harga : ($field->original_price * 2 / 2),
+                'kode_booking' => $booking ? $booking->kode_booking : null,
+                'metode_pembayaran' => $booking ? $booking->metode_pembayaran : null,
+                'durasi' => $booking ? $booking->durasi : 2,
             ];
         }
 

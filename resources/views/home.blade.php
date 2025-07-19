@@ -420,9 +420,10 @@
                         </label>
                         <div class="relative">
                             <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($tanggal)->toDateString() }}"
-                                   class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
-                                   min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                   onchange="this.form.submit()">
+                                    class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
+                                    min="{{ \Carbon\Carbon::today()->toDateString() }}"
+                                    max="{{ \Carbon\Carbon::today()->addDays(7)->toDateString() }}"
+                                    onchange="this.form.submit()">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                                 <svg class="h-6 w-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -441,9 +442,8 @@
             </div>
         </div>
 
-        <!-- Schedule Table Card -->
+              <!-- Schedule Table Card -->
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/30 max-w-6xl mx-auto transition-all duration-500 hover:shadow-2xl backdrop-blur-sm bg-white/90">
-            <!-- Table Header -->
             <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4">
                 <div class="flex flex-col sm:flex-row justify-between items-center">
                     <h3 class="text-xl font-bold text-white flex items-center">
@@ -459,7 +459,6 @@
                 </div>
             </div>
 
-            <!-- Schedule Table -->
             <div class="overflow-x-auto">
                 <table class="w-full border-collapse">
                     <thead>
@@ -475,7 +474,7 @@
                                     </th>
                                 @endforeach
                             @else
-                                <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">No Time Slots Available</th>
+                                <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">Tidak Ada Slot Waktu Tersedia</th>
                             @endif
                         </tr>
                     </thead>
@@ -580,7 +579,6 @@
                 </table>
             </div>
 
-            <!-- Legend and CTA -->
             <div class="bg-gradient-to-r from-indigo-50 to-blue-50 px-8 py-6 border-t border-gray-200/30">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
                     <div class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
