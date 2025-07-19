@@ -151,13 +151,19 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    @if($event->status == 'aktif') bg-green-100 text-green-800
-                                    @elseif($event->status == 'selesai') bg-gray-100 text-gray-800
-                                    @elseif($event->status == 'coming soon') bg-yellow-100 text-yellow-800
-                                    @else bg-red-100 text-red-800 @endif">
-                                    {{ ucfirst($event->status) }}
-                                </span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        @if($event->status == 'aktif') bg-emerald-200 text-emerald-900
+                                        @elseif($event->status == 'selesai') bg-slate-200 text-slate-900
+                                        @elseif($event->status == 'coming soon') bg-amber-200 text-amber-900
+                                        @else bg-rose-200 text-rose-900 @endif">
+                                        {{ ucfirst($event->status) }}
+                                    </span>
+                                        <a href="{{ route('event.daftar', $event->id) }}"
+                                           class="inline-block text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-full shadow transition-colors duration-200">
+                                            Daftar
+                                        </a>
+                                </div>
                             </td>
                         </tr>
                         @empty

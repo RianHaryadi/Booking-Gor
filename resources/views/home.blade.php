@@ -671,7 +671,8 @@
             <a href="{{ route('booking.index') }}" class="bg-white text-blue-800 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 inline-flex items-center justify-center transform hover:scale-105 glow-effect btn-hover-effect">
                 <i class="fas fa-calendar-alt mr-3 text-lg"></i> Booking Sekarang
             </a>
-            <a href="#contact" class="border-2 border-white text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-white/20 transition duration-300 inline-flex items-center justify-center transform hover:scale-105 btn-hover-effect">
+          <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20menanyakan%20salah%20satu%20dari%20opsi%20berikut%3A%0A1.%20Pemesanan%20lapangan%20%5Bsepak%20bola%2Ffutsal%5D%20untuk%20%5Btanggal%2Fjam%5D%2C%20termasuk%20harga%20dan%20ketersediaan.%0A2.%20Informasi%20untuk%20mengadakan%20event%20seperti%20%5Bturnamen%20olahraga%2Facara%20perusahaan%5D%2C%20termasuk%20fasilitas%20dan%20prosedur.%0ANama%20saya%20%5Bnama%20Anda%5D%20dari%20%5Bkota%2Forganisasi%5D.%20Terima%20kasih%21" 
+            class="border-2 border-white text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-white/20 transition duration-300 inline-flex items-center justify-center transform hover:scale-105 btn-hover-effect">
                 <i class="fas fa-phone-alt mr-3 text-lg"></i> Hubungi Kami
             </a>
         </div>

@@ -32,4 +32,6 @@ Route::post('/tracking', [TrackingController::class, 'search'])->name('tracking.
 
 // event end turnamnet
 Route::get('/event', [EventController::class, 'index'])->name('event.index');
-
+Route::get('/event/{id}/daftar', [EventController::class, 'daftar'])->name('event.daftar');
+Route::post('/event/{id}/store', [EventController::class, 'store'])->name('event.store');
+Route::get('/event/{id}/success', [EventController::class, 'success'])->name('event.success');
