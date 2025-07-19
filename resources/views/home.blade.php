@@ -266,7 +266,6 @@
             </p>
         </div>
 
-        <!-- Turnamen Mendatang -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-16">
             <div class="p-6 sm:p-8 bg-gradient-to-r from-blue-600 to-indigo-700">
                 <h3 class="text-2xl sm:text-3xl font-bold text-white">Turnamen Terdekat</h3>
@@ -331,17 +330,22 @@
                                 <td class="py-5 px-6">
                                     <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
                                         {{ $turnamen->status === 'upcoming' ? 'bg-yellow-100 text-yellow-800' : 
-                                           ($turnamen->status === 'ongoing' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
+                                            ($turnamen->status === 'ongoing' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
                                         {{ ucfirst($turnamen->status) }}
                                     </span>
                                 </td>
+                                
                                 <td class="py-5 px-6">
-                                    @if ($turnamen->status === 'upcoming')
-                                        <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                                    @if ($turnamen->status === 'ongoing' && $turnamen->linkpendaftaran)
+                                        <a href="{{ $turnamen->linkpendaftaran }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                                             Daftar Sekarang
                                         </a>
+                                    @elseif ($turnamen->status === 'upcoming')
+                                        <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-yellow-800 bg-yellow-100 cursor-default">
+                                            Akan Datang
+                                        </span>
                                     @else
-                                        <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadowing-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                                        <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                                             Lihat Detail
                                         </a>
                                     @endif
@@ -353,7 +357,7 @@
             </div>
             
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 text-center">
-                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
+                <a href="" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
                     Lihat semua turnamen
                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -431,16 +435,6 @@
                     </div>
                 </div>
             </div>
-            
-        
-        <div class="mt-12 text-center">
-            <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300">
-                Lihat Semua Dokumentasi
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-            </a>
-        </div>
     </div>
 </section>
 
@@ -496,221 +490,110 @@
     </div>
 </div>
 
-<section class="py-20 bg-gradient-to-b from-blue-50/50 to-white/50" id="schedule">
+<section id="tournaments" class="py-20 bg-gradient-to-b from-blue-50 to-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12 sm:mb-16">
-            <div class="relative inline-block mb-6 animate-float">
-                <h2 class="text-4xl sm:text-5xl font-bold mb-2 relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 animate-text-shimmer">
-                    Jadwal Ketersediaan
-                </h2>
-                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-1.5 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200 rounded-full opacity-75 animate-pulse-slow"></div>
-            </div>
-            <p class="text-gray-600/90 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed font-medium">
-                Cek ketersediaan lapangan favoritmu dan pesan waktu bermain dengan mudah
+        <div class="text-center mb-16">
+            <h2 class="text-4xl sm:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-700">
+                Turnamen & Event Mendatang
+            </h2>
+            <p class="text-gray-600 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed">
+                Bergabung dalam kompetisi seru dan buktikan kemampuan tim kamu! Daftar sekarang untuk pengalaman bermain yang tak terlupakan.
             </p>
         </div>
 
-        @if (session('warning'))
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg">
-                <p class="font-medium">{{ session('warning') }}</p>
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-16">
+            <div class="p-6 sm:p-8 bg-gradient-to-r from-blue-600 to-indigo-700">
+                <h3 class="text-2xl sm:text-3xl font-bold text-white">Turnamen Terdekat</h3>
+                <p class="text-blue-100 mt-2">Daftar sekarang sebelum kuota penuh!</p>
             </div>
-        @endif
-        @if (session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg">
-                <p class="font-medium">{{ session('error') }}</p>
-            </div>
-        @endif
-
-        <div class="mb-10 max-w-lg mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 backdrop-blur-sm bg-white/80">
-            <div class="p-6">
-                <form method="GET" action="{{ route('home') }}" class="space-y-4">
-                    <div>
-                        <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            Pilih Tanggal Bermain
-                        </label>
-                        <div class="relative">
-                            <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($tanggal)->toDateString() }}"
-                                class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
-                                min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                max="{{ \Carbon\Carbon::today()->addDays(7)->toDateString() }}"
-                                onchange="this.form.submit()">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                                <svg class="h-6 w-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit"
-                            class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-6 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        Cari Jadwal Tersedia
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/30 max-w-6xl mx-auto transition-all duration-500 hover:shadow-2xl backdrop-blur-sm bg-white/90">
-            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4">
-                <div class="flex flex-col sm:flex-row justify-between items-center">
-                    <h3 class="text-xl font-bold text-white flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        Daftar Ketersediaan Lapangan
-                    </h3>
-                    <div class="mt-3 sm:mt-0 flex items-center space-x-2">
-                        <span class="text-sm text-indigo-200">Tanggal:</span>
-                        <span class="text-sm font-medium text-white">{{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}</span>
-                    </div>
-                </div>
-            </div>
-
+            
             <div class="overflow-x-auto">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-gradient-to-r from-indigo-500/10 to-blue-500/10">
-                            <th class="p-5 text-left text-indigo-700 font-bold text-sm uppercase tracking-wider">Lapangan</th>
-                            @if ($allFields->isNotEmpty() && !empty($allFields->first()->availableTimeSlots))
-                                @foreach ($allFields->first()->availableTimeSlots as $slot)
-                                    <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">
-                                        <div class="flex flex-col items-center">
-                                            <span class="font-bold">{{ $slot['time'] }}</span>
-                                            <span class="text-xs font-normal text-indigo-500">{{ $slot['end_time'] }}</span>
-                                        </div>
-                                    </th>
-                                @endforeach
-                            @else
-                                <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">Tidak Ada Slot Waktu Tersedia</th>
-                            @endif
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50">
+                        <tr class="text-blue-800">
+                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Nama Turnamen</th>
+                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Tanggal</th>
+                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Kategori</th>
+                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Lokasi</th>
+                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Status</th>
+                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200/30">
-                        @forelse ($allFields as $index => $field)
-                            <tr class="hover:bg-gray-50/50 transition-colors duration-200 {{ $index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30' }}">
-                                <td class="p-5 font-medium text-gray-900">
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach ($tournaments as $turnamen)
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="py-5 px-6">
                                     <div class="flex items-center">
-                                        @if($field->image)
-                                            <div class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden mr-4 border-2 border-white shadow-sm">
-                                                <img class="h-full w-full object-cover" src="{{ asset('storage/' . $field->image) }}" alt="{{ $field->name }}">
-                                            </div>
-                                        @endif
-                                        <div>
-                                            <div class="font-bold text-gray-800">{{ $field->name }}</div>
-                                            <div class="flex items-center mt-1">
-                                                <span class="text-xs px-2 py-1 rounded-full font-medium 
-                                                    @if($field->category === 'Premium') bg-amber-100 text-amber-800
-                                                    @elseif($field->category === 'VIP') bg-purple-100 text-purple-800
-                                                    @else bg-blue-100 text-blue-800 @endif">
-                                                    {{ $field->category ?? 'Standard' }}
-                                                </span>
-                                                @if($field->rating)
-                                                    <span class="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 flex items-center">
-                                                        <svg class="w-3 h-3 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                        </svg>
-                                                        {{ number_format($field->rating, 1) }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                @if($field->availableTimeSlots)
-                                    @foreach ($field->availableTimeSlots as $slot)
-                                        <td class="p-5 text-center">
-                                            @if ($slot['status'] === 'booked' || $slot['status'] === 'pending')
-                                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 cursor-not-allowed">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                    </svg>
-                                                    {{ ucfirst($slot['status']) }}
-                                                </span>
+                                        <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                                            @if ($turnamen->poster)
+                                                <img src="{{ asset('storage/' . $turnamen->poster) }}" alt="{{ $turnamen->nama }}" class="h-full w-full object-cover rounded-lg">
                                             @else
-                                                <a href="{{ route('booking.form', [
-                                                    'field' => $field->id,
-                                                    'date' => $tanggal,
-                                                    'jam_mulai' => $slot['time'],
-                                                    'jam_selesai' => \Carbon\Carbon::parse($tanggal . ' ' . $slot['time'])->addHours($slot['durasi'])->format('H:i'), // Calculate end time based on selected duration
-                                                    'durasi' => $slot['durasi'], // Use the duration from the slot data
-                                                    'total_harga' => $slot['total_harga'], // Use the calculated total_harga from the slot data
-                                                    'kode_booking' => 'BK-' . now()->format('Ymd') . '-' . \Illuminate\Support\Str::random(5)
-                                                ]) }}"
-                                                    class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                    </svg>
-                                                    Tersedia
-                                                </a>
-                                            @endif
-                                        </td>
-                                    @endforeach
-                                @else
-                                    <td colspan="{{ count($allFields->first()->availableTimeSlots ?? []) }}" class="p-10 text-center">
-                                        <div class="flex flex-col items-center justify-center text-gray-500">
-                                            <div class="w-24 h-24 mb-6 text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                                 </svg>
-                                            </div>
-                                            <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
-                                            <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
-                                            <button onclick="document.getElementById('tanggal').focus()" 
-                                                class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
-                                                Pilih Tanggal Lain
-                                            </button>
+                                            @endif
                                         </div>
-                                    </td>
-                                @endif
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="{{ count($allFields->first()->availableTimeSlots ?? []) + 1 }}" class="p-10 text-center">
-                                    <div class="flex flex-col items-center justify-center text-gray-500">
-                                        <div class="w-24 h-24 mb-6 text-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
+                                        <div class="ml-4">
+                                            <h4 class="font-semibold text-gray-900">{{ $turnamen->nama }}</h4>
+                                            <p class="text-sm text-gray-500">{{ $turnamen->deskripsi ? Str::limit($turnamen->deskripsi, 50) : 'No description' }}</p>
+                                            <p class="text-sm text-gray-500">Hadiah: Rp {{ number_format($turnamen->hadiah, 0, ',', '.') }}</p>
                                         </div>
-                                        <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
-                                        <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
-                                        <button onclick="document.getElementById('tanggal').focus()" 
-                                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
-                                            Pilih Tanggal Lain
-                                        </button>
                                     </div>
                                 </td>
+                                <td class="py-5 px-6">
+                                    <div class="flex items-center">
+                                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        <span>{{ \Carbon\Carbon::parse($turnamen->tanggal_mulai)->translatedFormat('d M Y') }} - {{ \Carbon\Carbon::parse($turnamen->tanggal_selesai)->translatedFormat('d M Y') }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-5 px-6">
+                                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $turnamen->kategori === 'single' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
+                                        {{ ucfirst($turnamen->kategori) }}
+                                    </span>
+                                </td>
+                                <td class="py-5 px-6">
+                                    <div class="flex items-center">
+                                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        <span>{{ $turnamen->lokasi }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-5 px-6">
+                                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
+                                        {{ $turnamen->status === 'upcoming' ? 'bg-yellow-100 text-yellow-800' : 
+                                            ($turnamen->status === 'ongoing' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
+                                        {{ ucfirst($turnamen->status) }}
+                                    </span>
+                                </td>
+                                
+                                <td class="py-5 px-6">
+                                    @if (in_array($turnamen->status, ['upcoming', 'ongoing']) && $turnamen->linkpendaftaran)
+                                        <a href="{{ $turnamen->linkpendaftaran }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                                            Daftar Sekarang
+                                        </a>
+                                    @else
+                                        <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                                            Lihat Detail
+                                        </a>
+                                    @endif
+                                </td>
                             </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
-
-            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 px-8 py-6 border-t border-gray-200/30">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
-                        <div class="flex items-center bg-white/80 px-3 py-1.5 rounded-lg shadow-sm border border-gray-200/50">
-                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                            <span>Tersedia</span>
-                        </div>
-                        <div class="flex items-center bg-white/80 px-3 py-1.5 rounded-lg shadow-sm border border-gray-200/50">
-                            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                            <span>Booked/Pending</span>
-                        </div>
-                    </div>
-                    <a href="{{ route('booking.index') }}"
-                       class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-bold rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl active:scale-95">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        Booking Sekarang
-                    </a>
-                </div>
+            
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 text-center">
+                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
+                    Lihat semua turnamen
+                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
             </div>
         </div>
     </div>
@@ -838,15 +721,6 @@
                 </div>
             </div>
         </div>
-        
-        <div class="mt-16 text-center">
-            <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-indigo-700">
-                Lihat Semua Fasilitas
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-            </a>
-        </div>
     </div>
 </section>
 
@@ -866,7 +740,7 @@
             <a href="{{ route('booking.index') }}" class="bg-white text-blue-800 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 inline-flex items-center justify-center transform hover:scale-105 glow-effect btn-hover-effect">
                 <i class="fas fa-calendar-alt mr-3 text-lg"></i> Booking Sekarang
             </a>
-          <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20menanyakan%20salah%20satu%20dari%20opsi%20berikut%3A%0A1.%20Pemesanan%20lapangan%20%5Bsepak%20bola%2Ffutsal%5D%20untuk%20%5Btanggal%2Fjam%5D%2C%20termasuk%20harga%20dan%20ketersediaan.%0A2.%20Informasi%20untuk%20mengadakan%20event%20seperti%20%5Bturnamen%20olahraga%2Facara%20perusahaan%5D%2C%20termasuk%20fasilitas%20dan%20prosedur.%0ANama%20saya%20%5Bnama%20Anda%5D%20dari%20%5Bkota%2Forganisasi%5D.%20Terima%20kasih%21" 
+          <a href="https://wa.me/6281318865459?text=Halo%2C%20saya%20ingin%20menanyakan%20salah%20satu%20dari%20opsi%20berikut%3A%0A1.%20Pemesanan%20lapangan%20%5Bsepak%20bola%2Ffutsal%5D%20untuk%20%5Btanggal%2Fjam%5D%2C%20termasuk%20harga%20dan%20ketersediaan.%0A2.%20Informasi%20untuk%20mengadakan%20event%20seperti%20%5Bturnamen%20olahraga%2Facara%20perusahaan%5D%2C%20termasuk%20fasilitas%20dan%20prosedur.%0ANama%20saya%20%5Bnama%20Anda%5D%20dari%20%5Bkota%2Forganisasi%5D.%20Terima%20kasih%21" 
             class="border-2 border-white text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-white/20 transition duration-300 inline-flex items-center justify-center transform hover:scale-105 btn-hover-effect">
                 <i class="fas fa-phone-alt mr-3 text-lg"></i> Hubungi Kami
             </a>

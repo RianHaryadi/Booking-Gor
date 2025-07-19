@@ -12,16 +12,18 @@ class Turnamen extends Model
     protected $table = 'turnamen';
 
     protected $fillable = [
-        'nama',
-        'deskripsi',
-        'lokasi',
-        'tanggal_mulai',
-        'tanggal_selesai',
-        'poster',
-        'kategori',
-        'hadiah',
-        'status',
-    ];
+    'nama',
+    'deskripsi',
+    'lokasi',
+    'tanggal_mulai',
+    'tanggal_selesai',
+    'poster',
+    'kategori',
+    'hadiah',
+    'status',
+    'linkpendaftaran', // <- pastikan ini ada
+];
+
 
     protected $casts = [
         'tanggal_mulai' => 'date',

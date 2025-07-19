@@ -31,16 +31,12 @@ class HomeController extends Controller
                             ->with('error', 'Tanggal tidak boleh lebih dari 7 hari ke depan.');
         }
 
-        // Removed Sunday restriction logic from here as per request.
+        // Mengambil 4 turnamen paling baru ditambahkan, apapun statusnya
+        $tournaments = Turnamen::latest()->take(4)->get();
+        $allTournaments = $tournaments;
+    
 
-        // Fetch all upcoming tournaments and take top 4 for display
-        $allTournaments = Turnamen::where('status', 'upcoming')
-            ->where('tanggal_mulai', '>=', Carbon::today())
-            ->orderBy('tanggal_mulai')
-            ->get();
-        $tournaments = $allTournaments->take(4);
-
-        // Fetch ALL fields to correctly build the schedule table headers and rows.
+        // Fetch ALL fields to correctly build the schedule table headers and rows
         $allFields = LapanganMode::all();
 
         // Fetch top 4 rated fields for the "featured fields" section
@@ -97,8 +93,9 @@ class HomeController extends Controller
             $status = 'available';
             if ($booking) {
                 $status = $booking->status; // If there's an overlapping booking, use its status
-            } elseif ($parsedDate->isSameDay(Carbon::today()) && $slotStart->isPast()) {
-                $status = 'soon'; // Mark past slots on the current day as 'soon'
+            } elseif ($parsedDate->isToday() && $slotStart->isPast()) {
+                // Corrected condition to check if the slot is in the past only on the current day
+                $status = 'soon'; 
             }
 
             $slots[] = [
@@ -108,7 +105,7 @@ class HomeController extends Controller
                 'nama_pemesan' => $booking ? $booking->nama_pemesan : null,
                 'nomor_telepon' => $booking ? $booking->nomor_telepon : null,
                 'email' => $booking ? $booking->email : null,
-                // Calculate total_harga based on the user's requestedDurasi, not the display interval.
+                // Calculate total_harga based on the user's requestedDurasi, not the display interval
                 'total_harga' => $field->original_price * ($requestedDurasi / 2),
                 'kode_booking' => $booking ? $booking->kode_booking : null,
                 'metode_pembayaran' => $booking ? $booking->metode_pembayaran : null,

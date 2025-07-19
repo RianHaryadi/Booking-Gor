@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->enum('kategori', ['single', 'team'])->default('single'); // Tambahan
             $table->unsignedBigInteger('hadiah')->default(0); // Tambahan
             $table->enum('status', ['upcoming', 'ongoing', 'completed'])->default('upcoming');
+            $table->string('linkpendaftaran')->nullable()->after('status');
             $table->timestamps();
         });
     }

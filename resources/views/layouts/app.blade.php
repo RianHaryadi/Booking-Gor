@@ -144,7 +144,7 @@
                     <h3 class="text-lg font-bold mb-4">Kontak Kami</h3>
                     <ul class="text-sm text-gray-300 space-y-2">
                         <li>Email: <a href="mailto:info@gorserbaguna.com" class="hover:text-indigo-400 transition-colors duration-300">info@gorserbaguna.com</a></li>
-                        <li>Telepon: <a href="tel:+6281234567890" class="hover:text-indigo-400 transition-colors duration-300">+62 812-3456-7890</a></li>
+                        <li>Telepon: <a href="tel:+6281318865459" class="hover:text-indigo-400 transition-colors duration-300">+6281318865459</a></li>
                         <li>Alamat: Jl. Olahraga No. 123, Jakarta</li>
                     </ul>
                 </div>

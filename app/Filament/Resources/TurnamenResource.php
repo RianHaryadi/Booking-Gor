@@ -37,7 +37,7 @@ class TurnamenResource extends Resource
                         ->required()
                         ->maxLength(255)
                         ->placeholder('Masukkan nama turnamen'),
-                    
+
                     Textarea::make('deskripsi')
                         ->label('Deskripsi')
                         ->rows(4)
@@ -80,6 +80,14 @@ class TurnamenResource extends Resource
                         ->default('upcoming')
                         ->required()
                         ->placeholder('Pilih status turnamen'),
+
+                    TextInput::make('linkpendaftaran')
+                        ->label('Link Pendaftaran')
+                        ->url()
+                        ->placeholder('https://example.com')
+                        ->suffixIcon('heroicon-o-link')
+                        ->maxLength(255)
+                        ->columnSpanFull(),
                 ])
                 ->columns(2),
 
@@ -135,8 +143,14 @@ class TurnamenResource extends Resource
                         'success' => 'completed',
                     ])
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
-                
+
                 TextColumn::make('hadiah')->label('Hadiah')->money('IDR', true),
+
+                TextColumn::make('linkpendaftaran')
+                ->label('Link Pendaftaran')
+                ->url(fn ($record) => $record->linkpendaftaran, true)
+                ->openUrlInNewTab()
+                ->limit(30),
             ])
             ->defaultSort('tanggal_mulai', 'desc')
             ->filters([
@@ -178,13 +192,11 @@ class TurnamenResource extends Resource
                             ->preserveFilenames(),
                     ])
                     ->action(function (array $data): void {
-                        // Get the file path
                         $filePath = is_array($data['csv_file']) ? ($data['csv_file']['path'] ?? $data['csv_file'][0]) : $data['csv_file'];
                         if (strpos($filePath, 'csv-temp/') !== 0) {
                             $filePath = 'csv-temp/' . $filePath;
                         }
 
-                        // Check if file exists
                         if (!Storage::disk('public')->exists($filePath)) {
                             Notification::make()
                                 ->title('File tidak ditemukan')
@@ -194,10 +206,7 @@ class TurnamenResource extends Resource
                             return;
                         }
 
-                        // Get absolute path
                         $absolutePath = Storage::disk('public')->path($filePath);
-
-                        // Open CSV file
                         $handle = fopen($absolutePath, 'r');
                         if ($handle === false) {
                             Notification::make()
@@ -207,14 +216,11 @@ class TurnamenResource extends Resource
                             return;
                         }
 
-                        // Read header
                         $header = fgetcsv($handle, 0, ',');
                         $required = ['nama', 'lokasi', 'tanggal_mulai', 'tanggal_selesai', 'kategori', 'status', 'hadiah'];
 
-                        // Normalize header
                         $header = array_map('trim', array_map('strtolower', $header));
 
-                        // Check required columns
                         if (array_intersect($required, $header) !== $required) {
                             Notification::make()
                                 ->title('Format CSV salah')
@@ -225,7 +231,6 @@ class TurnamenResource extends Resource
                             return;
                         }
 
-                        // Get column indices
                         $namaIndex = array_search('nama', $header);
                         $deskripsiIndex = array_search('deskripsi', $header);
                         $lokasiIndex = array_search('lokasi', $header);
@@ -235,12 +240,11 @@ class TurnamenResource extends Resource
                         $kategoriIndex = array_search('kategori', $header);
                         $hadiahIndex = array_search('hadiah', $header);
                         $statusIndex = array_search('status', $header);
+                        $linkIndex = array_search('link', $header); // ← tambahkan ini
 
-                        // Valid categories and statuses
                         $validCategories = ['single', 'team'];
                         $validStatuses = ['upcoming', 'ongoing', 'completed'];
 
-                        // Process rows
                         $count = 0;
                         $skipped = 0;
                         while (($row = fgetcsv($handle, 0, ',')) !== false) {
@@ -249,7 +253,6 @@ class TurnamenResource extends Resource
                                 continue;
                             }
 
-                            // Normalize data
                             $nama = trim($row[$namaIndex] ?? '');
                             $deskripsi = isset($row[$deskripsiIndex]) ? trim($row[$deskripsiIndex] ?? '') ?: null : null;
                             $lokasi = trim($row[$lokasiIndex] ?? '');
@@ -259,8 +262,8 @@ class TurnamenResource extends Resource
                             $kategori = isset($row[$kategoriIndex]) ? trim($row[$kategoriIndex] ?? '') ?: null : null;
                             $hadiah = isset($row[$hadiahIndex]) ? (float)trim($row[$hadiahIndex] ?? '0') : 0;
                             $status = isset($row[$statusIndex]) ? trim($row[$statusIndex] ?? '') ?: 'upcoming' : 'upcoming';
+                            $link = isset($row[$linkIndex]) ? trim($row[$linkIndex]) : null;
 
-                            // Validate required fields and formats
                             if (empty($nama) || empty($lokasi) || empty($tanggal_mulai) || empty($tanggal_selesai) || 
                                 empty($kategori) || empty($status) || $hadiah < 0 ||
                                 !in_array($kategori, $validCategories) || !in_array($status, $validStatuses)) {
@@ -268,7 +271,6 @@ class TurnamenResource extends Resource
                                 continue;
                             }
 
-                            // Validate dates
                             try {
                                 $startDate = \Carbon\Carbon::parse($tanggal_mulai);
                                 $endDate = \Carbon\Carbon::parse($tanggal_selesai);
@@ -281,13 +283,11 @@ class TurnamenResource extends Resource
                                 continue;
                             }
 
-                            // Check for duplicates
                             if (Turnamen::where('nama', $nama)->where('lokasi', $lokasi)->exists()) {
                                 $skipped++;
                                 continue;
                             }
 
-                            // Save data
                             try {
                                 Turnamen::create([
                                     'nama' => $nama,
@@ -299,6 +299,7 @@ class TurnamenResource extends Resource
                                     'kategori' => $kategori,
                                     'hadiah' => $hadiah,
                                     'status' => $status,
+                                    'link' => $link,
                                 ]);
                                 $count++;
                             } catch (\Exception $e) {
@@ -307,14 +308,10 @@ class TurnamenResource extends Resource
                         }
 
                         fclose($handle);
-
-                        // Delete file after processing
                         try {
                             Storage::disk('public')->delete($filePath);
-                        } catch (\Exception $e) {
-                        }
+                        } catch (\Exception $e) {}
 
-                        // Send notification
                         Notification::make()
                             ->title('Import Selesai')
                             ->success()
