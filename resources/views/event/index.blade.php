@@ -1,116 +1,103 @@
 @extends('layouts.app')
-
-@section('title', 'Daftar Event')
+@section('title','Event & Turnamen — GOR Serbaguna')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-green-500">
-                    Daftar Event Olahraga
-                </span>
-            </h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-                Temukan berbagai event olahraga seru dari berbagai kategori. Bergabunglah dan raih kemenangan!
-            </p>
-        </div>
+<div style="padding-top:64px">
 
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl">
-            <div class="overflow-x-auto">
-                <table class="w-full divide-y divide-gray-200">
-                    <thead class="bg-gradient-to-r from-blue-600 to-green-500">
-                        <tr>
-                            <th class="px-8 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider rounded-tl-2xl">#</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider">Poster</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider">Event</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider hidden lg:table-cell">Deskripsi</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider">Tanggal</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider hidden md:table-cell">Lokasi</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider">Kategori</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-5 text-left text-xs font-semibold text-white uppercase tracking-wider rounded-tr-2xl">Pendaftaran</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse ($events as $index => $event)
-                        <tr class="hover:bg-gray-50 transition-colors duration-200 group">
-                            <td class="px-8 py-4">{{ $events->firstItem() + $index }}</td>
-                            <td class="px-6 py-4">
-                                <div class="h-16 w-16 rounded-lg overflow-hidden border shadow">
-                                    @if($event->poster)
-                                        <img src="{{ asset('storage/' . $event->poster) }}" alt="{{ $event->nama }}" class="h-full w-full object-cover">
-                                    @else
-                                        <div class="h-full w-full bg-gray-100 flex items-center justify-center">
-                                            <span class="text-sm text-gray-500">No Image</span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm font-semibold text-gray-900">{{ $event->nama }}</div>
-                                <div class="text-xs text-gray-500">Hadiah: Rp{{ number_format($event->hadiah, 0, ',', '.') }}</div>
-                            </td>
-                            <td class="px-6 py-4 hidden lg:table-cell">
-                                <div class="text-sm text-gray-600 line-clamp-2">{{ $event->deskripsi }}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">
-                                    {{ \Carbon\Carbon::parse($event->tanggal_mulai)->translatedFormat('d M Y') }}
-                                </div>
-                                <div class="text-xs text-gray-500">
-                                    s/d {{ \Carbon\Carbon::parse($event->tanggal_selesai)->translatedFormat('d M Y') }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 hidden md:table-cell">
-                                <div class="text-sm text-gray-700">{{ Str::limit($event->lokasi, 20) }}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full {{ $event->kategori === 'single' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
-                                    {{ ucfirst($event->kategori) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full 
-                                    {{ $event->status === 'upcoming' ? 'bg-yellow-100 text-yellow-800' : 
-                                      ($event->status === 'ongoing' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
-                                    {{ ucfirst($event->status) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                {{-- Jika status 'ongoing' dan link ada, tampilkan tombol daftar --}}
-                                @if($event->status === 'ongoing' && $event->linkpendaftaran)
-                                    <a href="{{ $event->linkpendaftaran }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-                                        Daftar Sekarang
-                                    </a>
-                                {{-- Jika status 'upcoming', tampilkan tulisan 'Akan Datang' --}}
-                                @elseif($event->status === 'upcoming')
-                                    <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-yellow-800 bg-yellow-100">
-                                        Akan Datang
-                                    </span>
-                                {{-- Untuk kondisi lainnya, pendaftaran ditutup --}}
-                                @else
-                                    <span class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-500 bg-gray-100 cursor-not-allowed">
-                                        Pendaftaran Ditutup
-                                    </span>
-                                @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="9" class="px-6 py-12 text-center text-gray-500">Belum ada event tersedia.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            @if($events->hasPages())
-            <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-200 rounded-b-2xl">
-                {{ $events->links('vendor.pagination.tailwind') }}
-            </div>
-            @endif
-        </div>
+  {{-- HERO --}}
+  <section style="padding:56px 7vw 48px;max-width:1400px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px">
+      <div>
+        <p style="font-size:.7rem;font-weight:700;letter-spacing:.15em;color:#F59E0B;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px">
+          <i class="fas fa-trophy" style="font-size:.75rem"></i>Kompetisi
+        </p>
+        <h1 class="display" style="font-size:clamp(2.5rem,5vw,4.5rem);color:#F1F5F9;line-height:.92">
+          EVENT &<br>TURNAMEN
+        </h1>
+      </div>
+      <p style="color:#475569;max-width:280px;font-size:.9rem;line-height:1.65">Bergabunglah dalam turnamen olahraga seru dan raih hadiah menarik bersama komunitas kami.</p>
     </div>
+  </section>
+
+  {{-- EVENTS CONTENT --}}
+  <section style="padding:0 7vw 80px;max-width:1400px;margin:0 auto">
+
+    {{-- Card grid for events --}}
+    @forelse($events as $event)
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:16px;display:grid;grid-template-columns:280px 1fr auto;transition:border-color .3s" class="event-row" onmouseover="this.style.borderColor='rgba(124,58,237,0.35)'" onmouseout="this.style.borderColor='var(--border)'">
+      {{-- Poster --}}
+      <div style="height:160px;position:relative;overflow:hidden">
+        @if($event->poster)
+        <img src="{{ asset('storage/'.$event->poster) }}" alt="{{ $event->nama }}" style="width:100%;height:100%;object-fit:cover">
+        @else
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(59,130,246,0.15));display:flex;align-items:center;justify-content:center">
+          <i class="fas fa-trophy" style="font-size:2.5rem;color:rgba(245,158,11,0.4)"></i>
+        </div>
+        @endif
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,var(--bg2))"></div>
+      </div>
+
+      {{-- Info --}}
+      <div style="padding:24px 28px;display:flex;flex-direction:column;justify-content:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          @if($event->status==='ongoing')
+          <span class="badge badge-green"><span style="width:5px;height:5px;background:#10B981;border-radius:50%;animation:pulse 1.5s infinite"></span>LIVE</span>
+          @elseif($event->status==='upcoming')
+          <span class="badge badge-amber">UPCOMING</span>
+          @else
+          <span class="badge badge-muted">SELESAI</span>
+          @endif
+          <span class="badge badge-blue">{{ ucfirst($event->kategori) }}</span>
+        </div>
+        <h2 style="font-weight:700;font-size:1.15rem;color:#F1F5F9;line-height:1.3">{{ $event->nama }}</h2>
+        <p style="color:#475569;font-size:.82rem;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ $event->deskripsi }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:.78rem;color:#334155;margin-top:4px">
+          <span style="display:flex;align-items:center;gap:5px"><i class="fas fa-calendar" style="color:#3B82F6;font-size:.7rem"></i>{{ \Carbon\Carbon::parse($event->tanggal_mulai)->format('d M') }} – {{ \Carbon\Carbon::parse($event->tanggal_selesai)->format('d M Y') }}</span>
+          <span style="display:flex;align-items:center;gap:5px"><i class="fas fa-map-marker-alt" style="color:#7C3AED;font-size:.7rem"></i>{{ $event->lokasi }}</span>
+          <span style="display:flex;align-items:center;gap:5px;color:#10B981;font-weight:700"><i class="fas fa-gift" style="font-size:.7rem"></i>Rp{{ number_format($event->hadiah,0,',','.') }}</span>
+        </div>
+      </div>
+
+      {{-- CTA --}}
+      <div style="padding:24px 28px;display:flex;align-items:center;border-left:1px solid var(--border)">
+        @if($event->status==='ongoing'&&$event->linkpendaftaran)
+        <a href="{{ $event->linkpendaftaran }}" target="_blank" class="btn btn-primary" style="white-space:nowrap;padding:12px 20px">
+          <i class="fas fa-user-plus"></i>Daftar
+        </a>
+        @elseif($event->status==='upcoming')
+        <div style="text-align:center">
+          <div style="font-size:.68rem;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Dibuka</div>
+          <div style="font-size:.825rem;color:#FDE68A;font-weight:600">{{ \Carbon\Carbon::parse($event->tanggal_mulai)->format('d M Y') }}</div>
+        </div>
+        @else
+        <div style="font-size:.78rem;color:#1e293b;font-weight:600">Ditutup</div>
+        @endif
+      </div>
+    </div>
+    @empty
+    <div style="text-align:center;padding:80px;color:#334155">
+      <div style="width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <i class="fas fa-trophy" style="font-size:1.2rem;opacity:.3"></i>
+      </div>
+      <p style="font-size:.9rem">Belum ada event tersedia saat ini.</p>
+    </div>
+    @endforelse
+
+    {{-- Pagination --}}
+    @if(method_exists($events,'hasPages')&&$events->hasPages())
+    <div style="margin-top:32px;display:flex;justify-content:center">
+      {{ $events->links() }}
+    </div>
+    @endif
+  </section>
 </div>
+
+<style>
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@media(max-width:700px){
+  .event-row{grid-template-columns:1fr!important}
+  .event-row>div:first-child{height:200px}
+  .event-row>div:last-child{border-left:none!important;border-top:1px solid var(--border)}
+}
+</style>
 @endsection

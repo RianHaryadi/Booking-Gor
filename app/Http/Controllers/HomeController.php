@@ -24,11 +24,11 @@ class HomeController extends Controller
 
         $parsedDate = Carbon::parse($tanggal)->setTimezone('Asia/Jakarta')->startOfDay();
 
-        // Validate date is within 7 days from today
-        $maxDate = Carbon::today()->addDays(7)->startOfDay();
+        // Validate date is within 30 days from today
+        $maxDate = Carbon::today()->addDays(30)->startOfDay();
         if ($parsedDate->gt($maxDate)) {
             return redirect()->route('home', ['tanggal' => Carbon::today()->toDateString(), 'durasi' => $durasi])
-                            ->with('error', 'Tanggal tidak boleh lebih dari 7 hari ke depan.');
+                            ->with('error', 'Tanggal tidak boleh lebih dari 30 hari ke depan.');
         }
 
         // Mengambil 4 turnamen paling baru ditambahkan, apapun statusnya
@@ -82,20 +82,16 @@ class HomeController extends Controller
             $slotEnd = Carbon::parse("$date $endTime");
 
             // Check if this specific 2-hour display slot overlaps with ANY existing booking for this field
-            $booking = $fieldBookings->first(function ($existingBooking) use ($slotStart, $slotEnd) {
-                $existingBookingStart = Carbon::parse($existingBooking->jam_mulai);
-                $existingBookingEnd = Carbon::parse($existingBooking->jam_selesai);
-                // Overlap condition: (StartA < EndB) AND (EndA > StartB)
-                return $slotStart->lt($existingBookingEnd) && $slotEnd->gt($existingBookingStart);
+            $booking = $fieldBookings->first(function ($existingBooking) use ($startTime, $endTime) {
+                return $existingBooking->jam_mulai < $endTime && $existingBooking->jam_selesai > $startTime;
             });
 
             // Determine status
             $status = 'available';
             if ($booking) {
-                $status = $booking->status; // If there's an overlapping booking, use its status
+                $status = $booking->status;
             } elseif ($parsedDate->isToday() && $slotStart->isPast()) {
-                // Corrected condition to check if the slot is in the past only on the current day
-                $status = 'soon'; 
+                $status = 'soon';
             }
 
             $slots[] = [

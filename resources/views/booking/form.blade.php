@@ -1,641 +1,345 @@
 @extends('layouts.app')
-
-@section('title', 'Book ' . $lapangan->name)
+@section('title', 'Booking Arena ' . $lapangan->name)
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
-        <div class="mb-6">
-            <a href="{{ url()->previous() }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Back to courts
-            </a>
+<div style="padding-top:120px; padding-bottom:100px; padding-left:7vw; padding-right:7vw; max-width:1400px; margin:0 auto; position:relative; z-index:10">
+    
+    {{-- Decorative Background Elements --}}
+    <div class="mono" style="position:fixed; top:15%; right:-5%; font-size:15rem; color:rgba(255,255,255,0.02); z-index:-1; pointer-events:none; font-weight:900; line-height:1">RESERVE</div>
+    
+    {{-- Header Section --}}
+    <div class="fx-reveal" style="margin-bottom:60px; display:flex; justify-content:space-between; align-items:flex-end; gap:30px; flex-wrap:wrap">
+        <div>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px">
+                <span class="tag-mono">STEP_02</span>
+                <span class="mono" style="font-size:0.65rem; color:var(--muted); letter-spacing:0.2em">CONFIRM_ARENA_RESERVATION</span>
+            </div>
+            <h1 class="display" style="font-size:clamp(2.5rem, 6vw, 4.5rem); color:#fff; margin:0">FORM <span class="text-accent-stroke">BOOKING</span></h1>
+            <p class="mono" style="color:var(--muted); font-size:0.8rem; margin-top:10px; max-width:600px">
+                {{ $lapangan->name }} <span style="color:var(--primary); margin:0 10px">/</span> {{ \Carbon\Carbon::parse($selectedDate)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+            </p>
         </div>
+        <a href="{{ route('booking.index') }}" class="btn-outline" style="text-decoration:none">
+            <i class="fas fa-arrow-left" style="margin-right:10px"></i>KEMBALI KE LIST
+        </a>
+    </div>
 
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 transition-all duration-300 hover:shadow-2xl">
-            <div class="md:flex">
-                <div class="md:w-1/3 relative">
-                    @if ($lapangan->image)
-                        <img class="h-64 w-full md:h-full object-cover"
-                             src="{{ asset('storage/' . $lapangan->image) }}"
-                             alt="{{ $lapangan->name }}">
-                    @else
-                        <div class="h-64 w-full md:h-full bg-gray-100 flex items-center justify-center text-gray-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                    @endif
-                </div>
-                <div class="p-8 md:w-2/3">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full uppercase tracking-wide">{{ $lapangan->category ?? 'Standard' }}</span>
-                            <h1 class="mt-3 text-3xl font-bold text-gray-900">{{ $lapangan->name }}</h1>
-                            <div class="flex items-center mt-2 text-gray-600">
-                                <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                                </svg>
-                                {{ $lapangan->location }}
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div id="court-price" class="text-3xl font-bold text-blue-600">
-                                Rp{{ number_format($lapangan->original_price ?? 10000, 0, ',', '.') }}
-                            </div>
-                            <div class="text-sm text-gray-500">per 2 hours</div>
-                            @if ($lapangan->rating)
-                                <div class="mt-2 flex items-center text-sm text-gray-500">
-                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span>{{ number_format($lapangan->rating, 1) }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
+    {{-- Alert Messages --}}
+    @if(session('error'))
+    <div class="glass fx-reveal delay-1" style="padding:20px; border-left:4px solid #EF4444; margin-bottom:30px; display:flex; align-items:center; gap:15px; background:rgba(239, 68, 68, 0.05)">
+        <i class="fas fa-exclamation-triangle" style="color:#EF4444"></i>
+        <span class="mono" style="font-size:0.8rem; color:#fff">{{ session('error') }}</span>
+    </div>
+    @endif
 
-                    <div class="mt-6 pt-6 border-t border-gray-100">
-                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Description</h3>
-                        <p class="mt-2 text-gray-600">{{ $lapangan->description ?? 'No description available.' }}</p>
-                    </div>
-
-                    <div class="mt-6 pt-6 border-t border-gray-100">
-                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Facilities</h3>
-                        <div class="mt-3 flex flex-wrap gap-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Changing Room
-                            </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Parking Area
-                            </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Equipment Rental
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    @if($errors->any())
+    <div class="glass fx-reveal delay-1" style="padding:24px; border-left:4px solid #EF4444; margin-bottom:30px; background:rgba(239, 68, 68, 0.05)">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px">
+            <i class="fas fa-microchip" style="color:#EF4444"></i>
+            <span class="mono" style="font-weight:700; font-size:0.8rem">SYSTEM_VALIDATION_ERROR:</span>
         </div>
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px">
+            @foreach($errors->all() as $error)
+            <li class="mono" style="font-size:0.75rem; color:rgba(255,255,255,0.7); display:flex; align-items:center; gap:8px">
+                <span style="width:4px; height:4px; background:#EF4444"></span>{{ $error }}
+            </li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-            <div class="px-8 pt-8">
-                <div class="flex items-center">
-                    <div class="flex items-center text-blue-600 relative">
-                        <div class="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-blue-600 bg-blue-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark text-white">
-                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                        </div>
-                        <div class="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-blue-600">Booking Details</div>
-                    </div>
-                    <div class="flex-auto border-t-2 transition duration-500 ease-in-out border-blue-600"></div>
-                    <div class="flex items-center text-gray-500 relative">
-                        <div class="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div class="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-gray-500">Your Info</div>
-                    </div>
-                    <div class="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div>
-                    <div class="flex items-center text-gray-500 relative">
-                        <div class="rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card">
-                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                            </svg>
-                        </div>
-                        <div class="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-gray-500">Payment</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="form-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-6 mt-4" role="alert"></div>
-            <div id="loading-spinner" class="hidden text-center py-4">
-                <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </div>
-
-            <form action="{{ route('booking.store') }}" method="POST" id="booking-form" class="p-6 sm:p-8 space-y-6">
+    <div style="display:grid; grid-template-columns:1fr 400px; gap:40px" class="booking-grid">
+        
+        {{-- Left: Main Form Content --}}
+        <div class="fx-reveal delay-1">
+            <form action="{{ route('booking.store') }}" method="POST" id="booking-form">
                 @csrf
-                @if ($errors->has('error'))
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                        <strong class="font-bold">Error!</strong>
-                        <span class="block sm:inline">{{ $errors->first('error') }}</span>
-                    </div>
-                @endif
                 <input type="hidden" name="lapangan_mode_id" value="{{ $lapangan->id }}">
-                <input type="hidden" name="jam_selesai" id="jam_selesai">
-                <input type="hidden" name="status" id="status" value="pending">
-                <input type="hidden" name="kode_booking" id="kode_booking" value="BOOK-{{ uniqid() }}">
+                <input type="hidden" name="tanggal" value="{{ $selectedDate }}">
+                <input type="hidden" name="kode_booking" id="kode_booking_hidden" value="{{ $bookingData['kode_booking'] ?? 'BK' . strtoupper(Str::random(6)) }}">
+                <input type="hidden" name="durasi" id="durasi_hidden" value="{{ $bookingData['durasi'] ?? 2 }}">
+                <input type="hidden" name="jam_selesai" id="jam_selesai_hidden" value="{{ $bookingData['jam_selesai'] ?? '' }}">
+                <input type="hidden" name="total_harga" id="total_harga_hidden" value="{{ $bookingData['total_harga'] ?? 0 }}">
+                <input type="hidden" name="jam_mulai" id="jam_mulai_input" value="{{ $bookingData['jam_mulai'] ?? '' }}">
 
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-900 flex items-center">
-                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span>
-                        Booking Details
-                    </h2>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-2">Booking Date</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <input type="date" name="tanggal" id="tanggal" value="{{ old('tanggal', $selectedDate ?? '') }}"
-                                       min="{{ now()->toDateString() }}" required
-                                       class="bg-white pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
+                {{-- Slot Selection Panel --}}
+                <div class="glass" style="padding:40px; border-radius:4px; margin-bottom:30px; position:relative">
+                    <div class="corner-accent corner-tl"></div>
+                    <div class="corner-accent corner-br"></div>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px">
+                        <div style="display:flex; align-items:center; gap:15px">
+                            <i class="fas fa-clock" style="color:var(--primary); font-size:1.2rem"></i>
+                            <h2 class="mono" style="font-size:0.9rem; font-weight:700; margin:0">SELECT_TIME_SLOT</h2>
+                        </div>
+                        <div style="display:flex; gap:15px">
+                            <div style="display:flex; align-items:center; gap:6px">
+                                <span style="width:8px; height:8px; background:var(--primary)"></span>
+                                <span class="mono" style="font-size:0.6rem; color:var(--muted)">AVAILABLE</span>
                             </div>
-                            @error('tanggal')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                            <p id="sunday-message" class="mt-2 text-sm text-red-600 hidden">The GOR is closed on Sundays. Please select another date.</p>
+                            <div style="display:flex; align-items:center; gap:6px">
+                                <span style="width:8px; height:8px; background:var(--muted)"></span>
+                                <span class="mono" style="font-size:0.6rem; color:var(--muted)">RESERVED</span>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="durasi" class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-                            <select name="durasi" id="durasi" required
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
-                                <option value="" disabled {{ old('durasi') ? '' : 'selected' }}>Select duration</option>
-                                <option value="2" {{ old('durasi') === '2' ? 'selected' : '' }}>2 Hours</option>
-                                <option value="4" {{ old('durasi') === '4' ? 'selected' : '' }}>4 Hours</option>
-                                <option value="6" {{ old('durasi') === '6' ? 'selected' : '' }}>6 Hours</option>
-                            </select>
-                            @error('durasi')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                    <div id="slots-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:12px">
+                        @foreach($lapangan->availableTimeSlots as $slot)
+                            @php
+                                $isAvailable = $slot['status'] === 'available';
+                                $isPreselected = ($bookingData['jam_mulai'] ?? '') == $slot['time'];
+                            @endphp
+                            <div class="time-slot-item {{ $isAvailable ? 'available' : 'unavailable' }} {{ $isPreselected ? 'selected' : '' }}"
+                                 onclick="{{ $isAvailable ? 'selectTimeSlot(this)' : '' }}"
+                                 data-time="{{ $slot['time'] }}"
+                                 data-end="{{ $slot['end_time'] }}"
+                                 data-price="{{ $lapangan->original_price }}"
+                                 style="padding:15px; border:1px solid var(--border); background:rgba(255,255,255,0.02); cursor:{{ $isAvailable ? 'pointer' : 'not-allowed' }}; transition:all 0.3s; text-align:center; position:relative; overflow:hidden">
+                                
+                                @if(!$isAvailable)
+                                <div style="position:absolute; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:5">
+                                    <i class="fas fa-lock" style="font-size:0.7rem; color:var(--muted)"></i>
+                                </div>
+                                @endif
+
+                                <div class="mono" style="font-size:0.9rem; font-weight:700; color:{{ $isAvailable ? '#fff' : 'var(--muted)' }}; position:relative; z-index:2">
+                                    {{ substr($slot['time'], 0, 5) }}
+                                </div>
+                                <div class="mono" style="font-size:0.55rem; color:var(--muted); margin-top:4px; position:relative; z-index:2">
+                                    TO {{ substr($slot['end_time'], 0, 5) }}
+                                </div>
+
+                                @if($isAvailable)
+                                <div class="slot-hover-bg" style="position:absolute; bottom:0; left:0; right:0; height:0; background:var(--primary); transition:all 0.3s; z-index:1; opacity:0.1"></div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div id="no-slots-msg" style="display:{{ empty($lapangan->availableTimeSlots) ? 'block' : 'none' }}; text-align:center; padding:40px">
+                        <i class="fas fa-calendar-times" style="font-size:2rem; color:var(--muted); display:block; margin-bottom:15px"></i>
+                        <span class="mono" style="font-size:0.8rem; color:var(--muted)">NO_SLOTS_AVAILABLE_FOR_SELECTED_DATE</span>
+                    </div>
+                </div>
+
+                {{-- Personal Data Panel --}}
+                <div class="glass" style="padding:40px; border-radius:4px; margin-bottom:30px; position:relative">
+                    <div class="corner-accent corner-tl"></div>
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:35px">
+                        <i class="fas fa-id-card" style="color:var(--primary); font-size:1.2rem"></i>
+                        <h2 class="mono" style="font-size:0.9rem; font-weight:700; margin:0">PERSONAL_RESERVATION_DATA</h2>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px" class="form-fields">
+                        <div style="grid-column:1/-1">
+                            <label class="mono" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.2em; display:block; margin-bottom:10px">PLAYER_FULL_NAME</label>
+                            <input type="text" name="nama_pemesan" class="input-raw" style="width:100%" placeholder="ENTER NAME" value="{{ old('nama_pemesan', $bookingData['nama_pemesan'] ?? '') }}" required>
                         </div>
-
-                        <div class="md:col-span-2 bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="jam_mulai" class="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
-                            <select name="jam_mulai" id="jam_mulai" required
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
-                                <option value="" disabled {{ old('jam_mulai') ? '' : 'selected' }}>Select start time</option>
-                                @foreach ($lapangan->availableTimeSlots as $slot)
-                                    @if ($slot['status'] === 'available')
-                                        <option value="{{ $slot['time'] }}" {{ old('jam_mulai') === $slot['time'] ? 'selected' : '' }}>{{ $slot['time'] }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @error('jam_mulai')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                            <p id="no-timeslots-message" class="mt-2 text-sm text-red-600 hidden">No available time slots for the selected date.</p>
-                            <p id="end-time-warning" class="mt-2 text-sm text-yellow-600 hidden">Selected duration exceeds operational hours (ends by 22:00). Please choose an earlier start time or shorter duration.</p>
+                        <div>
+                            <label class="mono" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.2em; display:block; margin-bottom:10px">COMMUNICATION_LINE (HP)</label>
+                            <input type="tel" name="nomor_telepon" class="input-raw" style="width:100%" placeholder="0812XXXXXXXX" value="{{ old('nomor_telepon', $bookingData['nomor_telepon'] ?? '') }}" required>
+                        </div>
+                        <div>
+                            <label class="mono" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.2em; display:block; margin-bottom:10px">ELECTRONIC_MAIL</label>
+                            <input type="email" name="email" class="input-raw" style="width:100%" placeholder="EMAIL@DOMAIN.COM" value="{{ old('email', $bookingData['email'] ?? '') }}">
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-900 flex items-center">
-                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span>
-                        Your Information
-                    </h2>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="nama_pemesan" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <input type="text" name="nama_pemesan" id="nama_pemesan" value="{{ old('nama_pemesan') }}" required
-                                       class="bg-white pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
-                            </div>
-                            @error('nama_pemesan')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="nomor_telepon" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
-                                    </svg>
-                                </div>
-                                <input type="text" name="nomor_telepon" id="nomor_telepon" value="{{ old('nomor_telepon') }}" required
-                                       class="bg-white pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
-                            </div>
-                            @error('nomor_telepon')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="md:col-span-2 bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email (Optional)</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                                    </svg>
-                                </div>
-                                <input type="email" name="email" id="email" value="{{ old('email') }}"
-                                       class="bg-white pl-10 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
-                            </div>
-                            @error('email')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-900 flex items-center">
-                        <span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span>
-                        Payment Details
-                    </h2>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="metode_pembayaran" class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
-                            <select name="metode_pembayaran" id="metode_pembayaran" required
-                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-12">
-                                <option value="" disabled {{ old('metode_pembayaran') ? '' : 'selected' }}>Select payment method</option>
-                                <option value="cash" {{ old('metode_pembayaran') === 'cash' ? 'selected' : '' }}>Cash</option>
-                                <option value="transfer" {{ old('metode_pembayaran') === 'transfer' ? 'selected' : '' }}>Bank Transfer</option>
-                                <option value="qris" {{ old('metode_pembayaran') === 'qris' ? 'selected' : '' }}>QRIS</option>
-                            </select>
-                            @error('metode_pembayaran')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-                            <label for="total_harga_display" class="block text-sm font-medium text-gray-700 mb-2">Total Price</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07-.34-.433-.582a2.305 2.305 0 01-.567.267z"></path>
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <input type="text" id="total_harga_display" readonly
-                                       class="bg-white pl-10 block w-full rounded-lg border-gray-300 shadow-sm h-12">
-                                <input type="hidden" name="total_harga" id="total_harga">
-                            </div>
-                            @error('total_harga')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Booking Summary</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Court:</span>
-                            <span class="font-medium">{{ $lapangan->name }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Booking Code:</span>
-                            <span class="font-medium" id="summary-kode_booking">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Date:</span>
-                            <span class="font-medium" id="summary-date">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Time:</span>
-                            <span class="font-medium" id="summary-time">-</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Duration:</span>
-                            <span class="font-medium" id="summary-duration">-</span>
-                        </div>
-                        <div class="border-t border-gray-200 my-2"></div>
-                        <div class="flex justify-between text-lg font-bold text-blue-600">
-                            <span>Total:</span>
-                            <span id="summary-total">Rp0</span>
-                        </div>
+                {{-- Payment Panel --}}
+                <div class="glass" style="padding:40px; border-radius:4px; position:relative">
+                    <div class="corner-accent corner-tl"></div>
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:35px">
+                        <i class="fas fa-credit-card" style="color:var(--primary); font-size:1.2rem"></i>
+                        <h2 class="mono" style="font-size:0.9rem; font-weight:700; margin:0">PAYMENT_GATEWAY_SELECTION</h2>
                     </div>
 
-                    <div class="mt-6">
-                        <button type="submit" id="submit-button" disabled
-                                class="w-full flex justify-center items-center py-4 px-6 border border-transparent rounded-xl shadow-sm text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-1 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                            <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            Confirm Booking
-                        </button>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:15px">
+                        @foreach([
+                            ['cash', 'CASH_DIRECT', 'fa-money-bill-wave'],
+                            ['transfer', 'BANK_TRANSFER', 'fa-university'],
+                            ['qris', 'QRIS_SCAN', 'fa-qrcode'],
+                            ['ewallet', 'E_WALLET', 'fa-mobile-alt']
+                        ] as [$val, $lbl, $ico])
+                        <label style="cursor:pointer">
+                            <input type="radio" name="metode_pembayaran" value="{{ $val }}" style="display:none" class="payment-radio" {{ old('metode_pembayaran', $bookingData['metode_pembayaran'] ?? 'cash') === $val ? 'checked' : '' }}>
+                            <div class="payment-card {{ old('metode_pembayaran', $bookingData['metode_pembayaran'] ?? 'cash') === $val ? 'selected' : '' }}" 
+                                 style="padding:20px; border:1px solid var(--border); text-align:center; background:rgba(255,255,255,0.02); transition:all 0.3s">
+                                <i class="fas {{ $ico }}" style="font-size:1.2rem; margin-bottom:12px; display:block; color:var(--muted); transition:color 0.3s"></i>
+                                <span class="mono" style="font-size:0.6rem; color:var(--muted); transition:color 0.3s">{{ $lbl }}</span>
+                            </div>
+                        </label>
+                        @endforeach
                     </div>
                 </div>
             </form>
         </div>
+
+        {{-- Right: Reservation Summary Sticky --}}
+        <div class="fx-reveal delay-2">
+            <div style="position:sticky; top:110px">
+                <div class="glass" style="padding:0; border-radius:4px; overflow:hidden">
+                    {{-- Small Banner --}}
+                    <div style="height:8px; background:linear-gradient(90deg, var(--primary), var(--accent))"></div>
+                    
+                    <div style="padding:40px">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px">
+                            <div>
+                                <span class="tag-mono" style="margin-bottom:8px; display:inline-block">SUMMARY_REPORT</span>
+                                <h3 class="display" style="font-size:1.8rem; margin:0; letter-spacing:0.05em">{{ $lapangan->name }}</h3>
+                                <p class="mono" style="font-size:0.6rem; color:var(--muted); margin-top:5px">LOC: {{ $lapangan->location }}</p>
+                            </div>
+                            <div style="text-align:right">
+                                <i class="fas fa-shield-alt" style="color:var(--accent); font-size:1rem"></i>
+                            </div>
+                        </div>
+
+                        <div style="background:rgba(255,255,255,0.02); padding:20px; border:1px solid var(--border); margin-bottom:30px">
+                            <div style="display:flex; flex-direction:column; gap:15px">
+                                <div style="display:flex; justify-content:space-between; align-items:center">
+                                    <span class="mono" style="font-size:0.65rem; color:var(--muted)">DATE_RESERVE</span>
+                                    <span class="mono" style="font-size:0.75rem; color:#fff">{{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center">
+                                    <span class="mono" style="font-size:0.65rem; color:var(--muted)">TIME_SLOT</span>
+                                    <span id="label-time" class="mono" style="font-size:0.75rem; color:var(--accent)">PENDING_SELECTION</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center">
+                                    <span class="mono" style="font-size:0.65rem; color:var(--muted)">DURATION_TKN</span>
+                                    <span id="label-duration" class="mono" style="font-size:0.75rem; color:#fff">--</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--border); padding-top:15px; margin-top:5px">
+                                    <span class="mono" style="font-size:0.65rem; color:var(--muted)">UNIT_PRICE</span>
+                                    <span class="mono" style="font-size:0.75rem; color:#fff">Rp{{ number_format($lapangan->original_price, 0, ',', '.') }} <span style="font-size:0.5rem">/2H</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom:30px">
+                            <div class="mono" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; margin-bottom:10px">TOTAL_AMOUNT_TO_PAY</div>
+                            <div id="label-total" class="display" style="font-size:2.8rem; color:#fff">Rp 0</div>
+                            <div class="mono" style="font-size:0.55rem; color:var(--primary); margin-top:5px">*TAX_INCLUDED_SECURE_TRANSACTION</div>
+                        </div>
+
+                        <button type="button" onclick="document.getElementById('booking-form').submit()" id="btn-submit" class="btn-cyber" style="width:100%; justify-content:center; padding:18px" disabled>
+                            INITIALIZE_BOOKING <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div style="padding:15px 40px; background:rgba(0,0,0,0.3); border-top:1px solid var(--border)">
+                        <div style="display:flex; align-items:center; gap:10px">
+                            <div style="width:8px; height:8px; border-radius:50%; background:{{ $lapangan->isAvailable ? 'var(--accent)' : '#EF4444' }}; box-shadow:0 0 10px {{ $lapangan->isAvailable ? 'var(--accent)' : '#EF4444' }}"></div>
+                            <span class="mono" style="font-size:0.55rem; color:var(--muted)">ARENA_STATUS: {{ $lapangan->isAvailable ? 'ONLINE_READY' : 'OFFLINE_BUSY' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-@php
-    $hargaPer2Jam = $lapangan->original_price ?? 10000;
-@endphp
+<style>
+    .time-slot-item:hover:not(.unavailable) {
+        border-color: var(--primary);
+        background: rgba(var(--primary-rgb), 0.05);
+    }
+    .time-slot-item.selected {
+        border-color: var(--primary);
+        background: rgba(93, 95, 239, 0.1);
+        box-shadow: inset 0 0 15px rgba(93, 95, 239, 0.2);
+    }
+    .time-slot-item.selected .mono {
+        color: var(--accent) !important;
+    }
+    .time-slot-item.selected::after {
+        content: '';
+        position: absolute;
+        bottom: 0; right: 0;
+        border-style: solid;
+        border-width: 0 0 12px 12px;
+        border-color: transparent transparent var(--primary) transparent;
+    }
 
-<script type="application/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('Form loaded. Initializing JavaScript.');
+    .payment-card:hover:not(.selected) {
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .payment-card.selected {
+        border-color: var(--primary);
+        background: rgba(93, 95, 239, 0.05);
+    }
+    .payment-card.selected i {
+        color: var(--accent) !important;
+    }
+    .payment-card.selected span {
+        color: #fff !important;
+    }
 
-        let hargaPer2Jam = JSON.parse(`@json($hargaPer2Jam)`);
-        const durasiSelect = document.getElementById('durasi');
-        const jamMulaiSelect = document.getElementById('jam_mulai');
-        const jamSelesaiInput = document.getElementById('jam_selesai');
-        const tanggalInput = document.getElementById('tanggal');
-        const namaPemesanInput = document.getElementById('nama_pemesan');
-        const nomorTeleponInput = document.getElementById('nomor_telepon');
-        const emailInput = document.getElementById('email');
-        const metodePembayaranSelect = document.getElementById('metode_pembayaran');
-        const totalHargaDisplay = document.getElementById('total_harga_display');
-        const totalHargaInput = document.getElementById('total_harga');
-        const kodeBookingInput = document.getElementById('kode_booking');
-        const submitButton = document.getElementById('submit-button');
-        const summaryDate = document.getElementById('summary-date');
-        const summaryTime = document.getElementById('summary-time');
-        const summaryDuration = document.getElementById('summary-duration');
-        const summaryTotal = document.getElementById('summary-total');
-        const summaryKodeBooking = document.getElementById('summary-kode_booking');
-        const noTimeslotsMessage = document.getElementById('no-timeslots-message');
-        const sundayMessage = document.getElementById('sunday-message');
-        const endTimeWarning = document.getElementById('end-time-warning');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const formError = document.getElementById('form-error');
-        const courtPriceDisplay = document.getElementById('court-price');
-        const lapanganId = document.querySelector('input[name="lapangan_mode_id"]').value;
+    @media (max-width: 1024px) {
+        .booking-grid { grid-template-columns: 1fr !important; }
+        .form-fields { grid-template-columns: 1fr !important; }
+    }
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        if (!csrfToken) {
-            console.error('CSRF token not found.');
-            showError('Security error: CSRF token missing');
-            return;
-        }
+    #btn-submit:disabled {
+        background: #1a1a1a;
+        color: #444;
+        cursor: not-allowed;
+        transform: none !important;
+        clip-path: none;
+        border: 1px solid #333;
+    }
+</style>
 
-        function showError(message) {
-            if (formError) {
-                formError.textContent = message;
-                formError.classList.remove('hidden');
-                formError.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+<script>
+    function selectTimeSlot(el) {
+        // Clear previous selection
+        document.querySelectorAll('.time-slot-item').forEach(item => item.classList.remove('selected'));
+        
+        // Add selected class
+        el.classList.add('selected');
+        
+        // Update hidden inputs
+        const startTime = el.dataset.time;
+        const endTime = el.dataset.end;
+        const price = parseInt(el.dataset.price);
+        const duration = 2; // Fixed interval as per controller
+        const total = price * (duration / 2);
 
-        function hideError() {
-            if (formError) {
-                formError.classList.add('hidden');
-            }
-        }
+        document.getElementById('jam_mulai_input').value = startTime;
+        document.getElementById('jam_selesai_hidden').value = endTime;
+        document.getElementById('durasi_hidden').value = duration;
+        document.getElementById('total_harga_hidden').value = total;
 
-        function formatDate(dateString) {
-            try {
-                return new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                });
-            } catch (e) {
-                console.error('Error formatting date:', e);
-                return '-';
-            }
-        }
+        // Update Labels
+        document.getElementById('label-time').innerText = startTime.substring(0, 5) + ' - ' + endTime.substring(0, 5);
+        document.getElementById('label-duration').innerText = duration + 'H';
+        document.getElementById('label-total').innerText = 'Rp ' + total.toLocaleString('id-ID');
 
-        function calculateJamSelesai() {
-            const jamMulai = jamMulaiSelect.value;
-            const durasi = parseInt(durasiSelect.value) || 0;
-            endTimeWarning.classList.add('hidden');
+        // Enable button
+        document.getElementById('btn-submit').disabled = false;
+        
+        // Visual feedback
+        console.log('Slot selected:', startTime);
+    }
 
-            if (!jamMulai || !durasi) return '';
-
-            const [startHour, startMinute] = jamMulai.split(':').map(Number);
-            const startDateTime = new Date();
-            startDateTime.setHours(startHour, startMinute, 0, 0);
-
-            const endDateTime = new Date(startDateTime.getTime() + durasi * 60 * 60 * 1000);
-            const closingHour = 22;
-            const closingTime = new Date(startDateTime);
-            closingTime.setHours(closingHour, 0, 0, 0);
-
-            if (endDateTime > closingTime) {
-                endTimeWarning.classList.remove('hidden');
-                return '';
-            }
-
-            return `${String(endDateTime.getHours()).padStart(2, '0')}:${String(endDateTime.getMinutes()).padStart(2, '0')}`;
-        }
-
-        function updateTotalHarga() {
-            const durasi = parseInt(durasiSelect.value) || 0;
-            const totalHarga = hargaPer2Jam * (durasi / 2);
-            totalHargaDisplay.value = totalHarga ? `Rp${totalHarga.toLocaleString('id-ID')}` : '';
-            totalHargaInput.value = totalHarga ? totalHarga.toFixed(2) : '';
-            jamSelesaiInput.value = calculateJamSelesai();
-            updateSummary();
-            validateForm();
-            console.log('Updated total harga:', { durasi, hargaPer2Jam, totalHarga });
-        }
-
-        function updateSummary() {
-            summaryDate.textContent = tanggalInput.value ? formatDate(tanggalInput.value) : '-';
-            const startTime = jamMulaiSelect.value;
-            const endTime = jamSelesaiInput.value;
-            summaryTime.textContent = (startTime && endTime) ? `${startTime} - ${endTime}` : '-';
-            summaryDuration.textContent = durasiSelect.value ? `${durasiSelect.value} Hours` : '-';
-            summaryTotal.textContent = totalHargaInput.value ? `Rp${parseFloat(totalHargaInput.value).toLocaleString('id-ID')}` : 'Rp0';
-            summaryKodeBooking.textContent = kodeBookingInput.value || '-';
-        }
-
-        function validateForm() {
-            const cleanedPhone = nomorTeleponInput.value.replace(/[^\d+]/g, '');
-            const isSundaySelected = tanggalInput.value && (new Date(tanggalInput.value + 'T00:00:00').getDay() === 0);
-            const isValidEmail = !emailInput.value || emailInput.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
-            const isValid = tanggalInput.value &&
-                !isSundaySelected &&
-                durasiSelect.value &&
-                jamMulaiSelect.value &&
-                jamSelesaiInput.value &&
-                endTimeWarning.classList.contains('hidden') &&
-                namaPemesanInput.value.trim().length >= 2 &&
-                cleanedPhone.match(/^\+?(\d{8,15})$/) &&
-                metodePembayaranSelect.value &&
-                parseFloat(totalHargaInput.value) > 0 &&
-                kodeBookingInput.value &&
-                isValidEmail;
-
-            submitButton.disabled = !isValid;
-            console.log('Form validation:', {
-                isValid,
-                tanggal: tanggalInput.value,
-                isSunday: isSundaySelected,
-                durasi: durasiSelect.value,
-                jamMulai: jamMulaiSelect.value,
-                jamSelesai: jamSelesaiInput.value,
-                endTimeWarningHidden: endTimeWarning.classList.contains('hidden'),
-                namaPemesan: namaPemesanInput.value.trim().length >= 2,
-                nomorTelepon: cleanedPhone,
-                email: isValidEmail,
-                metodePembayaran: metodePembayaranSelect.value,
-                totalHarga: parseFloat(totalHargaInput.value),
-                kodeBooking: kodeBookingInput.value
-            });
-            return isValid;
-        }
-
-        async function fetchAvailableTimeSlots() {
-            const date = tanggalInput.value;
-            if (!date) return;
-
-            try {
-                loadingSpinner.classList.remove('hidden');
-                jamMulaiSelect.disabled = true;
-                durasiSelect.disabled = true;
-                hideError();
-
-                const isSunday = new Date(date + 'T00:00:00').getDay() === 0;
-                if (isSunday) {
-                    sundayMessage.classList.remove('hidden');
-                    jamMulaiSelect.innerHTML = '<option value="" disabled selected>Select start time</option>';
-                    noTimeslotsMessage.classList.add('hidden');
-                    updateTotalHarga();
-                    return;
-                }
-                sundayMessage.classList.add('hidden');
-
-                const url = `/booking/timeslots?date=${encodeURIComponent(date)}&lapangan_mode_id=${encodeURIComponent(lapanganId)}`;
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
-                }
-
-                const { slots, hargaPer2Jam: serverPrice } = await response.json();
-                console.log('Received from server:', { slots, serverPrice });
-                hargaPer2Jam = serverPrice || hargaPer2Jam;
-                courtPriceDisplay.textContent = `Rp${hargaPer2Jam.toLocaleString('id-ID')}`;
-
-                jamMulaiSelect.innerHTML = '<option value="" disabled selected>Select start time</option>';
-                if (!slots || slots.length === 0) {
-                    noTimeslotsMessage.classList.remove('hidden');
-                    noTimeslotsMessage.textContent = 'No available time slots for the selected date.';
-                    return;
-                }
-
-                noTimeslotsMessage.classList.add('hidden');
-                slots.filter(slot => slot.status === 'available').forEach(slot => {
-                    const option = document.createElement('option');
-                    option.value = slot.time;
-                    option.textContent = slot.time;
-                    jamMulaiSelect.appendChild(option);
-                });
-
-                const oldJamMulai = "{{ old('jam_mulai') }}";
-                if (oldJamMulai && slots.some(slot => slot.time === oldJamMulai)) {
-                    jamMulaiSelect.value = oldJamMulai;
-                }
-
-                updateTotalHarga();
-            } catch (error) {
-                showError(`Failed to load time slots: ${error.message}`);
-                console.error('Error fetching time slots:', error);
-                jamMulaiSelect.innerHTML = '<option value="" disabled selected>No available time slots</option>';
-                noTimeslotsMessage.classList.remove('hidden');
-                noTimeslotsMessage.textContent = 'Unable to load time slots. Please try again later.';
-            } finally {
-                loadingSpinner.classList.add('hidden');
-                jamMulaiSelect.disabled = false;
-                durasiSelect.disabled = false;
-                updateTotalHarga();
-                validateForm();
-            }
-        }
-
-        document.getElementById('booking-form').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            if (!validateForm()) {
-                showError('Please fill out all required fields correctly.');
-                return;
-            }
-
-            try {
-                // Generate a new kode_booking before submission
-                kodeBookingInput.value = `BOOK-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-                summaryKodeBooking.textContent = kodeBookingInput.value;
-
-                submitButton.disabled = true;
-                loadingSpinner.classList.remove('hidden');
-                hideError();
-
-                const formData = new FormData(this);
-                const formValues = Object.fromEntries(formData);
-                console.log('Form submitted with data:', formValues);
-
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `Booking failed: HTTP ${response.status}`);
-                }
-
-                window.location.href = '/booking/success';
-            } catch (error) {
-                showError(error.message);
-                console.error('Form submission error:', error);
-                submitButton.disabled = false;
-                loadingSpinner.classList.add('hidden');
-            }
+    // Payment radio listener
+    document.querySelectorAll('.payment-radio').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('selected'));
+            e.target.closest('label').querySelector('.payment-card').classList.add('selected');
         });
+    });
 
-        nomorTeleponInput.addEventListener('input', () => {
-            const phoneError = document.getElementById('phone-error') || document.createElement('p');
-            phoneError.id = 'phone-error';
-            phoneError.className = 'mt-2 text-sm text-red-600';
-            const cleanedPhone = nomorTeleponInput.value.replace(/[^\d+]/g, '');
-            if (!cleanedPhone.match(/^\+?(\d{8,15})$/)) {
-                phoneError.textContent = 'Please enter a valid phone number (8-15 digits, may start with +)';
-                nomorTeleponInput.after(phoneError);
-            } else {
-                phoneError.remove();
+    // Handle pre-filled data if returning from validation error
+    document.addEventListener('DOMContentLoaded', () => {
+        const prefilledTime = "{{ old('jam_mulai', $bookingData['jam_mulai'] ?? '') }}";
+        if (prefilledTime) {
+            const el = document.querySelector(`.time-slot-item[data-time="${prefilledTime}"]`);
+            if (el && el.classList.contains('available')) {
+                selectTimeSlot(el);
             }
-            validateForm();
-        });
-
-        emailInput.addEventListener('input', validateForm);
-        durasiSelect.addEventListener('change', updateTotalHarga);
-        jamMulaiSelect.addEventListener('change', updateTotalHarga);
-        tanggalInput.addEventListener('change', fetchAvailableTimeSlots);
-        namaPemesanInput.addEventListener('input', validateForm);
-        nomorTeleponInput.addEventListener('input', validateForm);
-        metodePembayaranSelect.addEventListener('change', validateForm);
-
-        // Initial fetch and validation
-        fetchAvailableTimeSlots().then(() => {
-            validateForm();
-            updateTotalHarga();
-        });
+        }
     });
 </script>
 @endsection

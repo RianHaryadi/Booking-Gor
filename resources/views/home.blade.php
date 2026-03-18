@@ -1,995 +1,326 @@
 @extends('layouts.app')
-
-@section('title', 'GOR Sportiva - Pusat Olahraga Premium')
+@section('title','Arena Sportiva — Premier Sport Hub')
 
 @section('content')
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<meta name="description" content="GOR Sportiva - Pusat olahraga premium di Bandung dengan fasilitas bertaraf internasional untuk atlet dan komunitas olahraga.">
-<meta name="keywords" content="GOR Sportiva, olahraga, futsal, basket, badminton, voli, Bandung">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="scanline"></div>
 
-<section id="home" class="relative h-screen flex items-center justify-center text-white overflow-hidden pt-16">
-    <!-- Background Image with Parallax Effect -->
-    <div class="absolute inset-0 z-0 overflow-hidden">
-        <img src="{{ asset('images/pintu.jpg') }}" alt="GOR Sportiva Hero Background" 
-             class="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-1000 ease-out">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 z-1"></div>
-    </div>
+{{-- ── HERO SECTION ──────────────────────────────────────── --}}
+<section style="min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 7vw 100px" class="dot-pattern">
+  
+  {{-- BG IMAGE LAYER --}}
+  <div style="position:absolute;inset:0;z-index:0">
+    <img src="{{ asset('images/hero_sports.png') }}" alt="" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.3) contrast(1.1)">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg, var(--bg) 0%, rgba(5,5,5,0.7) 50%, transparent 100%)"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 30%, rgba(93,95,239,0.15), transparent 60%)"></div>
+  </div>
 
-    <!-- Content -->
-    <div class="relative z-10 text-center px-6 max-w-6xl mx-auto">
-        <div class="mb-8 animate__animated animate__fadeInDown">
-            <!-- Badge -->
-            <span class="inline-block bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium mb-6 border border-white/30 
-                        transition-all duration-500 hover:bg-white/30 hover:scale-105 hover:shadow-lg">
-                <i class="fas fa-medal mr-2 text-yellow-300"></i> GOR Terbaik di Kota 2023
-            </span>
-
-            <!-- Main Heading -->
-            <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 header-font leading-tight tracking-tight">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-blue-200 
-                          animate-text-shimmer bg-[length:200%_100%]">
-                    GOR SPORTIVA
-                </span>
-            </h1>
-
-            <!-- Subheading -->
-            <p class="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-blue-100 leading-relaxed font-light tracking-wide">
-                Pusat olahraga premium dengan fasilitas bertaraf internasional untuk atlet profesional dan komunitas olahraga
-            </p>
-
-            <!-- Buttons -->
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="{{ route('booking.index') }}" 
-                   class="bg-white text-blue-800 font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg hover:shadow-xl 
-                          transition-all duration-300 inline-flex items-center justify-center transform hover:scale-105 
-                          glow-effect hover:glow-effect-lg active:scale-95">
-                    <i class="fas fa-calendar-alt mr-3 text-lg"></i> Booking Sekarang
-                </a>
-                <a href="#schedule" 
-                   class="border-2 border-white text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-xl hover:bg-white/20 
-                          transition-all duration-300 inline-flex items-center justify-center transform hover:scale-105 
-                          backdrop-blur-sm active:scale-95">
-                    <i class="fas fa-video mr-3 text-lg"></i> Lihat Jadwal
-                </a>
-            </div>
-        </div>
-    </div>
+  <div style="position:relative;z-index:2;max-width:1400px;width:100%;margin:0 auto;display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center" class="hero-grid">
     
-    <!-- Scroll Down Indicator -->
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce-slow">
-        <a href="#facilities" 
-           class="w-12 h-12 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center text-white 
-                  hover:bg-white/30 transition-all duration-300 hover:scale-110 hover:shadow-md"
-           aria-label="Scroll to facilities">
-            <i class="fas fa-chevron-down text-lg animate-pulse"></i>
-        </a>
+    <div class="fx-reveal">
+      <div style="display:inline-flex;align-items:center;gap:12px;margin-bottom:32px">
+        <div class="tag-mono" style="background:var(--accent);color:#000;border:none;font-size:0.65rem;font-weight:900">[ ARENA_LIVE ]</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px var(--accent);animation:pulse 2s infinite"></span>
+          <span class="mono" style="font-size:0.7rem;color:rgba(255,255,255,0.4)">SYNC_ID: {{$lap_id ?? '820'}} // STATUS: OPTIMAL</span>
+        </div>
+      </div>
+
+      <h1 class="display" style="font-size:clamp(60px, 12vw, 160px);margin-bottom:32px;color:#fff;line-height:0.8;letter-spacing:-0.02em; position:relative">
+        <span style="position:absolute; top:-20px; left:0; font-size:1rem; color:var(--accent); font-family:var(--mono)">⌖</span>
+        DOMINATE<br>
+        THE <span style="color:var(--accent)">COURT</span>
+      </h1>
+
+      <div style="max-width:550px">
+        <p style="color:rgba(255,255,255,0.6);line-height:1.7;font-size:1.15rem;margin-bottom:45px" class="mono">
+          Premier multi-sport destination. Industrial grade facilities for badminton, basketball, and futsal. Engineered for elite performance.
+        </p>
+        <div style="display:flex;gap:15px; align-items:center">
+          <a href="{{ route('booking.index') }}" class="btn-cyber" style="padding:18px 45px; font-size: 0.8rem">
+            <i class="fas fa-calendar-alt"></i> BOOK_ARENA
+          </a>
+          <a href="#intel" class="btn-outline" style="padding:18px 45px; font-size: 0.8rem">
+            <i class="fas fa-info-circle"></i> EXPLORE_STATS
+          </a>
+          <div class="nav-desktop mono" style="font-size:0.55rem; color:var(--muted); margin-left:20px; border-left:1px solid var(--border); padding-left:20px">
+            VER: 1.0.8<br>PROTO: SECURE
+          </div>
+        </div>
+      </div>
     </div>
+
+    {{-- Performance Panel (Sport-focused Stats) --}}
+    <div class="fx-reveal delay-1 nav-desktop" style="border-left:1px solid var(--border);padding-left:40px;position:relative">
+      <div class="corner-accent corner-tl"></div>
+      <div class="corner-accent corner-br"></div>
+      
+      <div style="margin-bottom:45px">
+        <div class="mono" style="font-size:0.65rem;color:var(--muted);margin-bottom:20px;letter-spacing:0.2em">ARENA_CAPACITY_LOAD //</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          @foreach([['Active Courts','12/15'],['Utilization','92%'],['Peak Hours','17:00-21:00'],['Surface','Pro-Vinyl']] as [$l,$v])
+          <div class="card-raw" style="padding:20px;background:rgba(255,255,255,0.01);border:1px solid var(--border); position:relative">
+            <div style="position:absolute; top:5px; right:8px; font-size:0.5rem; color:rgba(255,255,255,0.1)">ITEM_{{rand(100,999)}}</div>
+            <div class="mono" style="font-size:0.6rem;color:var(--muted);text-transform:uppercase;margin-bottom:8px">{{ $l }}</div>
+            <div class="display" style="font-size:1.4rem;color:#fff">{{ $v }}</div>
+          </div>
+          @endforeach
+        </div>
+      </div>
+
+      {{-- Sport Icons Visual --}}
+      <div style="display:flex;gap:35px;justify-content:center;opacity:0.4">
+        <div style="text-align:center"><i class="fas fa-shuttlecock" style="font-size:2rem;color:var(--accent)"></i><div class="mono" style="font-size:0.5rem; margin-top:5px">BDMN</div></div>
+        <div style="text-align:center"><i class="fas fa-basketball-ball" style="font-size:2rem;color:var(--accent)"></i><div class="mono" style="font-size:0.5rem; margin-top:5px">BSKT</div></div>
+        <div style="text-align:center"><i class="fas fa-futbol" style="font-size:2rem;color:var(--accent)"></i><div class="mono" style="font-size:0.5rem; margin-top:5px">FTSL</div></div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Floating Coordinates (Keeps premium feel but in sports context) --}}
+  <div class="mono" style="position:absolute;right:2vw;top:50%;transform:translateY(-50%) rotate(90deg);font-size:0.6rem;color:rgba(255,255,255,0.15);letter-spacing:0.5em">
+    LOC: SECTOR_A // ARENA_HUB_018 // GPS: -6.1751, 106.8650
+  </div>
 </section>
 
-<section class="py-20 bg-gradient-to-br from-blue-50 to-indigo-50 -mt-1">
-    <div class="container mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
-            <div class="stat-card bg-white p-6 sm:p-8 rounded-2xl shadow-md text-center border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-indigo-300 group relative overflow-hidden animate__animated animate__fadeIn">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-                <div class="absolute top-4 right-4 text-indigo-400 group-hover:text-indigo-600 transition-colors stat-icon">
-                    <i class="fas fa-futbol text-xl sm:text-2xl"></i>
-                </div>
-                <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 mb-3 transition-colors duration-300 group-hover:text-indigo-700 stat-number" data-count="15">10+</div>
-                <div class="text-gray-600 font-medium text-sm sm:text-base">Lapangan Olahraga</div>
-                <div class="mt-4 flex justify-center">
-                    <div class="w-12 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full transition-all duration-500 group-hover:w-16"></div>
-                </div>
-            </div>
-            <div class="stat-card bg-white p-6 sm:p-8 rounded-2xl shadow-md text-center border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-blue-300 group relative overflow-hidden animate__animated animate__fadeIn delay-100">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-                <div class="absolute top-4 right-4 text-indigo-400 group-hover:text-blue-600 transition-colors stat-icon">
-                    <i class="fas fa-users text-xl sm:text-2xl"></i>
-                </div>
-                <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 mb-3 transition-colors duration-300 group-hover:text-blue-700 stat-number" data-count="10000">100+</div>
-                <div class="text-gray-600 font-medium text-sm sm:text-base">Pengguna Bulanan</div>
-                <div class="mt-4 flex justify-center">
-                    <div class="w-12 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full transition-all duration-500 group-hover:w-16"></div>
-                </div>
-            </div>
-            <div class="stat-card bg-white p-6 sm:p-8 rounded-2xl shadow-md text-center border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-green-300 group relative overflow-hidden animate__animated animate__fadeIn delay-200">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-                <div class="absolute top-4 right-4 text-indigo-400 group-hover:text-green-500 transition-colors stat-icon">
-                    <i class="fas fa-headset text-xl sm:text-2xl"></i>
-                </div>
-                <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 mb-3 transition-colors duration-300 group-hover:text-green-600 stat-number" data-count="24">24/7</div>
-                <div class="text-gray-600 font-medium text-sm sm:text-base">Layanan Pelanggan</div>
-                <div class="mt-4 flex justify-center">
-                    <div class="w-12 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full transition-all duration-500 group-hover:w-16"></div>
-                </div>
-            </div>
-            <div class="stat-card bg-white p-6 sm:p-8 rounded-2xl shadow-md text-center border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-amber-300 group relative overflow-hidden animate__animated animate__fadeIn delay-300">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-                <div class="absolute top-4 right-4 text-indigo-400 group-hover:text-amber-500 transition-colors stat-icon">
-                    <i class="fas fa-award text-xl sm:text-2xl"></i>
-                </div>
-                <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 mb-3 transition-colors duration-300 group-hover:text-amber-600 stat-number" data-count="5">5</div>
-                <div class="text-gray-600 font-medium text-sm sm:text-base">Tahun Pengalaman</div>
-                <div class="mt-4 flex justify-center">
-                    <div class="w-12 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full transition-all duration-500 group-hover:w-16"></div>
-                </div>
-            </div>
-        </div>
+{{-- ── SPORT TICKER ── --}}
+<div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:#080808;padding:20px 0;overflow:hidden">
+  <div style="display:flex;white-space:nowrap;animation:ticker 40s linear infinite">
+    @foreach(range(1,8) as $i)
+    <div style="display:flex;align-items:center;gap:40px;padding:0 40px">
+      <span class="mono" style="font-size:0.7rem;color:var(--primary)">[ LOG_{{rand(1000,9999)}} ]</span>
+      <span class="display" style="font-size:1.5rem;color:#fff">BADMINTON_PRO_COURTS</span>
+      <i class="fas fa-bolt" style="color:var(--accent);font-size:1rem"></i>
+      <span class="display" style="font-size:1.5rem;color:#fff">FUTSAL_READY</span>
+      <i class="fas fa-basketball-ball" style="color:var(--primary);font-size:1rem"></i>
+      <span class="display" style="font-size:1.5rem;color:#fff">BASKETBALL_ARENA</span>
+      <span class="mono" style="font-size:0.65rem;color:var(--muted)">// ACCESS_GRANTED_{{$i}}</span>
     </div>
-</section>
-
-<section id="facilities" class="py-20 bg-white relative">
-    <div class="wave-container">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="wave-divider">
-            <defs>
-                <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#2563eb" />
-                    <stop offset="50%" stop-color="#4f46e5" />
-                    <stop offset="100%" stop-color="#7c3aed" />
-                </linearGradient>
-                <filter id="waveShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="rgba(59, 130, 246, 0.3)" />
-                </filter>
-            </defs>
-            <path fill="url(#waveGradient)" filter="url(#waveShadow)" 
-                  d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
-                  opacity=".25" class="wave-back"></path>
-            <path fill="url(#waveGradient)" 
-                  d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" 
-                  opacity=".7" class="wave-main"></path>
-            <path fill="url(#waveGradient)" 
-                  d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" 
-                  class="wave-top"></path>
-        </svg>
-    </div>
-        
-    <div class="container mx-auto px-4 sm:px-6">
-        <div class="text-center mb-12 sm:mb-16">
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 header-font">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                    Fasilitas Premium Kami
-                </span>
-            </h2>
-            <p class="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed font-light">
-                Nikmati pengalaman berolahraga kelas dunia dengan fasilitas berstandar internasional
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 py-8">
-            @forelse ($fields as $lapangan)
-                <div class="field-card group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100/50">
-                    <!-- Court Image with Floating Elements -->
-                    <div class="relative h-60 overflow-hidden">
-                        @if ($lapangan->image)
-                            <img src="{{ asset('storage/' . $lapangan->image) }}" alt="{{ $lapangan->name }}"
-                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                        @else
-                            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                        @endif
-
-                        <!-- Category Badge -->
-                        <div class="absolute top-4 left-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider 
-                                @if($lapangan->category === 'Premium') bg-amber-100 text-amber-800
-                                @elseif($lapangan->category === 'VIP') bg-purple-100 text-purple-800
-                                @else bg-blue-100 text-blue-800 @endif">
-                                {{ $lapangan->category ?? 'Standard' }}
-                            </span>
-                        </div>
-
-                        <!-- Rating Badge -->
-                        @if($lapangan->rating)
-                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold flex items-center shadow-md">
-                                <svg class="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                                <span>{{ number_format($lapangan->rating, 1) }}</span>
-                            </div>
-                        @endif
-
-                        <!-- Favorite Button -->
-                        <button class="absolute bottom-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors">
-                            <svg class="w-5 h-5 text-gray-600 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Court Details -->
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="text-xl font-bold text-gray-900 truncate">{{ $lapangan->name }}</h3>
-                            <div class="flex items-center text-sm text-gray-500 min-w-max ml-2">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                </svg>
-                                <span class="truncate">{{ $lapangan->location }}</span>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $lapangan->description }}</p>
-                        
-                        <!-- Price and Booking -->
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <span class="text-lg font-bold text-blue-600">
-                                    Rp{{ number_format($lapangan->original_price, 0, ',', '.') }}
-                                </span>
-                                <span class="text-sm text-gray-500">/ 2 jam</span>
-                            </div>
-                            <a href="{{ route('booking.form', ['field' => $lapangan->id, 'date' => $tanggal]) }}"
-                               class="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-2.5 px-5 rounded-lg font-medium flex items-center justify-center transition-all shadow-md hover:shadow-lg active:scale-95">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                Pesan
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-full text-center py-16" id="no-results">
-                    <div class="mx-auto max-w-md px-4">
-                        <div class="w-24 h-24 mx-auto mb-6 text-blue-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Tidak Ada Lapangan Tersedia</h3>
-                        <p class="text-gray-600 mb-6">Maaf, kami tidak dapat menemukan lapangan yang sesuai dengan kriteria Anda. Coba sesuaikan pencarian atau filter.</p>
-                        <button class="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">
-                            Hapus Semua Filter
-                        </button>
-                    </div>
-                </div>
-            @endforelse
-        </div>
-    </div>
-</section>
-
-<section id="tournaments" class="py-20 bg-gradient-to-b from-blue-50 to-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl sm:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-700">
-                Turnamen & Event Mendatang
-            </h2>
-            <p class="text-gray-600 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed">
-                Bergabung dalam kompetisi seru dan buktikan kemampuan tim kamu! Daftar sekarang untuk pengalaman bermain yang tak terlupakan.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-16">
-            <div class="p-6 sm:p-8 bg-gradient-to-r from-blue-600 to-indigo-700">
-                <h3 class="text-2xl sm:text-3xl font-bold text-white">Turnamen Terdekat</h3>
-                <p class="text-blue-100 mt-2">Daftar sekarang sebelum kuota penuh!</p>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="bg-gray-50">
-                        <tr class="text-blue-800">
-                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Nama Turnamen</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Tanggal</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Kategori</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Lokasi</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Status</th>
-                            <th class="py-4 px-6 font-semibold text-sm uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach ($tournaments as $turnamen)
-                            <tr class="hover:bg-blue-50 transition-colors">
-                                <td class="py-5 px-6">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                                            @if ($turnamen->poster)
-                                                <img src="{{ asset('storage/' . $turnamen->poster) }}" alt="{{ $turnamen->nama }}" class="h-full w-full object-cover rounded-lg">
-                                            @else
-                                                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                                </svg>
-                                            @endif
-                                        </div>
-                                        <div class="ml-4">
-                                            <h4 class="font-semibold text-gray-900">{{ $turnamen->nama }}</h4>
-                                            <p class="text-sm text-gray-500">{{ $turnamen->deskripsi ? Str::limit($turnamen->deskripsi, 50) : 'No description' }}</p>
-                                            <p class="text-sm text-gray-500">Hadiah: Rp {{ number_format($turnamen->hadiah, 0, ',', '.') }}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-5 px-6">
-                                    <div class="flex items-center">
-                                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                        <span>{{ \Carbon\Carbon::parse($turnamen->tanggal_mulai)->translatedFormat('d M Y') }} - {{ \Carbon\Carbon::parse($turnamen->tanggal_selesai)->translatedFormat('d M Y') }}</span>
-                                    </div>
-                                </td>
-                                <td class="py-5 px-6">
-                                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $turnamen->kategori === 'single' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
-                                        {{ ucfirst($turnamen->kategori) }}
-                                    </span>
-                                </td>
-                                <td class="py-5 px-6">
-                                    <div class="flex items-center">
-                                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
-                                        <span>{{ $turnamen->lokasi }}</span>
-                                    </div>
-                                </td>
-                                <td class="py-5 px-6">
-                                    <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full 
-                                        {{ $turnamen->status === 'upcoming' ? 'bg-yellow-100 text-yellow-800' : 
-                                            ($turnamen->status === 'ongoing' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
-                                        {{ ucfirst($turnamen->status) }}
-                                    </span>
-                                </td>
-                                
-                                <td class="py-5 px-6">
-                                    @if ($turnamen->status === 'ongoing' && $turnamen->linkpendaftaran)
-                                        <a href="{{ $turnamen->linkpendaftaran }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-                                            Daftar Sekarang
-                                        </a>
-                                    @elseif ($turnamen->status === 'upcoming')
-                                        <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-yellow-800 bg-yellow-100 cursor-default">
-                                            Akan Datang
-                                        </span>
-                                    @else
-                                        <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-                                            Lihat Detail
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 text-center">
-                <a href="" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
-                    Lihat semua turnamen
-                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="event-gallery" class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
-    <div class="container mx-auto px-4 sm:px-6">
-        <div class="mb-12 sm:mb-20 text-center">
-            <h3 class="text-3xl sm:text-4xl font-bold mb-4 header-font">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                    Dokumentasi Event
-                </span>
-            </h3>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Jelajahi momen-momen berharga dari acara kami melalui galeri foto eksklusif
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <!-- Gallery Item 1 with hover effect -->
-            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <img src="images/unnamed (2).webp" alt="Ruang Loker Premium" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gallery Item 2 -->
-            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <img src="images/unnamed (4).webp" alt="Sport Cafe" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gallery Item 3 -->
-            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <img src="images/unnamed (15).webp" alt="Musholla" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gallery Item 4 -->
-            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <img src="images/unnamed (18).webp" alt="Toilet" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gallery Item 5 -->
-            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <img src="images/unnamed (2).webp" alt="Bus Transport" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gallery Item 5 -->
-            <div class="relative rounded-2xl overflow-hidden h-64 sm:h-80 group transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <img src="images/unnamed (2).webp" alt="Bus Transport" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div>
-                    </div>
-                </div>
-            </div>
-    </div>
-</section>
-
-<div class="relative h-96 w-full overflow-hidden rounded-2xl shadow-xl">
-    <!-- Map Container with Gradient Overlay -->
-    <div class="absolute inset-0 z-0">
-        <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.442051823585!2d106.88008447475163!3d-6.336742293652942!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ed1de1b28475%3A0xab797084e7b67501!2sGOR%20PKP%20Jakarta%20Islamic%20School!5e0!3m2!1sid!2sid!4v1752926106964!5m2!1sid!2sid" 
-            class="w-full h-full" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-    </div>
-    
-    <!-- Location Info Card -->
-    <div class="absolute bottom-6 left-6 z-10 bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-sm">
-        <div class="flex items-start gap-4">
-            <div class="bg-indigo-100 p-3 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold text-gray-800">GOR PKP Jakarta Islamic School</h3>
-                <p class="text-gray-600 mt-1">Jl. Raya PKP, Kelapa Dua, Jakarta Timur</p>
-                <div class="mt-3 flex gap-2">
-                    <a href="https://maps.google.com/?q=GOR+PKP+Jakarta+Islamic+School" target="_blank" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
-                        Buka di Maps
-                    </a>
-                    <a href="https://www.google.com/maps/dir//GOR+PKP+Jakarta+Islamic+School/@-6.3367423,106.8800845,17z/data=!4m8!4m7!1m0!1m5!1m1!1s0x2e69ed1de1b28475:0xab797084e7b67501!2m2!1d106.8826594!2d-6.3367423" target="_blank" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                        Petunjuk Arah
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Map Controls -->
-    <div class="absolute top-6 right-6 z-10 flex gap-2">
-        <button class="p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors" title="Zoom In">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-        </button>
-        <button class="p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors" title="Zoom Out">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-            </svg>
-        </button>
-    </div>
+    @endforeach
+  </div>
 </div>
 
-<section class="py-20 bg-gradient-to-b from-blue-50/50 to-white/50" id="schedule">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12 sm:mb-16">
-            <div class="relative inline-block mb-6 animate-float">
-                <h2 class="text-4xl sm:text-5xl font-bold mb-2 relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 animate-text-shimmer">
-                    Jadwal Ketersediaan
-                </h2>
-                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-1.5 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200 rounded-full opacity-75 animate-pulse-slow"></div>
-            </div>
-            <p class="text-gray-600/90 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed font-medium">
-                Cek ketersediaan lapangan favoritmu dan pesan waktu bermain dengan mudah
-            </p>
+{{-- ── ARENA SPECS ───────────────── --}}
+<section id="intel" style="padding:150px 7vw;max-width:1400px;margin:0 auto">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center" class="hero-grid">
+    <div class="fx-reveal">
+      <div class="tag-mono" style="margin-bottom:20px; color:var(--primary); border-color:var(--primary)">SPEC: ELITE_INFRA</div>
+      <h2 class="display" style="font-size:clamp(3rem,8vw,6rem);color:#fff;line-height:0.9;margin-bottom:40px; position:relative">
+        <span style="position:absolute; left:-40px; top:10px; font-size:1.5rem; color:var(--accent)">⌞</span>
+        WINNING<br><span style="color:var(--accent)">GEOMETRY</span>
+        <span style="position:absolute; right:0; bottom:-10px; font-size:1.5rem; color:var(--primary)">⌝</span>
+      </h2>
+      
+      <div style="display:grid;grid-template-columns:1fr;gap:25px">
+        @foreach([
+          ['PRO_LIGHTS','800 LUX High-definition LED systems for professional tracking.'],
+          ['GRIP_MAX','Tarkett multi-sport surfaces ensuring maximum agility and safety.'],
+          ['ZONE_HVAC','Advanced climate control maintaining optimal match temperatures.']
+        ] as [$l,$d])
+        <div style="display:flex;gap:25px;padding:30px;border:1px solid var(--border);background:rgba(255,255,255,0.01);position:relative">
+          <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)"></div>
+          <div class="mono" style="position:absolute; top:10px; right:15px; font-size:0.55rem; color:rgba(255,255,255,0.05)">SYS_MTRX_{{rand(10,99)}}</div>
+          <div class="display" style="font-size:1.8rem;color:#fff">{{ $l }}</div>
+          <p class="mono" style="font-size:0.85rem;color:var(--muted);margin:0;line-height:1.6">{{ $d }}</p>
         </div>
-
-        @if (session('warning'))
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg">
-                <p class="font-medium">{{ session('warning') }}</p>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg">
-                <p class="font-medium">{{ session('error') }}</p>
-            </div>
-        @endif
-
-        <div class="mb-10 max-w-lg mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 backdrop-blur-sm bg-white/80">
-            <div class="p-6">
-                <form method="GET" action="{{ route('home') }}" class="space-y-4">
-                    <div>
-                        <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            Pilih Tanggal Bermain
-                        </label>
-                        <div class="relative">
-                            <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($tanggal)->toDateString() }}"
-                                class="w-full p-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/80 backdrop-blur-sm text-gray-700"
-                                min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                max="{{ \Carbon\Carbon::today()->addDays(7)->toDateString() }}"
-                                onchange="this.form.submit()">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                                <svg class="h-6 w-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit"
-                            class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-6 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        Cari Jadwal Tersedia
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/30 max-w-6xl mx-auto transition-all duration-500 hover:shadow-2xl backdrop-blur-sm bg-white/90">
-            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4">
-                <div class="flex flex-col sm:flex-row justify-between items-center">
-                    <h3 class="text-xl font-bold text-white flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        Daftar Ketersediaan Lapangan
-                    </h3>
-                    <div class="mt-3 sm:mt-0 flex items-center space-x-2">
-                        <span class="text-sm text-indigo-200">Tanggal:</span>
-                        <span class="text-sm font-medium text-white">{{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-gradient-to-r from-indigo-500/10 to-blue-500/10">
-                            <th class="p-5 text-left text-indigo-700 font-bold text-sm uppercase tracking-wider">Lapangan</th>
-                            @if ($allFields->isNotEmpty() && !empty($allFields->first()->availableTimeSlots))
-                                @foreach ($allFields->first()->availableTimeSlots as $slot)
-                                    <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">
-                                        <div class="flex flex-col items-center">
-                                            <span class="font-bold">{{ $slot['time'] }}</span>
-                                            <span class="text-xs font-normal text-indigo-500">{{ $slot['end_time'] }}</span>
-                                        </div>
-                                    </th>
-                                @endforeach
-                            @else
-                                <th class="p-5 text-center text-indigo-700 font-bold text-sm uppercase tracking-wider">Tidak Ada Slot Waktu Tersedia</th>
-                            @endif
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200/30">
-                        @forelse ($allFields as $index => $field)
-                            <tr class="hover:bg-gray-50/50 transition-colors duration-200 {{ $index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30' }}">
-                                <td class="p-5 font-medium text-gray-900">
-                                    <div class="flex items-center">
-                                        @if($field->image)
-                                            <div class="flex-shrink-0 h-12 w-12 rounded-xl overflow-hidden mr-4 border-2 border-white shadow-sm">
-                                                <img class="h-full w-full object-cover" src="{{ asset('storage/' . $field->image) }}" alt="{{ $field->name }}">
-                                            </div>
-                                        @endif
-                                        <div>
-                                            <div class="font-bold text-gray-800">{{ $field->name }}</div>
-                                            <div class="flex items-center mt-1">
-                                                <span class="text-xs px-2 py-1 rounded-full font-medium 
-                                                    @if($field->category === 'Premium') bg-amber-100 text-amber-800
-                                                    @elseif($field->category === 'VIP') bg-purple-100 text-purple-800
-                                                    @else bg-blue-100 text-blue-800 @endif">
-                                                    {{ $field->category ?? 'Standard' }}
-                                                </span>
-                                                @if($field->rating)
-                                                    <span class="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 flex items-center">
-                                                        <svg class="w-3 h-3 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                        </svg>
-                                                        {{ number_format($field->rating, 1) }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                @if($field->availableTimeSlots)
-                                    @foreach ($field->availableTimeSlots as $slot)
-                                        <td class="p-5 text-center">
-                                            @if ($slot['status'] === 'booked' || $slot['status'] === 'pending')
-                                                <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-red-50 text-red-700 border border-red-200 cursor-not-allowed">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                    </svg>
-                                                    {{ ucfirst($slot['status']) }}
-                                                </span>
-                                            @else
-                                                <a href="{{ route('booking.form', [
-                                                    'field' => $field->id,
-                                                    'date' => $tanggal,
-                                                    'jam_mulai' => $slot['time'],
-                                                    'jam_selesai' => \Carbon\Carbon::parse($tanggal . ' ' . $slot['time'])->addHours($slot['durasi'])->format('H:i'), // Calculate end time based on selected duration
-                                                    'durasi' => $slot['durasi'], // Use the duration from the slot data
-                                                    'total_harga' => $slot['total_harga'], // Use the calculated total_harga from the slot data
-                                                    'kode_booking' => 'BK-' . now()->format('Ymd') . '-' . \Illuminate\Support\Str::random(5)
-                                                ]) }}"
-                                                    class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:border-green-300 hover:shadow-sm transition-all duration-200 hover:-translate-y-0.5">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                    </svg>
-                                                    Tersedia
-                                                </a>
-                                            @endif
-                                        </td>
-                                    @endforeach
-                                @else
-                                    <td colspan="{{ count($allFields->first()->availableTimeSlots ?? []) }}" class="p-10 text-center">
-                                        <div class="flex flex-col items-center justify-center text-gray-500">
-                                            <div class="w-24 h-24 mb-6 text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                </svg>
-                                            </div>
-                                            <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
-                                            <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
-                                            <button onclick="document.getElementById('tanggal').focus()" 
-                                                class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
-                                                Pilih Tanggal Lain
-                                            </button>
-                                        </div>
-                                    </td>
-                                @endif
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="{{ count($allFields->first()->availableTimeSlots ?? []) + 1 }}" class="p-10 text-center">
-                                    <div class="flex flex-col items-center justify-center text-gray-500">
-                                        <div class="w-24 h-24 mb-6 text-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
-                                        </div>
-                                        <h4 class="text-xl font-bold text-gray-700 mb-2">Jadwal Tidak Tersedia</h4>
-                                        <p class="max-w-md mb-6">Maaf, tidak ada lapangan yang tersedia untuk tanggal yang dipilih.</p>
-                                        <button onclick="document.getElementById('tanggal').focus()" 
-                                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors shadow-sm">
-                                            Pilih Tanggal Lain
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 px-8 py-6 border-t border-gray-200/30">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
-                        <div class="flex items-center bg-white/80 px-3 py-1.5 rounded-lg shadow-sm border border-gray-200/50">
-                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                            <span>Tersedia</span>
-                        </div>
-                        <div class="flex items-center bg-white/80 px-3 py-1.5 rounded-lg shadow-sm border border-gray-200/50">
-                            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                            <span>Booked/Pending</span>
-                        </div>
-                    </div>
-                    <a href="{{ route('event.index') }}"
-                       class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-bold rounded-xl shadow-lg text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl active:scale-95">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        Booking Sekarang
-                    </a>
-                </div>
-            </div>
-        </div>
+        @endforeach
+      </div>
     </div>
+    
+    {{-- Court Layout Visual --}}
+    <div class="fx-reveal delay-1 card-raw" style="aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:50px;background:#0A0A0B;border-radius:1px; position:relative">
+       <div class="corner-accent corner-tl"></div>
+       <div class="corner-accent corner-br"></div>
+       <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);background-size:20px 20px"></div>
+       <div style="width:100%;height:100%;border:1px solid var(--border);position:relative;display:flex;align-items:center;justify-content:center">
+          {{-- Abstract Court Lines --}}
+          <div style="width:80%;height:50%;border:2px solid var(--primary);opacity:0.3;position:relative">
+             <div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--primary)"></div>
+             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border:2px solid var(--primary);border-radius:50%"></div>
+          </div>
+          <div style="position:absolute;top:20px;left:20px" class="mono" style="font-size:0.5rem;color:var(--muted)">LAYOUT_REF: S_ARENA_820 // SCALE: 1:500</div>
+          <div class="display" style="font-size:8rem;color:rgba(255,255,255,0.02);position:absolute">COURT</div>
+       </div>
+    </div>
+  </div>
 </section>
 
-<section id="facilities-support" class="py-20 bg-gradient-to-b from-gray-50 to-gray-100">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center mb-16">
-            <h3 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                    Fasilitas Pendukung
-                </span>
-            </h3>
-            <p class="text-lg text-gray-600">
-                Fasilitas premium yang kami sediakan untuk kenyamanan dan kebutuhan Anda selama acara berlangsung
-            </p>
+{{-- ── ARENA SCHEDULE ────────────────────────────────────── --}}
+<section id="schedule" style="padding:100px 7vw; background:var(--bg); border-top:1px solid var(--border); position:relative; overflow:hidden">
+  <div class="scanline"></div>
+  <div style="max-width:1400px; margin:0 auto">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:60px; flex-wrap:wrap; gap:30px">
+      <div class="fx-reveal">
+        <div class="tag-mono" style="margin-bottom:12px; color:var(--primary); border-color:var(--primary)">DATA_OVR: AVAILABILITY_MATRIX</div>
+        <h2 class="display" style="font-size:clamp(3rem, 8vw, 6rem); color:#fff; line-height:0.8; margin:0">ARENA<br><span style="color:var(--primary)">SCHEDULE</span></h2>
+      </div>
+      <div class="fx-reveal delay-1" style="text-align:right">
+        <div class="mono" style="font-size:0.65rem; color:var(--muted); margin-bottom:10px">SYSTEM_TIME: {{ \Carbon\Carbon::now()->format('H:i:s') }}</div>
+        <div style="padding:15px 25px; background:rgba(255,255,255,0.02); border:1px solid var(--border); display:inline-flex; align-items:center; gap:15px">
+          <div style="width:10px; height:10px; background:var(--accent); border-radius:50%; box-shadow:0 0 10px var(--accent)"></div>
+          <span class="mono" style="font-size:0.8rem; color:#fff">STATUS: ONLINE_SYNC</span>
         </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <!-- Facility Card 1 -->
-            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="aspect-w-4 aspect-h-3">
-                    <img src="images/loker.jpg" alt="Ruang Loker Premium" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
-                    <div>
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-1">Ruang Loker Premium</h4>
-                        <p class="text-gray-200 text-sm">Penyimpanan barang pribadi yang aman dan nyaman</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Facility Card 2 -->
-            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="aspect-w-4 aspect-h-3">
-                    <img src="images/ambulance.webp" alt="Ambulance Standby" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
-                    <div>
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-1">Ambulance Standby</h4>
-                        <p class="text-gray-200 text-sm">Layanan kesehatan siap 24 jam selama acara</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Facility Card 3 -->
-            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="aspect-w-4 aspect-h-3">
-                    <img src="images/Musholla.jpg" alt="Musholla" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
-                    <div>
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-1">Area Musholla</h4>
-                        <p class="text-gray-200 text-sm">Tempat ibadah yang nyaman dan lengkap</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Facility Card 4 -->
-            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="aspect-w-4 aspect-h-3">
-                    <img src="images/Toilet.jpg" alt="Toilet Bersih" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
-                    <div>
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                            </svg>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-1">Toilet Bersih</h4>
-                        <p class="text-gray-200 text-sm">Fasilitas sanitasi yang higienis dan terawat</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Facility Card 5 -->
-            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="aspect-w-4 aspect-h-3">
-                    <img src="images/bus.webp" alt="Transportasi Bus" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
-                    <div>
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                            </svg>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-1">Transportasi Bus</h4>
-                        <p class="text-gray-200 text-sm">Pelayanan transportasi antar-jemput peserta</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Facility Card 6 -->
-            <div class="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div class="aspect-w-4 aspect-h-3">
-                    <img src="images/Control.jpg" alt="Control Room" class="w-full h-64 sm:h-72 object-cover transition-transform duration-500 group-hover:scale-105">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-6">
-                    <div>
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                            </svg>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-1">Control Room</h4>
-                        <p class="text-gray-200 text-sm">Pusat kendali dan monitoring acara</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    {{-- 30-DAY DATE SELECTOR --}}
+    <div class="fx-reveal" style="margin-bottom:50px; position:relative">
+      <div class="mono" style="font-size:0.6rem; color:var(--muted); margin-bottom:15px; letter-spacing:0.2em">DEPLOYMENT_WINDOW [30_DAYS] //</div>
+      <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; scrollbar-width: none;" class="hide-scrollbar">
+        @php
+            $today = \Carbon\Carbon::today();
+        @endphp
+        @foreach(range(0, 29) as $i)
+          @php
+              $dateObj = $today->copy()->addDays($i);
+              $isCurrent = $dateObj->toDateString() == $tanggal;
+          @endphp
+          <a href="?tanggal={{ $dateObj->toDateString() }}#schedule" 
+             style="flex:0 0 100px; text-decoration:none; padding:15px; border:1px solid {{ $isCurrent ? 'var(--primary)' : 'var(--border)' }}; background:{{ $isCurrent ? 'rgba(93,95,239,0.1)' : 'rgba(255,255,255,0.01)' }}; text-align:center; transition:0.3s"
+             class="card-raw">
+            <div class="mono" style="font-size:0.6rem; color:{{ $isCurrent ? 'var(--primary)' : 'var(--muted)' }}; margin-bottom:5px">{{ $dateObj->format('D') }}</div>
+            <div class="display" style="font-size:1.5rem; color:{{ $isCurrent ? '#fff' : 'rgba(255,255,255,0.5)' }}">{{ $dateObj->format('d') }}</div>
+            <div class="mono" style="font-size:0.55rem; color:var(--muted); margin-top:5px">{{ $dateObj->format('M') }}</div>
+          </a>
+        @endforeach
+      </div>
+    </div>
+
+    {{-- SCHEDULE GRID --}}
+    <div class="fx-reveal delay-2 shadow-2xl" style="background:rgba(0,0,0,0.3); border:1px solid var(--border); overflow-x:auto">
+      <table style="width:100%; border-collapse:collapse; min-width:800px" class="mono">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border)">
+            <th style="padding:25px; text-align:left; background:rgba(255,255,255,0.02); width:200px">
+              <span style="font-size:0.6rem; color:var(--muted)">FIELD_IDENT</span><br>
+              <span style="font-size:0.9rem; color:var(--primary)">MASTER_GRID</span>
+            </th>
+            @if(isset($allFields[0]) && isset($allFields[0]->availableTimeSlots))
+              @foreach($allFields[0]->availableTimeSlots as $slot)
+                <th style="padding:20px; text-align:center; border-left:1px solid var(--border)">
+                  <span style="font-size:0.6rem; color:var(--muted)">TIME</span><br>
+                  <span style="font-size:0.8rem; color:#fff">{{ $slot['time'] }}</span>
+                </th>
+              @endforeach
+            @endif
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($allFields as $field)
+          <tr style="border-bottom:1px solid var(--border); transition:0.2s">
+            <td style="padding:25px; background:rgba(255,255,255,0.01); border-right: 1px solid var(--border)">
+              <div style="font-size:0.9rem; color:#fff; font-weight:700; margin-bottom:4px">{{ $field->name }}</div>
+              <div class="tag-mono" style="font-size:0.5rem; padding:2px 6px; border-color:rgba(255,255,255,0.1); color:var(--muted)">{{ strtoupper($field->sport_type) }}</div>
+            </td>
+            @foreach($field->availableTimeSlots as $slot)
+              <td style="padding:0; border-left:1px solid var(--border); position:relative">
+                @if($slot['status'] === 'available')
+                  <a href="{{ route('booking.form', ['field' => $field->id, 'date' => $tanggal, 'jam_mulai' => $slot['time'], 'jam_selesai' => $slot['end_time']]) }}" 
+                     style="display:flex; align-items:center; justify-content:center; height:100px; text-decoration:none; color:var(--accent); font-size:0.7rem; transition:0.3s; background: rgba(0, 255, 163, 0.02)"
+                     onmouseover="this.style.background='rgba(0,255,163,0.1)'; this.innerText='[ BOOK_NOW ]'"
+                     onmouseout="this.style.background='rgba(0, 255, 163, 0.02)'; this.innerText='AVAILABLE'">
+                    AVAILABLE
+                  </a>
+                @elseif($slot['status'] === 'soon')
+                   <div style="display:flex; align-items:center; justify-content:center; height:100px; color:rgba(255,255,255,0.1); font-size:0.6rem; cursor:not-allowed; background:rgba(255,255,255,0.02)">
+                    EXPIRED
+                  </div>
+                @else
+                  <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100px; background:rgba(255,71,71,0.05); color:#ff4747; font-size:0.6rem">
+                    <i class="fas fa-lock" style="margin-bottom:5px"></i>
+                   {{ strtoupper($slot['status']) }}
+                  </div>
+                @endif
+              </td>
+            @endforeach
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<section class="py-20 bg-gradient-to-r from-blue-800 to-indigo-900 text-white relative overflow-hidden">
-    <div class="absolute top-0 left-0 w-full h-full opacity-10">
-        <div class="absolute top-20 left-10 w-32 sm:w-40 h-32 sm:h-40 bg-white rounded-full floating"></div>
-        <div class="absolute bottom-10 right-20 w-48 sm:w-60 h-48 sm:h-60 bg-white rounded-full floating delay-2000"></div>
-        <div class="absolute top-1/3 right-1/4 w-24 sm:w-32 h-24 sm:h-32 bg-white rounded-full floating delay-4000"></div>
+{{-- ── ARENA SELECTION ────────────────────────────────────── --}}
+<section style="padding:100px 7vw;background:var(--bg2);border-top:1px solid var(--border); position:relative" class="dot-pattern">
+  <div style="position:absolute; top:20px; right:7vw" class="mono" style="font-size:0.6rem; color:rgba(255,255,255,0.1)">SECTOR_SCAN: ENABLED</div>
+  <div style="max-width:1400px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:80px;flex-wrap:wrap;gap:20px">
+      <div>
+        <div class="tag-mono" style="margin-bottom:12px; color:var(--accent); border-color:var(--accent)">ACCESS: FIELD_TERMINAL</div>
+        <h2 class="display" style="font-size:clamp(4rem,10vw,8rem);color:#fff;line-height:0.8;margin:0">SELECT<br><span style="color:var(--accent)">ARENA</span></h2>
+      </div>
+      <a href="{{ route('booking.index') }}" class="btn-outline" style="padding:15px 40px">VIEW_ALL_FIELDS</a>
     </div>
-    
-    <div class="container mx-auto px-4 sm:px-6 text-center relative z-10">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 header-font">Siap Berolahraga Hari Ini?</h2>
-        <p class="text-base sm:text-lg md:text-xl mb-8 sm:mb-10 text-blue-200 max-w-2xl mx-auto font-light">
-            Bergabunglah dengan ribuan orang yang telah merasakan pengalaman berolahraga premium di GOR Sportiva
-        </p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
-            <a href="{{ route('booking.index') }}" class="bg-white text-blue-800 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 inline-flex items-center justify-center transform hover:scale-105 glow-effect btn-hover-effect">
-                <i class="fas fa-calendar-alt mr-3 text-lg"></i> Booking Sekarang
-            </a>
-          <a href="https://wa.me/6281318865459?text=Halo%2C%20saya%20ingin%20menanyakan%20salah%20satu%20dari%20opsi%20berikut%3A%0A1.%20Pemesanan%20lapangan%20%5Bsepak%20bola%2Ffutsal%5D%20untuk%20%5Btanggal%2Fjam%5D%2C%20termasuk%20harga%20dan%20ketersediaan.%0A2.%20Informasi%20untuk%20mengadakan%20event%20seperti%20%5Bturnamen%20olahraga%2Facara%20perusahaan%5D%2C%20termasuk%20fasilitas%20dan%20prosedur.%0ANama%20saya%20%5Bnama%20Anda%5D%20dari%20%5Bkota%2Forganisasi%5D.%20Terima%20kasih%21" 
-            class="border-2 border-white text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-white/20 transition duration-300 inline-flex items-center justify-center transform hover:scale-105 btn-hover-effect">
-                <i class="fas fa-phone-alt mr-3 text-lg"></i> Hubungi Kami
-            </a>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));gap:2px;background:var(--border)">
+      @forelse($fields as $index => $lap)
+      <div class="card-raw fx-reveal" style="background:var(--bg); border:none; position:relative">
+        <div class="corner-accent corner-tl" style="opacity:0.3"></div>
+        <div style="height:320px;position:relative;overflow:hidden">
+          @if($lap->image)
+            <img src="{{ asset('storage/'.$lap->image) }}" alt="" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.6)">
+          @else
+            <div style="width:100%;height:100%;background:#111;display:flex;align-items:center;justify-content:center">
+               <i class="fas fa-microchip" style="font-size:4rem;color:#111"></i>
+            </div>
+          @endif
+          <div class="tag-mono" style="position:absolute;top:25px;left:25px;background:var(--accent);color:#000;border:none;font-weight:900">NODE_0{{$index+1}}</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top, var(--bg) 0%, transparent 100%)"></div>
+          
+          {{-- Sport Type Icon Floating --}}
+          <div style="position:absolute;top:25px;right:25px;width:40px;height:40px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.1)">
+            @if(strtolower($lap->sport_type) == 'badminton') <i class="fas fa-shuttlecock" style="color:var(--accent)"></i>
+            @elseif(strtolower($lap->sport_type) == 'basketball') <i class="fas fa-basketball-ball" style="color:var(--accent)"></i>
+            @elseif(strtolower($lap->sport_type) == 'futsal') <i class="fas fa-futbol" style="color:var(--accent)"></i>
+            @else <i class="fas fa-bolt" style="color:var(--accent)"></i> @endif
+          </div>
         </div>
+        <div style="padding:40px">
+          <div class="mono" style="font-size:0.6rem;color:rgba(255,255,255,0.2);margin-bottom:8px">SYSTEM_AUTH: ARENA_{{rand(100,999)}}_X</div>
+          <h3 class="display" style="font-size:1.8rem;color:#fff;margin-bottom:12px;letter-spacing:0.02em">{{ $lap->name }}</h3>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:35px">
+              <div>
+                <div class="mono" style="font-size:0.65rem;color:var(--muted);margin-bottom:4px">LOCATION_HUB</div>
+                <div class="mono" style="font-size:0.8rem;color:#fff;font-weight:700">{{ strtoupper($lap->location) }}</div>
+              </div>
+              <div class="display" style="font-size:1.6rem;color:var(--accent)">Rp{{ number_format($lap->original_price,0,',','.') }}</div>
+          </div>
+          <a href="{{ route('booking.form',['field'=>$lap->id,'date'=>$tanggal]) }}" class="btn-cyber" style="width:100%;justify-content:center;padding:15px; font-size: 0.75rem">
+            INITIALIZE_BOOKBOOKING
+          </a>
+        </div>
+      </div>
+      @empty
+      @endforelse
     </div>
+  </div>
 </section>
 
-<style>
-    /* Custom Animations */
-    @keyframes bounce-slow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-    }
+{{-- ── BOOKING PHASES ────────────────────────────── --}}
+<section style="padding:150px 7vw;max-width:1400px;margin:0 auto;text-align:center">
+  <div class="tag-mono fx-reveal" style="margin-bottom:20px;color:var(--accent);border-color:var(--accent)">GUIDE: DEPLOYMENT_PROTOCOL</div>
+  <h2 class="display fx-reveal" style="font-size:clamp(4rem, 10vw, 7rem);color:#fff;margin-bottom:100px">MATCH_INIT<br><span style="color:var(--primary)">PHASES</span></h2>
+  
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:60px;position:relative">
+    {{-- Connecting Line --}}
+    <div style="position:absolute;top:50px;left:10%;right:10%;height:2px;background:var(--border)" class="nav-desktop"></div>
     
-    @keyframes text-shimmer {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
-    }
-    
-    @keyframes pulse-slow {
-        0% { opacity: 0.75; }
-        50% { opacity: 0.5; }
-        100% { opacity: 0.75; }
-    }
-    
-    .animate-bounce-slow {
-        animation: bounce-slow 3s infinite;
-    }
-    
-    .animate-text-shimmer {
-        animation: text-shimmer 8s ease infinite;
-    }
-    
-    .animate-pulse-slow {
-        animation: pulse-slow 3s ease-in-out infinite;
-    }
-    
-    .glow-effect {
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-    }
-    
-    .glow-effect-lg {
-        box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
-    }
-    
-    .zoom-effect {
-        transition: transform 0.7s ease;
-    }
-    
-    .group:hover .zoom-effect {
-        transform: scale(1.1);
-    }
-    
-    .floating {
-        animation: floating 6s ease-in-out infinite;
-    }
-    
-    @keyframes floating {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0); }
-    }
-    
-    /* Smooth transitions */
-    .transition-all {
-        transition-property: all;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    }
-</style>
+    @foreach([
+      ['01','SCAN','Select date and check arena latency'],
+      ['02','LOCK','Secure your exclusive time-slot from the grid'],
+      ['03','READY','Finalize match deployment and secure the port']
+    ] as [$p,$t,$d])
+    <div class="fx-reveal" style="position:relative;z-index:1">
+      <div class="display" style="width:100px;height:100px;background:var(--bg);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 35px;font-size:2.5rem;color:#fff;box-shadow:0 0 30px rgba(var(--accent-rgb), 0.1); position:relative">
+        <div class="corner-accent corner-tl" style="width:15px; height:15px"></div>
+        <div class="corner-accent corner-br" style="width:15px; height:15px"></div>
+        {{ $p }}
+      </div>
+      <div class="display" style="font-size:2rem;color:var(--accent);margin-bottom:15px">{{ $t }}</div>
+      <p class="mono" style="font-size:0.95rem;color:var(--muted);line-height:1.6">{{ $d }}</p>
+    </div>
+    @endforeach
+  </div>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js" async></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Parallax effect for hero section
-        document.addEventListener('mousemove', (e) => {
-            document.querySelectorAll('.parallax-bg').forEach(element => {
-                const speed = element.getAttribute('data-parallax') || 0.1;
-                const x = (window.innerWidth - e.pageX * speed) / 100;
-                const y = (window.innerHeight - e.pageY * speed) / 100;
-                element.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
-
-        // Number count-up animation for stats
-        document.querySelectorAll('.stat-number').forEach(number => {
-            const target = parseInt(number.getAttribute('data-count')) || 0;
-            let current = 0;
-            const increment = target / 100;
-            let animationStarted = false;
-
-            const updateNumber = () => {
-                if (current < target) {
-                    current += increment;
-                    number.textContent = Math.ceil(current) + (number.textContent.includes('+') ? '+' : '');
-                    requestAnimationFrame(updateNumber);
-                } else {
-                    number.textContent = target + (number.textContent.includes('+') ? '+' : '');
-                    if (number.getAttribute('data-count') === '24') {
-                        number.textContent = '24/7';
-                    }
-                }
-            };
-
-            const observer = new IntersectionObserver(entries => {
-                if (entries[0].isIntersecting && !animationStarted) {
-                    updateNumber();
-                    animationStarted = true;
-                    observer.disconnect();
-                }
-            }, { threshold: 0.5 });
-            observer.observe(number);
-        });
-
-        // Scroll-triggered animations
-        const animateOnScroll = () => {
-            document.querySelectorAll('.animate__animated').forEach(element => {
-                const rect = element.getBoundingClientRect();
-                const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-                if (rect.top <= windowHeight * 0.9 && rect.bottom >= 0) {
-                    if (!element.classList.contains('animate__animated--done')) {
-                        element.classList.add('animate__animated', 'animate__animated--done');
-                    }
-                }
-            });
-        };
-        window.addEventListener('scroll', animateOnScroll);
-        animateOnScroll();
-
-        // Video background fallback
-        const videoBg = document.querySelector('video');
-        if (videoBg) {
-            videoBg.play().catch(() => {
-                videoBg.parentElement.style.backgroundImage = `url('${videoBg.getAttribute('poster')}')`;
-                videoBg.parentElement.style.backgroundSize = 'cover';
-                videoBg.parentElement.style.backgroundPosition = 'center';
-                videoBg.remove();
-            });
-        }
-    });
-</script>
 @endsection

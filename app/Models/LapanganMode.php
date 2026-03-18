@@ -18,10 +18,21 @@ class LapanganMode extends Model
         'original_price',
         'category',
         'rating',
+        'sport_type',
+        'max_courts',
     ];
 
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Determines if this sport "locks" the entire arena (futsal, basketball)
+     * or uses shared sub-courts (badminton - 3 sub-courts).
+     */
+    public function isArenaLockSport(): bool
+    {
+        return in_array(strtolower($this->sport_type ?? ''), ['futsal', 'basketball', 'basket']);
     }
 }

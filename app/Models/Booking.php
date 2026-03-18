@@ -23,6 +23,7 @@ class Booking extends Model
         'metode_pembayaran',
         'status',
         'durasi',
+        'payment_status',
     ];
    
 

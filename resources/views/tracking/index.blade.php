@@ -1,81 +1,85 @@
 @extends('layouts.app')
-
-@section('title', 'Tracking Booking')
+@section('title', 'Lacak Reservasi — SPORTIVA')
 
 @section('content')
-<section class="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md mx-auto">
-        <!-- Tracking Card -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <!-- Card Header -->
-            <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 py-5 px-6">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    <h2 class="text-xl font-bold text-white">Lacak Booking Anda</h2>
+<div style="min-height:90vh; display:flex; align-items:center; justify-content:center; padding:80px 24px; position:relative; overflow:hidden; z-index:10">
+    {{-- Decorative Background --}}
+    <div class="mono" style="position:fixed; top:20%; right:-8%; font-size:18rem; color:rgba(255,255,255,0.02); z-index:-1; pointer-events:none; font-weight:900; transform:rotate(15deg)">TRACK</div>
+    <div style="position:absolute; width:600px; height:600px; background:radial-gradient(circle, rgba(var(--primary-rgb), 0.05), transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; pointer-events:none; z-index:-1"></div>
+
+    <div style="width:100%; max-width:500px" class="fx-reveal">
+        
+        {{-- Header --}}
+        <div style="text-align:center; margin-bottom:50px">
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:16px">
+                <span class="tag-mono">SYS_SCAN</span>
+                <span class="mono" style="font-size:0.65rem; color:var(--muted); letter-spacing:0.2em">TRACKING_DATABASE_ACCESS</span>
+            </div>
+            <h1 class="display" style="font-size:3.5rem; color:#fff; margin:0; line-height:1">LACAK <span class="text-accent-stroke">BOOKING</span></h1>
+            <p class="mono" style="color:var(--muted); font-size:0.75rem; margin-top:15px; letter-spacing:0.1em">MASUKKAN KODE IDENTIFIKASI UNTUK VERIFIKASI STATUS ARENA.</p>
+        </div>
+
+        {{-- Search Card --}}
+        <div class="glass" style="padding:40px; position:relative; border-radius:4px; overflow:hidden">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-br"></div>
+            
+            @if($errors->any())
+            <div style="background:rgba(239, 68, 68, 0.05); border-left:3px solid #EF4444; padding:15px; margin-bottom:25px; display:flex; align-items:center; gap:12px">
+                <i class="fas fa-exclamation-triangle" style="color:#EF4444; font-size:0.8rem"></i>
+                <span class="mono" style="font-size:0.75rem; color:#fff">{{ $errors->first() }}</span>
+            </div>
+            @endif
+
+            <form action="{{ route('tracking.result') }}" method="POST">
+                @csrf
+                <div style="margin-bottom:30px">
+                    <label class="mono" style="font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.2em; display:block; margin-bottom:12px">UNI_RESERVATION_CODE</label>
+                    <div style="position:relative">
+                        <input type="text" name="kode_booking" 
+                               placeholder="BK-XXXXXX" 
+                               class="input-raw" 
+                               style="width:100%; padding-left:50px; text-transform:uppercase; letter-spacing:0.1em; font-size:1rem"
+                               value="{{ old('kode_booking') }}"
+                               required>
+                        <i class="fas fa-barcode" style="position:absolute; left:20px; top:50%; transform:translateY(-50%); color:var(--primary); font-size:1rem"></i>
+                    </div>
+                    <p class="mono" style="font-size:0.55rem; color:var(--muted); margin-top:12px; display:flex; align-items:center; gap:8px">
+                        <i class="fas fa-info-circle" style="color:var(--primary)"></i>
+                        KODE DAPAT DITEMUKAN PADA HALAMAN SUKSES ATAU EMAIL KONFIRMASI.
+                    </p>
                 </div>
+
+                <button type="submit" class="btn-cyber" style="width:100%; justify-content:center; padding:18px">
+                    SCAN_DATABASE <i class="fas fa-search" style="margin-left:10px"></i>
+                </button>
+            </form>
+
+            <div style="height:1px; background:var(--border); margin:35px 0; position:relative">
+                <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg2); padding:0 15px; color:var(--muted); font-size:0.55rem" class="mono">OR_CONTACT_SUPPORT</span>
             </div>
 
-            <!-- Card Content -->
-            <div class="p-6 sm:p-8">
-                @if ($errors->any())
-                    <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm text-red-700">{{ $errors->first() }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                <form action="{{ route('tracking.index') }}" method="POST" class="space-y-6">
-                    @csrf
-                    
-                    <!-- Booking Code Input -->
-                    <div>
-                        <label for="kode_booking" class="block text-sm font-medium text-gray-700 mb-1">Kode Booking</label>
-                        <div class="relative rounded-md shadow-sm">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
-                                </svg>
-                            </div>
-                            <input type="text" name="kode_booking" id="kode_booking" 
-                                   class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 pr-3 py-3 border-gray-300 rounded-lg" 
-                                   placeholder="Contoh: GOR-123456" 
-                                   value="{{ old('kode_booking') }}" required>
-                        </div>
-                        <p class="mt-1 text-sm text-gray-500">Masukkan kode booking yang Anda terima via email/SMS</p>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div>
-                        <button type="submit" 
-                                class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:-translate-y-0.5">
-                            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                            Lacak Booking
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Help Section -->
-                <div class="mt-8 border-t border-gray-200 pt-6">
-                    <h3 class="text-sm font-medium text-gray-900">Butuh Bantuan?</h3>
-                    <div class="mt-2 text-sm text-gray-600">
-                        <p>Hubungi kami di <a href="tel:+628123456789" class="text-indigo-600 hover:text-indigo-500">0812-3456-789</a> atau</p>
-                        <p>Email ke <a href="mailto:info@gorserbaguna.com" class="text-indigo-600 hover:text-indigo-500">info@gorserbaguna.com</a></p>
-                    </div>
-                </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
+                @foreach([
+                    ['fab fa-whatsapp', 'https://wa.me/6281318865459', 'WHATSAPP'],
+                    ['fas fa-phone', 'tel:+6281318865459', 'PHONE'],
+                    ['fas fa-envelope', 'mailto:info@sportiva.com', 'EMAIL']
+                ] as [$ico, $url, $lbl])
+                <a href="{{ $url }}" target="_blank" class="mono" style="text-decoration:none; text-align:center; padding:12px; border:1px solid var(--border); transition:all 0.3s; background:rgba(255,255,255,0.01)" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='var(--primary)'" onmouseout="this.style.background='rgba(255,255,255,0.01)'; this.style.borderColor='var(--border)'">
+                    <i class="{{ $ico }}" style="color:var(--primary); font-size:0.9rem; display:block; margin-bottom:6px"></i>
+                    <span style="font-size:0.5rem; color:var(--muted)">{{ $lbl }}</span>
+                </a>
+                @endforeach
             </div>
         </div>
+
+        {{-- Footer Link --}}
+        <div style="text-align:center; margin-top:30px">
+            <a href="{{ route('booking.index') }}" class="mono" style="color:var(--muted); text-decoration:none; font-size:0.7rem; transition:color 0.3s; display:inline-flex; align-items:center; gap:8px" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">
+                <i class="fas fa-calendar-plus" style="color:var(--primary)"></i> BARU_RESERVASI_ARENA
+            </a>
+        </div>
+
     </div>
-</section>
+</div>
 @endsection

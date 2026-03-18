@@ -175,6 +175,7 @@ class BookingResource extends Resource
         }
 
         $data['status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
+        $data['payment_status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'paid' : 'pending';
 
         return $data;
     }
@@ -211,6 +212,7 @@ class BookingResource extends Resource
         }
 
         $data['status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'booked' : 'pending';
+        $data['payment_status'] = in_array($data['metode_pembayaran'], ['transfer', 'qris']) ? 'paid' : 'pending';
 
         return $data;
     }
@@ -227,7 +229,14 @@ class BookingResource extends Resource
                 TextColumn::make('jam_selesai')->time(),
                 TextColumn::make('durasi')->label('Durasi')->suffix(' Jam'),
                 TextColumn::make('total_harga')->money('IDR'),
-                TextColumn::make('metode_pembayaran')->label('Pembayaran')->badge(),
+                TextColumn::make('metode_pembayaran')->label('Metode')->badge(),
+                TextColumn::make('payment_status')
+                    ->badge()
+                    ->color(fn ($state) => match ($state) {
+                        'paid' => 'success',
+                        'pending' => 'warning',
+                        default => 'gray',
+                    }),
                 TextColumn::make('status')->badge(),
             ])
             ->actions([

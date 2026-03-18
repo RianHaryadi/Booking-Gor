@@ -65,6 +65,14 @@ class BookingValidationResource extends Resource
             Forms\Components\TextInput::make('nama_pemesan')
                 ->required()
                 ->maxLength(255),
+
+            Forms\Components\Select::make('payment_status')
+                ->options([
+                    'pending' => 'Pending',
+                    'paid' => 'Paid',
+                ])
+                ->required()
+                ->native(false),
         ]);
     }
 
@@ -92,11 +100,39 @@ class BookingValidationResource extends Resource
                 Tables\Columns\TextColumn::make('jam_selesai'),
                 Tables\Columns\TextColumn::make('durasi')->label('Durasi (jam)'),
                 Tables\Columns\TextColumn::make('nama_pemesan'),
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->badge()
+                    ->color(fn ($state) => match ($state) {
+                        'paid' => 'success',
+                        'pending' => 'warning',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('created_at')->since(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\Action::make('mark_paid')
+                    ->label('Confirm Payment')
+                    ->icon('heroicon-o-currency-dollar')
+                    ->color('success')
+                    ->visible(fn ($record) => $record->payment_status === 'pending')
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+                        $record->update([
+                            'payment_status' => 'paid',
+                            'status' => 'booked'
+                        ]);
+                        $record->booking()->update([
+                            'payment_status' => 'paid',
+                            'status' => 'booked'
+                        ]);
+                        Notification::make()
+                            ->title('Pembayaran dikonfirmasi.')
+                            ->success()
+                            ->send();
+                    }),
 
                 Tables\Actions\Action::make('mark_pembersihan')
                     ->label('Pembersihan')

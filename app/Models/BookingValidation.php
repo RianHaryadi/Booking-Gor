@@ -21,6 +21,7 @@ class BookingValidation extends Model
         'validated_by',
         'validated_at',
         'durasi',
+        'payment_status',
     ];
 
     protected $casts = [

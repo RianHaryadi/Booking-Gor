@@ -1,271 +1,120 @@
 @extends('layouts.app')
-
-@section('title', 'Booking Success')
+@section('title', 'Booking Berhasil — SPORTIVA')
 
 @section('content')
-    <!-- Include Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Include Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --primary-light: #e0e7ff;
-            --success: #10b981;
-            --success-light: #d1fae5;
-            --dark: #1f2937;
-            --light: #f9fafb;
-            --gray: #6b7280;
-            --gray-light: #f3f4f6;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-        }
-        
-        .header-font {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .success-card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .success-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 120px;
-            background: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
-            z-index: -1;
-        }
-        
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-            position: relative;
-            top: -40px;
-        }
-        
-        .success-icon svg {
-            width: 40px;
-            height: 40px;
-            color: var(--success);
-        }
-        
-        .booking-ref {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .detail-card {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-        
-        .detail-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .detail-label {
-            color: var(--gray);
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .detail-value {
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, #3a0ca3 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
-            color: white;
-        }
-        
-        .btn-outline {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary-light);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-            color: var(--primary);
-        }
-        
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .status-confirmed {
-            background: var(--success-light);
-            color: var(--success);
-        }
-        
-        .status-pending {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #e5e7eb, transparent);
-            margin: 20px 0;
-        }
-        
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-        
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-    </style>
+<div style="min-height:90vh; display:flex; align-items:center; justify-content:center; padding:80px 24px; position:relative; overflow:hidden; z-index:10">
+    {{-- Decorative Background --}}
+    <div class="mono" style="position:fixed; top:20%; left:-5%; font-size:18rem; color:rgba(255,255,255,0.02); z-index:-1; pointer-events:none; font-weight:900; transform:rotate(-10deg)">DONE</div>
+    <div style="position:absolute; width:600px; height:600px; background:radial-gradient(circle, rgba(var(--accent-rgb), 0.05), transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; pointer-events:none; z-index:-1"></div>
 
-
-
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="w-full max-w-lg">
-        <!-- Success Card -->
-        <div class="success-card p-6">
-            <!-- Success Icon -->
-            <div class="success-icon floating">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+    <div style="width:100%; max-width:600px" class="fx-reveal">
+        
+        {{-- Success Badge --}}
+        <div style="text-align:center; margin-bottom:50px">
+            <div style="position:relative; display:inline-block">
+                <div style="width:100px; height:100px; background:var(--bg2); border:1px solid var(--accent); display:flex; align-items:center; justify-content:center; clip-path:polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); box-shadow:0 0 40px rgba(var(--accent-rgb), 0.2)">
+                    <i class="fas fa-check" style="color:var(--accent); font-size:2.5rem"></i>
+                </div>
+                <div style="position:absolute; inset:-10px; border:1px solid rgba(var(--accent-rgb), 0.2); clip-path:polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); animation:spin-slow 10s linear infinite"></div>
             </div>
             
-            <!-- Header Content -->
-            <div class="text-center mt-6">
-                <h1 class="header-font text-3xl font-bold text-gray-900 mb-2">Booking Confirmed!</h1>
-                <p class="text-gray-600 mb-6">Your reservation at <span class="font-medium">GOR Serbaguna</span> has been successfully confirmed</p>
-                
-                <div class="booking-ref mb-8">
-                    <i class="fas fa-ticket-alt mr-2"></i>
-                    {{ $booking->kode_booking ?? 'N/A' }}
+            <div style="margin-top:30px">
+                <span class="tag-mono" style="margin-bottom:12px; display:inline-block">RESERVATION_CONFIRMED</span>
+                <h1 class="display" style="font-size:3.5rem; color:#fff; margin:0; line-height:1">BOOKING <span class="text-accent-stroke">COMPLETE</span></h1>
+                <p class="mono" style="color:var(--muted); font-size:0.75rem; margin-top:15px; letter-spacing:0.1em">SISTEM TELAH MENVALIdASI PESANAN ANDA. ARENA TELAH DI-RESERVE.</p>
+            </div>
+        </div>
+
+        {{-- Main Result Card --}}
+        <div class="glass" style="padding:0; position:relative; border-radius:4px; overflow:hidden">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-br"></div>
+            
+            {{-- Ticket Header --}}
+            <div style="background:rgba(255,255,255,0.02); padding:35px; border-bottom:1px dashed var(--border); text-align:center">
+                <span class="mono" style="font-size:0.6rem; color:var(--muted); letter-spacing:0.3em; display:block; margin-bottom:10px">UNIQUE_RESERVATION_ID</span>
+                <div class="display" style="font-size:3.2rem; background:linear-gradient(90deg, #fff, var(--accent)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:0.1em">
+                    {{ $booking->kode_booking }}
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(var(--accent-rgb), 0.1); padding:4px 15px; border:1px solid rgba(var(--accent-rgb), 0.2); margin-top:15px">
+                    <span style="width:6px; height:6px; background:var(--accent); border-radius:50%; box-shadow:0 0 8px var(--accent)"></span>
+                    <span class="mono" style="font-size:0.6rem; color:var(--accent); font-weight:700">STATUS_SECURED</span>
                 </div>
             </div>
-            
-            <!-- Booking Details -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="detail-card">
-                    <div class="detail-label">Court</div>
-                    <div class="detail-value mt-1">{{ $booking->lapanganMode->name ?? 'N/A' }}</div>
-                </div>
-                
-                <div class="detail-card">
-                    <div class="detail-label">Date</div>
-                    <div class="detail-value mt-1">{{ \Carbon\Carbon::parse($booking->tanggal)->format('d M Y') }}</div>
-                </div>
-                
-                <div class="detail-card">
-                    <div class="detail-label">Time Slot</div>
-                    <div class="detail-value mt-1">{{ $booking->jam_mulai }} - {{ $booking->jam_selesai }}</div>
-                </div>
-                
-                <div class="detail-card">
-                    <div class="detail-label">Amount</div>
-                    <div class="detail-value mt-1 text-primary">Rp{{ number_format($booking->total_harga, 0, ',', '.') }}</div>
+
+            {{-- Receipt Details --}}
+            <div style="padding:40px">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px">
+                    <div>
+                        <span class="mono" style="font-size:0.6rem; color:var(--muted); display:block; margin-bottom:5px">ARENA_FIELD</span>
+                        <span class="mono" style="font-size:0.85rem; color:#fff; font-weight:700">{{ $booking->lapanganMode->name ?? 'N/A' }}</span>
+                    </div>
+                    <div style="text-align:right">
+                        <span class="mono" style="font-size:0.6rem; color:var(--muted); display:block; margin-bottom:5px">PLAYER_RESERVE</span>
+                        <span class="mono" style="font-size:0.85rem; color:#fff; font-weight:700">{{ $booking->nama_pemesan }}</span>
+                    </div>
+                    <div>
+                        <span class="mono" style="font-size:0.6rem; color:var(--muted); display:block; margin-bottom:5px">DATE_SCHEDULE</span>
+                        <span class="mono" style="font-size:0.85rem; color:#fff; font-weight:700">{{ \Carbon\Carbon::parse($booking->tanggal)->format('D, d M Y') }}</span>
+                    </div>
+                    <div style="text-align:right">
+                        <span class="mono" style="font-size:0.6rem; color:var(--muted); display:block; margin-bottom:5px">TIME_WINDOW</span>
+                        <span class="mono" style="font-size:0.85rem; color:var(--accent); font-weight:700">{{ substr($booking->jam_mulai, 0, 5) }} - {{ substr($booking->jam_selesai, 0, 5) }}</span>
+                    </div>
+                    <div style="grid-column:1/-1; border-top:1px solid var(--border); padding-top:20px; margin-top:10px; display:flex; justify-content:space-between; align-items:center">
+                        <div>
+                            <span class="mono" style="font-size:0.6rem; color:var(--muted); display:block; margin-bottom:5px">PAYMENT_METHOD</span>
+                            <div style="display:flex; align-items:center; gap:8px">
+                                <i class="fas {{ $booking->metode_pembayaran == 'cash' ? 'fa-money-bill-wave' : 'fa-credit-card' }}" style="color:var(--primary); font-size:0.8rem"></i>
+                                <span class="mono" style="font-size:0.75rem; color:#fff; text-transform:uppercase">{{ $booking->metode_pembayaran }}</span>
+                            </div>
+                        </div>
+                        <div style="text-align:right">
+                            <span class="mono" style="font-size:0.6rem; color:var(--muted); display:block; margin-bottom:5px">TOTAL_PAID</span>
+                            <span class="display" style="font-size:1.8rem; color:#fff">Rp{{ number_format($booking->total_harga, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="divider"></div>
-            
-            <!-- Status and Actions -->
-            <div class="flex flex-col sm:flex-row justify-between items-center">
-                <div class="mb-4 sm:mb-0">
-                    <span class="status-badge @if($booking->status === 'confirmed') status-confirmed @else status-pending @endif">
-                        <i class="fas @if($booking->status === 'confirmed') fa-check-circle @else fa-clock @endif mr-2"></i>
-                        {{ ucfirst($booking->status) }}
-                    </span>
-                </div>
-                
-                <div class="flex space-x-3">
-                    <button onclick="window.print()" class="btn-outline">
-                        <i class="fas fa-print mr-2"></i> Print
-                    </button>
-                    <a href="{{ route('home') }}" class="btn-primary">
-                        <i class="fas fa-home mr-2"></i> Home
-                    </a>
+
+            {{-- Security Footer --}}
+            <div style="background:rgba(0,0,0,0.4); padding:20px 40px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center">
+                <span class="mono" style="font-size:0.55rem; color:var(--muted)">HASH: {{ md5($booking->id . $booking->kode_booking) }}</span>
+                <div style="display:flex; gap:15px">
+                    <i class="fas fa-print" style="color:var(--muted); font-size:0.8rem; cursor:pointer" title="Print Receipt"></i>
+                    <i class="fas fa-download" style="color:var(--muted); font-size:0.8rem; cursor:pointer" title="Download E-Ticket"></i>
                 </div>
             </div>
         </div>
-        
-        <!-- Additional Information -->
-        <div class="mt-8 text-center text-sm text-gray-500">
-            <p>Need help? <a href="mailto:support@gorserbaguna.com" class="text-primary font-medium">Contact our support team</a></p>
-            <p class="mt-1">We've sent the booking details to your email</p>
+
+        {{-- Action Buttons --}}
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:30px">
+            <a href="{{ route('tracking.index') }}" class="btn-outline" style="text-decoration:none; justify-content:center; display:flex; align-items:center">
+                <i class="fas fa-crosshairs" style="margin-right:10px"></i> LACAK_RESERVASI
+            </a>
+            <a href="{{ route('home') }}" class="btn-cyber" style="text-decoration:none; justify-content:center">
+                KEMBALI_KE_DASHBOARD <i class="fas fa-home" style="margin-left:10px"></i>
+            </a>
         </div>
+
+        {{-- WhatsApp Support --}}
+        <a href="https://wa.me/6281318865459?text=Halo%2C+booking+saya+dengan+kode+{{ $booking->kode_booking }}+sudah+dikonfirmasi%2C+terima+kasih%21"
+           target="_blank" class="mono"
+           style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:25px; color:var(--muted); text-decoration:none; font-size:0.65rem; transition:color 0.3s"
+           onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">
+            <i class="fab fa-whatsapp" style="font-size:1rem"></i>
+            TANYA_ADMIN_VIA_WHATSAPP
+        </a>
+
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add animation to elements
-        const animateElements = document.querySelectorAll('.detail-card');
-        animateElements.forEach((el, index) => {
-            setTimeout(() => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-                
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100 + (index * 100));
-            }, 100);
-        });
-    });
-</script>
+@section('styles')
+<style>
+    @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+@endsection
 @endsection
