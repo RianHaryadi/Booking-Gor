@@ -14,6 +14,10 @@ use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Booking;
+use App\Models\LapanganMode;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 use App\Filament\Resources\TurnamenResource\Pages;
 
@@ -169,6 +173,138 @@ class TurnamenResource extends Resource
                     ]),
             ])
             ->actions([
+                Action::make('block_arena')
+                    ->label('Tutup Lapangan')
+                    ->icon('heroicon-o-lock-closed')
+                    ->color('danger')
+                    ->form([
+                        Forms\Components\Toggle::make('semua_lapangan')
+                            ->label('Tutup Semua Lapangan')
+                            ->default(true)
+                            ->reactive(),
+                        Forms\Components\Select::make('lapangan_ids')
+                            ->label('Pilih Lapangan yang Ditutup')
+                            ->options(LapanganMode::pluck('name', 'id'))
+                            ->multiple()
+                            ->hidden(fn (Get $get) => $get('semua_lapangan'))
+                            ->required(fn (Get $get) => !$get('semua_lapangan'))
+                            ->helperText('Pilih satu atau lebih lapangan yang akan diblokir jika tidak memilih semua.'),
+                        Forms\Components\Grid::make()->columns(2)->schema([
+                            Forms\Components\DatePicker::make('start_date')
+                                ->label('Dari Tanggal')
+                                ->default(fn ($record) => $record->tanggal_mulai)
+                                ->required(),
+                            Forms\Components\DatePicker::make('end_date')
+                                ->label('Sampai Tanggal')
+                                ->default(fn ($record) => $record->tanggal_selesai)
+                                ->required(),
+                        ]),
+                        Forms\Components\Grid::make()->columns(2)->schema([
+                            Forms\Components\TimePicker::make('jam_mulai')
+                                ->label('Dari Jam')
+                                ->seconds(false)
+                                ->default('08:00')
+                                ->required(),
+                            Forms\Components\TimePicker::make('jam_selesai')
+                                ->label('Sampai Jam')
+                                ->seconds(false)
+                                ->default('18:00')
+                                ->required(),
+                        ]),
+                    ])
+                    ->modalHeading('Tutup Lapangan untuk Turnamen')
+                    ->modalDescription('Pilih pengaturan blokir jadwal (status "Booked" otomatis).')
+                    ->action(function ($record, array $data) {
+                        $startDate = Carbon::parse($data['start_date']);
+                        $endDate = Carbon::parse($data['end_date']);
+                        $jamMulai = $data['jam_mulai'] ?? '08:00';
+                        $jamSelesai = $data['jam_selesai'] ?? '18:00';
+
+                        // Calculate duration in hours
+                        $timeStart = Carbon::parse($jamMulai);
+                        $timeEnd = Carbon::parse($jamSelesai);
+                        $durasi = max(1, $timeStart->diffInHours($timeEnd));
+                        
+                        // Get fields based on user selection
+                        if (isset($data['semua_lapangan']) && $data['semua_lapangan']) {
+                            $fields = LapanganMode::all();
+                        } else {
+                            $fields = LapanganMode::whereIn('id', $data['lapangan_ids'])->get();
+                        }
+                        
+                        $bookingsCreated = 0;
+
+                        // Loop through each day of the tournament
+                        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+                            $dateString = $date->toDateString();
+
+                            foreach ($fields as $field) {
+                                // Check if a block already exists for this field on this day
+                                $exists = Booking::where('lapangan_mode_id', $field->id)
+                                    ->where('tanggal', $dateString)
+                                    ->where('nama_pemesan', 'TOURNAMENT: ' . $record->nama)
+                                    ->exists();
+
+                                if (!$exists) {
+                                    Booking::create([
+                                        'lapangan_mode_id' => $field->id,
+                                        'tanggal' => $dateString,
+                                        'jam_mulai' => Carbon::parse($jamMulai)->format('H:i'),
+                                        'jam_selesai' => Carbon::parse($jamSelesai)->format('H:i'),
+                                        'durasi' => $durasi,
+                                        'nama_pemesan' => 'TOURNAMENT: ' . $record->nama,
+                                        'nomor_telepon' => '-',
+                                        'email' => '-',
+                                        'metode_pembayaran' => 'cash',
+                                        'total_harga' => 0,
+                                        'status' => 'booked',
+                                        'payment_status' => 'paid',
+                                        'kode_booking' => 'TRN-' . strtoupper(Str::random(6)),
+                                    ]);
+                                    $bookingsCreated++;
+                                }
+                            }
+                        }
+
+                        if ($bookingsCreated > 0) {
+                            Notification::make()
+                                ->title("Berhasil menutup lapangan!")
+                                ->body("$bookingsCreated jadwal full-day berhasil diblokir.")
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title("Jadwal sudah diblokir")
+                                ->body("Lapangan pada tanggal tersebut sudah ditutup.")
+                                ->warning()
+                                ->send();
+                        }
+                    }),
+
+                Action::make('unblock_arena')
+                    ->label('Buka Lapangan')
+                    ->icon('heroicon-o-lock-open')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Buka Lapangan Kembali')
+                    ->modalDescription('Apakah Anda yakin ingin menghapus blokir jadwal untuk turnamen ini?')
+                    ->action(function ($record) {
+                        $deleted = Booking::where('nama_pemesan', 'TOURNAMENT: ' . $record->nama)->delete();
+                        
+                        if ($deleted > 0) {
+                            Notification::make()
+                                ->title("Lapangan berhasil dibuka!")
+                                ->body("$deleted jadwal blokir telah dihapus.")
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title("Tidak ada blokir ditemukan")
+                                ->body("Lapangan belum diblokir untuk turnamen ini.")
+                                ->warning()
+                                ->send();
+                        }
+                    }),
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),

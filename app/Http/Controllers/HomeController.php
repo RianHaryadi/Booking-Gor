@@ -83,13 +83,21 @@ class HomeController extends Controller
 
             // Check if this specific 2-hour display slot overlaps with ANY existing booking for this field
             $booking = $fieldBookings->first(function ($existingBooking) use ($startTime, $endTime) {
-                return $existingBooking->jam_mulai < $endTime && $existingBooking->jam_selesai > $startTime;
+                // Parse the times correctly to H:i:s format using Carbon, ignoring the date part if it exists
+                $bookingStartTime = \Carbon\Carbon::parse($existingBooking->jam_mulai)->format('H:i:s');
+                $bookingEndTime = \Carbon\Carbon::parse($existingBooking->jam_selesai)->format('H:i:s');
+                return $bookingStartTime < $endTime && $bookingEndTime > $startTime;
             });
 
             // Determine status
             $status = 'available';
             if ($booking) {
-                $status = $booking->status;
+                // Check if it's a tournament event
+                if (strpos($booking->nama_pemesan, 'TOURNAMENT:') === 0) {
+                    $status = 'event';
+                } else {
+                    $status = $booking->status;
+                }
             } elseif ($parsedDate->isToday() && $slotStart->isPast()) {
                 $status = 'soon';
             }
