@@ -225,10 +225,12 @@
                     EXPIRED
                   </div>
                 @elseif($slot['status'] === 'event')
-                  <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100px; background:rgba(168,85,247,0.1); color:#a855f7; font-size:0.6rem; border:1px solid rgba(168,85,247,0.2)">
-                    <i class="fas fa-trophy" style="margin-bottom:5px"></i>
-                   EVENT
-                  </div>
+                  <a href="#tournaments" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100px; background:rgba(168,85,247,0.15); color:#c084fc; font-size:0.65rem; font-weight:bold; border:1px solid rgba(168,85,247,0.3); text-decoration:none; transition:0.3s"
+                     onmouseover="this.style.background='rgba(168,85,247,0.3)'; this.style.color='#fff'"
+                     onmouseout="this.style.background='rgba(168,85,247,0.15)'; this.style.color='#c084fc'">
+                    <i class="fas fa-bolt" style="margin-bottom:5px; font-size:1rem"></i>
+                   DAFTAR EVENT
+                  </a>
                 @else
                   <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100px; background:rgba(255,71,71,0.05); color:#ff4747; font-size:0.6rem">
                     <i class="fas fa-lock" style="margin-bottom:5px"></i>
@@ -374,12 +376,12 @@
                   {{ \Carbon\Carbon::parse($t->tanggal_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($t->tanggal_selesai)->format('d M Y') }}
                 </div>
                 
-                @if($t->linkpendaftaran && $t->status !== 'completed')
-                  <a href="{{ $t->linkpendaftaran }}" target="_blank" class="btn-outline" style="padding:10px 20px;font-size:0.7rem;color:var(--primary);border-color:var(--primary);text-decoration:none">JOIN_DRAFT</a>
-                @elseif($t->status === 'completed')
-                  <span class="mono" style="font-size:0.75rem;color:var(--muted)">[ CAMPAIGN_ENDED ]</span>
+                @if($t->status !== 'completed')
+                  <a href="{{ $t->linkpendaftaran ?? '#' }}" target="{{ $t->linkpendaftaran ? '_blank' : '_self' }}" class="btn-cyber" style="padding:10px 20px;font-size:0.75rem;background:var(--primary);color:#000;text-decoration:none;box-shadow:0 0 15px rgba(var(--primary-rgb), 0.3);font-weight:900" {!! empty($t->linkpendaftaran) ? 'onclick="alert(\'Link pendaftaran belum tersedia. Silakan hubungi admin arena.\'); return false;"' : '' !!}>
+                    <i class="fas fa-bolt" style="margin-right:5px"></i> DAFTAR SEKARANG
+                  </a>
                 @else
-                   <span class="mono" style="font-size:0.75rem;color:var(--muted)">[ PENDING_ACCESS ]</span>
+                  <span class="mono" style="font-size:0.75rem;color:var(--muted)">[ CAMPAIGN_ENDED ]</span>
                 @endif
               </div>
             </div>

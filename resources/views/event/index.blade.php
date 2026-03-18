@@ -59,18 +59,13 @@
       </div>
 
       {{-- CTA --}}
-      <div style="padding:24px 28px;display:flex;align-items:center;border-left:1px solid var(--border)">
-        @if($event->status==='ongoing'&&$event->linkpendaftaran)
-        <a href="{{ $event->linkpendaftaran }}" target="_blank" class="btn btn-primary" style="white-space:nowrap;padding:12px 20px">
-          <i class="fas fa-user-plus"></i>Daftar
+      <div style="padding:24px 28px;display:flex;align-items:center;border-left:1px solid var(--border);justify-content:center">
+        @if($event->status !== 'completed')
+        <a href="{{ $event->linkpendaftaran ?? '#' }}" target="{{ $event->linkpendaftaran ? '_blank' : '_self' }}" style="white-space:nowrap;padding:12px 24px;font-size:0.8rem;background:var(--primary);color:#000;text-decoration:none;border-radius:4px;box-shadow:0 0 15px rgba(var(--primary-rgb), 0.3);font-weight:900;text-transform:uppercase" {!! empty($event->linkpendaftaran) ? 'onclick="alert(\'Link pendaftaran belum tersedia. Silakan hubungi admin arena.\'); return false;"' : '' !!}>
+          <i class="fas fa-bolt" style="margin-right:5px"></i> DAFTAR SEKARANG
         </a>
-        @elseif($event->status==='upcoming')
-        <div style="text-align:center">
-          <div style="font-size:.68rem;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Dibuka</div>
-          <div style="font-size:.825rem;color:#FDE68A;font-weight:600">{{ \Carbon\Carbon::parse($event->tanggal_mulai)->format('d M Y') }}</div>
-        </div>
         @else
-        <div style="font-size:.78rem;color:#1e293b;font-weight:600">Ditutup</div>
+        <div style="font-size:.78rem;color:#475569;font-weight:600"><span class="mono">[ CAMPAIGN_ENDED ]</span></div>
         @endif
       </div>
     </div>
