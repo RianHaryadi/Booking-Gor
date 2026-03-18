@@ -1,66 +1,74 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Arena Sportiva — Premier Sport Hub ⚡
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Arena Sportiva Hero](public/images/hero_sports.png)
 
-## About Laravel
+**Arena Sportiva** adalah platform manajemen booking lapangan olahraga (Badminton, Futsal, Basket) berbasis web yang dirancang dengan estetika *Elite-Dominance* dan *Cyber-Industrial*. Sistem ini mengintegrasikan kemudahan reservasi bagi pemain dengan manajemen turnamen dan operasional yang kuat untuk administrator.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🔥 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📡 Panel Reservasi & Tracking
+- **Interactive Booking Grid:** Jadwal ketersediaan lapangan real-time dengan interval 2 jam.
+- **Instant Booking Form:** Alur pemesanan cepat dengan opsi pembayaran Cash atau Transfer.
+- **Booking Tracking:** Cek status reservasi (Pending/Booked/Success) dengan kode booking unik.
+- **Full-Day Block System:** Kemampuan menutup lapangan secara otomatis untuk pemeliharaan atau event khusus.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🏆 Manajemen Turnamen (Event)
+- **Competitive Arena Section:** Menampilkan turnamen aktif, prizepool, dan kategori langsung di Homepage.
+- **Smart Registration Button:** Integrasi link pendaftaran eksternal (Google Forms/WA) dengan notifikasi otomatis jika link belum tersedia.
+- **Automatic Arena Blocking:** Administrator dapat menutup seluruh atau sebagian lapangan secara otomatis selama durasi turnamen melalui panel admin.
 
-## Learning Laravel
+### 🏢 Admin Panel (Powered by Filament)
+- **Resource Management:** Kelola jenis lapangan, data booking, kategori, dan turnamen dengan mudah.
+- **Booking Validation:** Validasi pembayaran manual untuk metode pembayaran Cash.
+- **Arena Control:** Tombol "Tutup Lapangan" dan "Buka Lapangan" yang fleksibel untuk mengatur ketersediaan arena.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Backend:** Laravel 10+
+- **Frontend:** Blade Templates, Vanilla CSS (Industrial Cyber Theme), FontAwesome 6+
+- **Database:** MySQL
+- **Admin Panel:** Filament PHP
+- **Utilities:** Carbon (Date handling), Alpine.js (Modal logic)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Cara Instalasi
 
-## Laravel Sponsors
+1. **Clone Repository**
+   ```bash
+   git clone [url-repository]
+   cd Booking-Gor
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Instal Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-### Premium Partners
+3. **Konfigurasi Environment**
+   Salin `.env.example` ke `.env` dan sesuaikan pengaturan database Anda.
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4. **Migrasi & Seed**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-## Contributing
+5. **Jalankan Server**
+   ```bash
+   php artisan serve
+   npm run dev
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🎨 Desain Estetika
+Project ini menggunakan tema **Cyber-Industrial** dengan palet warna:
+- **Primary:** Neon Green (`#00ffa3`)
+- **Accent:** Electric Purple (`#a855f7`) & Amber (`#F59E0B`)
+- **Background:** Deep Space Black (`#050505`)
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Developed with ⚡ for Elite Performance.**

@@ -19,7 +19,6 @@ class BookBookingController extends Controller
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
         $parsedDate = Carbon::parse($selectedDate)->setTimezone('Asia/Jakarta')->startOfDay();
 
-        // Validate date is within 30 days
         $maxDate = Carbon::today()->addDays(30)->startOfDay();
         if ($parsedDate->gt($maxDate)) {
             return redirect()->route('booking.index', ['date' => Carbon::today()->toDateString()])
@@ -45,7 +44,6 @@ class BookBookingController extends Controller
         $parsedDate = Carbon::parse($date)->setTimezone('Asia/Jakarta')->startOfDay();
         $isToday = $parsedDate->isToday();
 
-        // Get all bookings for this field on this date
         $fieldBookings = Booking::where('tanggal', $parsedDate->toDateString())
             ->where('lapangan_mode_id', $field->id)
             ->whereIn('status', ['booked', 'pending'])
@@ -58,7 +56,6 @@ class BookBookingController extends Controller
             $slotStart = Carbon::parse("$date $startTime");
             $slotEnd = Carbon::parse("$date $endTime");
 
-            // Check direct booking conflict for this field
             $booking = $fieldBookings->first(function ($booking) use ($startTime, $endTime) {
                 return $booking->jam_mulai < $endTime && $booking->jam_selesai > $startTime;
             });
@@ -120,7 +117,6 @@ class BookBookingController extends Controller
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
         $parsedDate = Carbon::parse($selectedDate)->setTimezone('Asia/Jakarta')->startOfDay();
 
-        // Validate date is within 30 days
         $maxDate = Carbon::today()->addDays(30)->startOfDay();
         if ($parsedDate->gt($maxDate)) {
             return redirect()->route('booking.form', ['field' => $field->id, 'date' => Carbon::today()->toDateString()])
@@ -153,7 +149,6 @@ class BookBookingController extends Controller
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
         $parsedDate = Carbon::parse($selectedDate)->setTimezone('Asia/Jakarta')->startOfDay();
 
-        // Validate date is within 30 days
         $maxDate = Carbon::today()->addDays(30)->startOfDay();
         if ($parsedDate->gt($maxDate)) {
             return redirect()->route('booking.schedule', ['date' => Carbon::today()->toDateString()])
@@ -197,7 +192,6 @@ class BookBookingController extends Controller
 
                 $validated = $validator->validated();
 
-                // Validate time and duration
                 $jamMulai = Carbon::parse($validated['jam_mulai']);
                 $jamSelesai = Carbon::parse($validated['jam_selesai']);
                 $durasi = (int) $validated['durasi'];
@@ -208,7 +202,6 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Check operational hours
                 $startHour = (int) $jamMulai->format('H');
                 $endHour   = (int) $jamSelesai->format('H');
                 if ($startHour < 8 || $endHour > 22 || ($endHour === 22 && $jamSelesai->minute > 0)) {
@@ -217,7 +210,6 @@ class BookBookingController extends Controller
                     return back()->withErrors($error)->withInput();
                 }
 
-                // Check direct time slot conflict
                 $field = LapanganMode::findOrFail($validated['lapangan_mode_id']);
                 $conflict = Booking::where('tanggal', $validated['tanggal'])
                     ->where('lapangan_mode_id', $field->id)
